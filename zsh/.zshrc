@@ -120,6 +120,7 @@ source /usr/share/doc/pkgfile/command-not-found.zsh
 # Variables
 export GPG_TTY=$(tty)   # Allow GPG signing
 export EDITOR=vim
+export STARSHIP_CONFIG=~/.config/starship/config.toml
 
 # Aliases
 alias ls="ls -al"
