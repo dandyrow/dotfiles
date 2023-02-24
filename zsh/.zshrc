@@ -121,6 +121,7 @@ source /usr/share/doc/pkgfile/command-not-found.zsh
 export GPG_TTY=$(tty)   # Allow GPG signing
 export EDITOR=vim
 export STARSHIP_CONFIG=~/.config/starship/config.toml
+export PATH="$HOME/.local/bin:$PATH"  # Adding pip install binaries to path
 
 # Aliases
 alias ls="ls -al"
