@@ -1,5 +1,17 @@
 # dotfiles
-Repository containing my configuration dotfiles
+
+This repo contains my configuration dotfiles for my linux systems. 
+It is structured in such a way that GNU stow can be used to install the dotfiles
+in their correct location within the target user's home directory.
+
+This README lists any requirements and / or instructions that are required for
+the dotfiles to be installed correctly. Below are the basic requirements common
+to all dotfiles within this repo.
+
+### Requirements
+
+* git
+* stow
 
 ## Zsh
 
