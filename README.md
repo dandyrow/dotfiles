@@ -21,9 +21,21 @@ to all dotfiles within this repo.
 * zsh-autosuggestions
 * zsh-syntax-highlighting
 * pkgfile
+* starship _(prompt)_
 
 ### Steps to install
 
 1. Install requirements listed above.
 2. Run `stow zsh` from within repo root.
 3. Set `ZDOTDIR` environment variable to `$HOME/.config/zsh` in `/etc/zsh/zprofile` or `/etc/zsh/zshenv` files for example to tell zsh where config is located using the line `export ZDOTDIR="$HOME/.config/zsh"`.
+
+## Starship
+
+### Requirements
+
+* starship
+
+### Steps to instal
+
+1. Install requirements.
+2. Run `stow starship` from within repo root.
