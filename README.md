@@ -22,6 +22,7 @@ to all dotfiles within this repo.
 * zsh-syntax-highlighting
 * pkgfile
 * starship _(prompt)_
+* neofetch
 
 ### Steps to install
 
