@@ -62,3 +62,14 @@ to all dotfiles within this repo.
 
 1. Install requirements
 2. Run `stow tmux` from within repo root.
+
+## Zellij
+
+### Requirements
+
+* zellij
+
+### Steps to install
+
+1. Install requirements
+2. Run `stow zellij` from within repo root.

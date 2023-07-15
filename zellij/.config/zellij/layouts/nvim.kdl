@@ -1,0 +1,12 @@
+layout {
+  pane stacked=true {
+    pane {
+      name "nvim"
+      command "nvim" 
+      args "."
+    }
+    pane {
+      name "shell"
+    }
+  }
+}
