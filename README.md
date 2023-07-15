@@ -73,3 +73,14 @@ to all dotfiles within this repo.
 
 1. Install requirements
 2. Run `stow zellij` from within repo root.
+
+## Git
+
+### Requirements
+
+* git
+
+### Steps to install
+
+1. Install requirements
+2. Run `stow git` from within repo root.

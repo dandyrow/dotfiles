@@ -1,0 +1,13 @@
+[user]
+name = Daniel Lowry
+email = development@daniellowry.co.uk
+
+[init]
+defaultBranch = master
+
+[push]
+autosetupremote = true
+
+[pull]
+rebase = false
+
