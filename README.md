@@ -22,6 +22,7 @@ to all dotfiles within this repo.
 * zsh-syntax-highlighting
 * pkgfile
 * starship _(prompt)_
+* neofetch
 
 ### Steps to install
 
@@ -39,3 +40,14 @@ to all dotfiles within this repo.
 
 1. Install requirements.
 2. Run `stow starship` from within repo root.
+
+## Neofetch
+
+### Requirements
+
+* neofetch
+
+### Steps to install
+
+1. Install requirements
+2. Run `stow neofetch` from within repo root.
