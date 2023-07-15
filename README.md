@@ -51,3 +51,14 @@ to all dotfiles within this repo.
 
 1. Install requirements
 2. Run `stow neofetch` from within repo root.
+
+## Tmux
+
+### Requirements
+
+* Tmux
+
+### Steps to install
+
+1. Install requirements
+2. Run `stow tmux` from within repo root.
