@@ -6,6 +6,9 @@ return {
     'nvim-tree/nvim-web-devicons',
   },
   config = function ()
+    -- Keymap to open nvim-tree as a sidebar
+    vim.keymap.set('n', '<leader>d', ':NvimTreeToggle<CR>', { silent = true })
+
     -- disable netrw
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
