@@ -84,3 +84,16 @@ to all dotfiles within this repo.
 
 1. Install requirements
 2. Run `stow git` from within repo root.
+
+## Neovim
+
+### Requirements
+
+* neovim
+* gcc (required for treesitter)
+* ripgrep (required for telescope)
+
+### Steps to install
+
+1. Install requirements
+2. Run `stow neovim` from within repo root.

@@ -13,6 +13,9 @@ return {
       },
       integrations = {
         nvimtree = true,
+        telescope = {
+          enabled = true,
+        },
         treesitter = true,
       },
     }
