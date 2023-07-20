@@ -23,11 +23,39 @@ return {
       percentage = 0.15,
     },
     integrations = {
+      barbecue = {
+        dim_dirname = true,
+        bold_basename = true,
+        dim_context = false,
+        alt_background = false,
+      },
+      cmp = true,
+      gitsigns = true,
+      markdown = true,
+      native_lsp = {
+        enabled = true,
+        virtual_text = {
+          errors = { "italic" },
+          hints = { "italic" },
+          warnings = { "italic" },
+          information = { "italic" },
+        },
+        underlines = {
+          errors = { "underline" },
+          hints = { "underline" },
+          warnings = { "underline" },
+          information = { "underline" },
+        },
+        inlay_hints = {
+          background = true,
+        },
+      },
       nvimtree = true,
       telescope = {
         enabled = true,
       },
       treesitter = true,
+      ts_rainbow2 = true,
     },
   },
 }
