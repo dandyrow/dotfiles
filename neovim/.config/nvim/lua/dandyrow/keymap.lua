@@ -20,11 +20,6 @@ vim.keymap.set('n', '<C-Down>', ':resize +2<CR>', { desc = '[Crtl] + [Down] decr
 vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', { desc = '[Crtl] + [Left] increase size of right window', silent = true })
 vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>', { desc = '[Crtl] + [Right] decrease size of right window', silent = true })
 
--- Navigate open buffers
-vim.keymap.set('n', '<S-l>', ':bnext<CR>', { desc = '[L] move to next buffer', silent = true })
-vim.keymap.set('n', '<S-h>', ':bprevious<CR>', { desc = '[H] move to previous buffer', silent = true })
-vim.keymap.set('n', '<C-q>', ':bdelete<CR>', { desc = '[Crtl] + [q] close current buffer', silent = true })
-
 -- Keep cursor in middle when performing actions
 vim.keymap.set('n', 'J', 'mzJ`z', { silent = true })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { silent = true })
