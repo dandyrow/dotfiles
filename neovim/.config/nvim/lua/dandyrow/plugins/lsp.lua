@@ -1,5 +1,6 @@
 return {
   'neovim/nvim-lspconfig',
+
   dependencies = {
     {
       'williamboman/mason.nvim',
@@ -8,17 +9,14 @@ return {
     },
     {
       'williamboman/mason-lspconfig.nvim',
-      config = function ()
-        require('mason-lspconfig').setup {
-          -- Automatically install LSPs configured below using Mason
-          automatic_installation = true,
-        }
-      end
+      opts = {
+        -- Automatically install LSPs configured below using Mason
+        automatic_installation = true,
+      },
     },
     {
       'folke/neodev.nvim',
       opts = {},
-      config = true,
     },
   },
 
@@ -81,5 +79,5 @@ return {
         end, { desc = 'Format current buffer with LSP', buffer = ev.buf })
       end,
     })
-  end
+  end,
 }

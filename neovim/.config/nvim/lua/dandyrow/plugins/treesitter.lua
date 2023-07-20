@@ -1,10 +1,13 @@
 return {
   'nvim-treesitter/nvim-treesitter',
+
   build = ':TSUpdate',
+
   dependencies = {
     'nvim-treesitter/nvim-treesitter-refactor',
     'HiPhish/nvim-ts-rainbow2',
   },
+
   config = function ()
     require('nvim-treesitter.configs').setup {
       ensure_installed = {

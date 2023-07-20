@@ -1,5 +1,6 @@
 return {
   'lewis6991/gitsigns.nvim',
+
   opts = {
     current_line_blame = true,
     numhl = true,
@@ -44,5 +45,5 @@ return {
       -- Text object
       map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
     end
-  }
+  },
 }
