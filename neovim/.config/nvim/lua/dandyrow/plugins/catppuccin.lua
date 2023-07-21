@@ -31,6 +31,7 @@ return {
       },
       cmp = true,
       gitsigns = true,
+      lsp_trouble = true,
       markdown = true,
       native_lsp = {
         enabled = true,
@@ -56,6 +57,7 @@ return {
       },
       treesitter = true,
       ts_rainbow2 = true,
+      which_key = true,
     },
   },
 }
