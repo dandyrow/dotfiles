@@ -10,9 +10,9 @@ return {
     vim.g.barbar_auto_setup = false
 
     -- Navigate open buffers
-    vim.keymap.set('n', '<S-l>', ':bnext<CR>', { desc = '[L] move to next buffer', silent = true })
-    vim.keymap.set('n', '<S-h>', ':bprevious<CR>', { desc = '[H] move to previous buffer', silent = true })
-    vim.keymap.set('n', '<C-q>', ':BufferClose<CR>', { desc = '[Crtl] + [q] close current buffer', silent = true })
+    vim.keymap.set('n', '<S-l>', ':bnext<CR>', { desc = 'Move to next buffer', silent = true })
+    vim.keymap.set('n', '<S-h>', ':bprevious<CR>', { desc = 'Move to previous buffer', silent = true })
+    vim.keymap.set('n', '<C-q>', ':BufferClose<CR>', { desc = 'Close current buffer', silent = true })
   end,
 
   opts = {

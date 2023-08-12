@@ -25,10 +25,17 @@ return {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 
     local Terminal = require('toggleterm.terminal').Terminal
-    local htop = Terminal:new({ cmd = 'htop', hidden = true })
 
+    local htop = Terminal:new({ cmd = 'htop', hidden = true })
     function _HTOP_TOGGLE()
       htop:toggle()
     end
+    vim.keymap.set('n', '<leader>th', '<CMD>lua _HTOP_TOGGLE()<CR>', { desc = 'Toggle htop float', noremap = true, silent = true })
+
+    local lazygit = Terminal:new({ cmd = 'lazygit', hidden = true })
+    function _LGIT_TOGGLE()
+      lazygit:toggle()
+    end
+    vim.keymap.set('n', '<leader>tg', '<CMD>lua _LGIT_TOGGLE()<CR>', { desc = 'Toggle lazygit float', noremap = true, silent = true })
   end,
 }

@@ -65,13 +65,13 @@ return {
       callback = function(ev)
         -- Buffer local mappings
         -- Code actions.
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = '[r]e[n]ame', buffer = ev.buf })
-        vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, { desc = '[c]ode [a]ctions', buffer = ev.buf })
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'Rename', buffer = ev.buf })
+        vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, { desc = 'Code actions', buffer = ev.buf })
         -- Jump to
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = '[g]oto [D]eclaration', buffer = ev.buf })
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = '[g]oto [d]efinition', buffer = ev.buf })
-        vim.keymap.set('n', 'gr', require("telescope.builtin").lsp_references, { desc = '[g]oto [r]eferences', buffer = ev.buf })
-        vim.keymap.set('n', 'gI', vim.lsp.buf.implementation, { desc = '[g]oto [I]mplementation', buffer = ev.buf })
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'Goto declaration', buffer = ev.buf })
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Goto definition', buffer = ev.buf })
+        vim.keymap.set('n', 'gr', require("telescope.builtin").lsp_references, { desc = 'Goto references', buffer = ev.buf })
+        vim.keymap.set('n', 'gI', vim.lsp.buf.implementation, { desc = 'Goto implementation', buffer = ev.buf })
         -- Documentation
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover documentation', buffer = ev.buf })
         vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { desc = 'Signature documentation', buffer = ev.buf })

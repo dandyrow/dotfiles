@@ -9,7 +9,7 @@ return {
 
   init = function ()
     -- Keymap to open nvim-tree as a sidebar
-    vim.keymap.set('n', '<leader>d', ':NvimTreeToggle<CR>', { desc = '[d] toggle nvimtree side window', silent = true })
+    vim.keymap.set('n', '<leader>d', ':NvimTreeToggle<CR>', { desc = 'Toggle nvimtree side window', silent = true })
 
     -- disable netrw
     vim.g.loaded_netrw = 1

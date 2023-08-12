@@ -30,11 +30,11 @@ return {
 		})
 
 		vim.keymap.set("n", "<leader>f", "<CMD>Format<CR>", {
-      desc = "[f] format buffer",
+      desc = "Format buffer",
       silent = true
     })
 		vim.keymap.set("n",	"<leader>F", "<CMD>FormatWrite<CR>", {
-      desc = "[F] format and write buffer",
+      desc = "Format and write buffer",
       silent = true
     })
 	end,
