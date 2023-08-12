@@ -76,7 +76,7 @@ return {
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover documentation', buffer = ev.buf })
         vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { desc = 'Signature documentation', buffer = ev.buf })
         -- Format 
-        vim.keymap.set('n', '<space>f', function()
+        vim.keymap.set('n', '<space>fl', function()
           vim.lsp.buf.format { async = true }
         end, { desc = 'Format current buffer with LSP', buffer = ev.buf })
       end,
