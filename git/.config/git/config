@@ -1,13 +1,19 @@
 [user]
-name = Daniel Lowry
-email = development@daniellowry.co.uk
+  name = Daniel Lowry
+  email = development@daniellowry.co.uk
+  signingKey = development@daniellowry.co.uk
 
 [init]
-defaultBranch = master
+  defaultBranch = master
 
 [push]
-autosetupremote = true
+  autosetupremote = true
 
 [pull]
-rebase = false
+  rebase = false
 
+[commit]
+  gpgSign = true
+
+[tag]
+  gpgSign = true
