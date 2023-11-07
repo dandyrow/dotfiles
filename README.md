@@ -92,6 +92,12 @@ to all dotfiles within this repo.
 * neovim
 * gcc (required for treesitter)
 * ripgrep (required for telescope)
+* yamllint
+* npm
+* wget
+* tree-sitter
+* fd
+* wl-clipboard (copy & paste to & from system clipboard)
 
 ### Steps to install
 
