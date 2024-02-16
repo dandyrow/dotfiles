@@ -20,9 +20,11 @@ to all dotfiles within this repo.
 * zsh
 * zsh-autosuggestions
 * zsh-syntax-highlighting
-* pkgfile
-* starship _(prompt)_
 * neofetch
+* starship _(prompt)_
+* ttf-dejavu-nerd _(nerdfont)_
+* pkgfile _[arch]_
+* command-not-found _[debian/ubuntu]_
 
 ### Steps to install
 
@@ -35,6 +37,7 @@ to all dotfiles within this repo.
 ### Requirements
 
 * starship
+* ttf-dejavu-nerd _(nerdfont)_
 
 ### Steps to instal
 
@@ -90,14 +93,16 @@ to all dotfiles within this repo.
 ### Requirements
 
 * neovim
-* gcc (required for treesitter)
-* ripgrep (required for telescope)
+* gcc _(required for treesitter)_
+* ripgrep _(required for telescope)_
 * yamllint
+* ansible-lint
 * npm
 * wget
 * tree-sitter
 * fd
-* wl-clipboard (copy & paste to & from system clipboard)
+* wl-clipboard _[wayland desktop] (copy & paste to & from system clipboard)_
+* ttf-dejavu-nerd _(nerdfont)_
 
 ### Steps to install
 

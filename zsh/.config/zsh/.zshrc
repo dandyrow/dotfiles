@@ -131,17 +131,32 @@ bindkey -s "^r" "source $ZDOTDIR/.zshrc\n"
 # Source ZSH plugins #
 ######################
 
-# Load zsh-autosuggestions
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [ -f /etc/os-release ]; then
+  . /etc/os-release
+  
+  if [[ $ID == debian ]]; then
+    # Load zsh-autosuggestions
+    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    
+    # Load zsh-syntax-highlighting
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+    # Load command not found handler for zsh on debian based distros
+    source /etc/zsh_command_not_found
+  elif [[ $ID == arch ]]; then
+    # Load zsh-autosuggestions
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+    
+    # Load zsh-syntax-highlighting
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+    # Load command not found hook from pkgfile
+    source /usr/share/doc/pkgfile/command-not-found.zsh
+  fi
+fi
 
 # Load catppuccin theme for syntac highlighting
 source "$XDG_CONFIG_HOME/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh"
-
-# Load zsh-syntax-highlighting
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# Load command not found hook from pkgfile
-source /usr/share/doc/pkgfile/command-not-found.zsh
 
 #################
 # Variables #
@@ -170,8 +185,6 @@ export TMUX_PLUGIN_MANAGER_PATH="$XDG_STATE_HOME/tmux/plugins"
 
 alias ls="ls -al"
 alias exa="exa --icons --grid --long --git --all"
-alias sudo="doas"
-alias sudoedit="doas rnano"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 
