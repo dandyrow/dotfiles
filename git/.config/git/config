@@ -17,3 +17,6 @@
 
 [tag]
   gpgSign = true
+
+[includeIf "gitdir:~/projects/work/"]
+  path = ~/projects/work/.gitconfig
