@@ -132,7 +132,8 @@ bindkey -s "^r" "source $ZDOTDIR/.zshrc\n"
 ######################
 
 if [ -f /etc/os-release ]; then
-  . /etc/os-release
+  # Executes /etc/os-release and it's variables become part of this shell session
+  source /etc/os-release
   
   if [[ $ID == debian ]]; then
     # Load zsh-autosuggestions
@@ -143,6 +144,9 @@ if [ -f /etc/os-release ]; then
 
     # Load command not found handler for zsh on debian based distros
     source /etc/zsh_command_not_found
+
+    # Add newer binaries to path for Debian
+    export PATH="/opt/node-v20.11.1/bin:/opt/nvim-linux64/bin:$PATH"
   elif [[ $ID == arch ]]; then
     # Load zsh-autosuggestions
     source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -162,6 +166,8 @@ source "$XDG_CONFIG_HOME/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh"
 # Variables #
 #################
 
+# For Debian systems the PATH variable is modified above to add locations of
+# more up to date binaries.
 export EDITOR=nvim
 export PATH="$HOME/.local/bin:$PATH"  # Add install location of pip binaries to path
 export GPG_TTY=$(tty)  # Allow GPG signing
