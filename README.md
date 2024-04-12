@@ -1,6 +1,6 @@
 # dotfiles
 
-This repo contains my configuration dotfiles for my linux systems. 
+This repo contains my configuration dotfiles for my linux systems.
 It is structured in such a way that GNU stow can be used to install the dotfiles
 in their correct location within the target user's home directory.
 
@@ -39,7 +39,7 @@ to all dotfiles within this repo.
 * starship
 * ttf-dejavu-nerd _(nerdfont)_
 
-### Steps to instal
+### Steps to install
 
 1. Install requirements.
 2. Run `stow starship` from within repo root.
@@ -97,10 +97,14 @@ to all dotfiles within this repo.
 * ripgrep _(required for telescope)_
 * yamllint
 * ansible-lint
+* codespell
+* proselint
+* gitlint
 * npm
 * wget
 * tree-sitter
 * fd
+* unzip
 * wl-clipboard _[wayland desktop] (copy & paste to & from system clipboard)_
 * ttf-dejavu-nerd _(nerdfont)_
 
