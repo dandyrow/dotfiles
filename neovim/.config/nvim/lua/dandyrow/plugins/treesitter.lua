@@ -22,9 +22,14 @@ return {
         'git_rebase',
         'gitcommit',
         'gitignore',
+        'properties',
       },
 
+      sync_install = false,
+
       auto_install = true,
+
+      ignore_install = {},
 
       highlight = {
         enable = true,

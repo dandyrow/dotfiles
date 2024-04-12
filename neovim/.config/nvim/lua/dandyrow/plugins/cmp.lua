@@ -1,5 +1,6 @@
 return {
   'hrsh7th/nvim-cmp',
+
   dependencies = {
     -- Completion addons
     'hrsh7th/cmp-buffer',

@@ -7,14 +7,14 @@ return {
 
   init = function ()
     -- Safely activate colourscheme
-    local status_ok, _ = pcall(vim.cmd, 'colorscheme catppuccin')
+    local status_ok, _ = pcall(vim.cmd.colorscheme, 'catppuccin')
     if not status_ok then
       vim.notify('colorscheme catppuccin not found!')
       return
     end
   end,
 
-  config = {
+  opts = {
     show_end_of_buffer = true,
     term_colors = true,
     dim_inactive = {
