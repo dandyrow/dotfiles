@@ -50,6 +50,15 @@ return {
     }
 
     lspconfig.ansiblels.setup {}
+    lspconfig.eslint.setup {}
+
+    lspconfig.tsserver.setup {
+      init_options = {
+        preferences = {
+          disableSuggestions = true,
+        },
+      },
+    }
 
     -- Global mappings.
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -75,8 +84,8 @@ return {
         -- Documentation
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover documentation', buffer = ev.buf })
         vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { desc = 'Signature documentation', buffer = ev.buf })
-        -- Format 
-        vim.keymap.set('n', '<space>fl', function()
+        -- Format
+        vim.keymap.set('n', '<space>F', function()
           vim.lsp.buf.format { async = true }
         end, { desc = 'Format current buffer with LSP', buffer = ev.buf })
       end,
