@@ -24,7 +24,7 @@ SAVEHIST=1000
 # Tab completion
 autoload -U compinit
 zstyle ':completion:*' menu select
-# Auto complete with case insesitivity
+# Auto complete with case insensitivity
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 zmodload zsh/complist
@@ -125,7 +125,7 @@ bindkey '^v' edit-command-line
 
 # Control bindings for programs
 bindkey -s "^w" "clear\n"
-bindkey -s "^r" "source $ZDOTDIR/.zshrc\n" 
+bindkey -s "^r" "source $ZDOTDIR/.zshrc\n"
 
 ######################
 # Source ZSH plugins #
@@ -134,11 +134,11 @@ bindkey -s "^r" "source $ZDOTDIR/.zshrc\n"
 if [ -f /etc/os-release ]; then
   # Executes /etc/os-release and it's variables become part of this shell session
   source /etc/os-release
-  
+
   if [[ $ID == debian ]]; then
     # Load zsh-autosuggestions
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    
+
     # Load zsh-syntax-highlighting
     source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -150,7 +150,7 @@ if [ -f /etc/os-release ]; then
   elif [[ $ID == arch ]]; then
     # Load zsh-autosuggestions
     source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-    
+
     # Load zsh-syntax-highlighting
     source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -159,7 +159,7 @@ if [ -f /etc/os-release ]; then
   fi
 fi
 
-# Load catppuccin theme for syntac highlighting
+# Load catppuccin theme for syntax highlighting
 source "$XDG_CONFIG_HOME/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh"
 
 #################
@@ -199,11 +199,11 @@ alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 
-############
-# Neofetch #
-# ##########
+#############
+# Fastfetch #
+#############
 
-neofetch
+fastfetch
 
 ##########
 # Prompt #
