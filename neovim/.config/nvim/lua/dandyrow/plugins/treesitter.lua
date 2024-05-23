@@ -23,6 +23,8 @@ return {
         'gitcommit',
         'gitignore',
         'properties',
+        'markdown',
+        'markdown_inline',
       },
 
       sync_install = false,
