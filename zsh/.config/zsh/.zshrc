@@ -19,13 +19,26 @@ fi
 # Set history options
 HISTFILE="$XDG_CACHE_HOME/zsh/history"
 HISTSIZE=1000
-SAVEHIST=1000
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+# Shares history between zsh sessions
+setopt sharehistory
+# Prevents commands starting with a space being saved to history, good to hide sensitive commands
+setopt hist_ignore_space
+# Prevents duplicate commands showing in history
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
 
 # Tab completion
 autoload -U compinit
 zstyle ':completion:*' menu select
 # Auto complete with case insensitivity
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# Show colours in zsh completion menu
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 zmodload zsh/complist
 compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
@@ -145,8 +158,6 @@ if [ -f /etc/os-release ]; then
     # Load command not found handler for zsh on debian based distros
     source /etc/zsh_command_not_found
 
-    # Add newer binaries to path for Debian
-    export PATH="/opt/node-v20.11.1/bin:/opt/nvim-linux64/bin:$PATH"
   elif [[ $ID == arch ]]; then
     # Load zsh-autosuggestions
     source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -166,8 +177,6 @@ source "$XDG_CONFIG_HOME/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh"
 # Variables #
 #################
 
-# For Debian systems the PATH variable is modified above to add locations of
-# more up to date binaries.
 export EDITOR=nvim
 export PATH="$HOME/.local/bin:$PATH"  # Add install location of pip binaries to path
 export GPG_TTY=$(tty)  # Allow GPG signing
@@ -189,7 +198,7 @@ export TMUX_PLUGIN_MANAGER_PATH="$XDG_STATE_HOME/tmux/plugins"
 # Aliases #
 ###########
 
-alias ls="ls -al"
+alias ls="ls -al --color"
 alias exa="exa --icons --grid --long --git --all"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
