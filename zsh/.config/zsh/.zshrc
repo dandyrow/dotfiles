@@ -24,6 +24,7 @@ export ANSIBLE_GALAXY_CACHE_DIR="$XDG_CACHE_HOME/ansible/galaxy_cache"
 export WINEPREFIX="$XDG_DATA_HOME/wineprefixes/default"
 export TMUX_PLUGIN_MANAGER_PATH="$XDG_STATE_HOME/tmux/plugins"
 
+export KEYTIMEOUT=1
 ###########
 # Aliases #
 ###########
@@ -85,8 +86,17 @@ done
 bindkey -v
 bindkey '^[k' history-search-backward
 bindkey '^[j' history-search-forward
+
 bindkey '^[l' vi-end-of-line
 bindkey '^[h' vi-beginning-of-line
+bindkey '^[[H' vi-beginning-of-line
+bindkey '^[[F' vi-end-of-line
+bindkey '^[[3~' delete-char
+bindkey '^[[2~' vi-insert
+bindkey -M vicmd '^[[H' vi-beginning-of-line
+bindkey -M vicmd '^[[F' vi-end-of-line
+bindkey -M vicmd '^[[3~' delete-char
+bindkey -M vicmd '^[[2~' vi-insert
 
 # Change cursor shape for different vi modes
 function zle-keymap-select {
@@ -129,7 +139,7 @@ source "$ZDOTDIR/catppuccin_mocha-zsh-syntax-highlighting.zsh"
 # Enable completions
 autoload -U compinit && compinit
 
-# Enable propmpt
+# Enable prompt
 eval "$(starship init zsh)"
 
 # Enable fzf integration
