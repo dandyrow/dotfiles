@@ -22,9 +22,9 @@ to all dotfiles within this repo.
 * fzf
 * exa
 * starship _(prompt)_
+* zoxide
 * ttf-dejavu-nerd _(nerdfont)_
-* pkgfile _[arch]_
-* command-not-found _[debian/ubuntu]_
+* pkgfile _[arch]_ (optional)
 
 ### Steps to install
 

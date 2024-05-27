@@ -72,6 +72,7 @@ fzfPreviewCommands=(
   'cd'
   'ls'
   'exa'
+  '__zoxide_z'
 )
 
 for cmd in $fzfPreviewCommands; do
@@ -144,5 +145,8 @@ eval "$(starship init zsh)"
 
 # Enable fzf integration
 eval "$(fzf --zsh)"
+
+# Enable zoxide
+eval "$(zoxide init --cmd cd zsh)"
 
 fastfetch
