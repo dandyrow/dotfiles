@@ -33,14 +33,6 @@ alias exa="exa --icons --grid --long --git --all --group-directories-first"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 
-# Git
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gph='git push'
-alias gpl='git pull'
-alias gl='git log --oneline'
-
 ###########
 # Options #
 ###########
@@ -125,8 +117,13 @@ pluginRepos=(
   'zsh-users/zsh-completions'
   'zsh-users/zsh-syntax-highlighting'
 )
-
 plugin-load $pluginRepos
+
+omzPlugins=(
+  'command-not-found'
+)
+plugin-omz $omzPlugins
+
 source "$ZDOTDIR/catppuccin_mocha-zsh-syntax-highlighting.zsh"
 
 # Enable completions

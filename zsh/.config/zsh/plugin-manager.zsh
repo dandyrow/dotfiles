@@ -17,6 +17,21 @@ function plugin-load {
   plugin-source $pluginDirs
 }
 
+# Takes in an array of names of ohmyzsh plugins which are found in the plugins
+# directory of the ohmyzsh repository, clones the ohmyzsh repo and installs
+# the plugins passed in.
+function plugin-omz {
+  repos=('ohmyzsh/ohmyzsh')
+  plugin-clone $repos
+
+  pluginDirs=()
+  for plugin in $@; do
+    pluginDirs+="ohmyzsh/plugins/$plugin"
+  done
+
+  plugin-source $pluginDirs
+}
+
 # Takes in an array of GitHub repos and clones them into the plugin directory.
 # The plugin directory is made up of the $ZPLUGINDIR and the name of the plugin.
 function plugin-clone {
