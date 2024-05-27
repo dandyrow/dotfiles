@@ -18,9 +18,9 @@ to all dotfiles within this repo.
 ### Requirements
 
 * zsh
-* zsh-autosuggestions
-* zsh-syntax-highlighting
-* neofetch
+* fastfetch
+* fzf
+* exa
 * starship _(prompt)_
 * ttf-dejavu-nerd _(nerdfont)_
 * pkgfile _[arch]_
