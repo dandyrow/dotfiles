@@ -37,7 +37,7 @@ alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 alias gs='git status'
 alias ga='git add'
 alias gc='git commit'
-alias gps='git push'
+alias gph='git push'
 alias gpl='git pull'
 alias gl='git log --oneline'
 
@@ -89,10 +89,12 @@ done
 # Keybindings #
 ###############
 
-# Enable Emacs mode
+# Enable Vi mode
 bindkey -v
 bindkey '^[k' history-search-backward
 bindkey '^[j' history-search-forward
+bindkey '^[l' vi-end-of-line
+bindkey '^[h' vi-beginning-of-line
 
 # Change cursor shape for different vi modes
 function zle-keymap-select {
