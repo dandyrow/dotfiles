@@ -18,6 +18,7 @@ export GETIPLAYERUSERPREFS="$XDG_DATA_HOME/get_iplayer"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export GOPATH="$XDG_DATA_HOME/go"
 export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export ANSIBLE_HOME="$XDG_CONFIG_HOME/ansible"
 export ANSIBLE_CONFIG="$XDG_CONFIG_HOME/ansible/ansible.cfg"
 export ANSIBLE_GALAXY_CACHE_DIR="$XDG_CACHE_HOME/ansible/galaxy_cache"
@@ -25,6 +26,7 @@ export WINEPREFIX="$XDG_DATA_HOME/wineprefixes/default"
 export TMUX_PLUGIN_MANAGER_PATH="$XDG_STATE_HOME/tmux/plugins"
 
 export KEYTIMEOUT=1
+
 ###########
 # Aliases #
 ###########
@@ -85,15 +87,21 @@ done
 
 # Enable Vi mode
 bindkey -v
+
+# Insert mode keybinds
 bindkey '^[k' history-search-backward
 bindkey '^[j' history-search-forward
-
 bindkey '^[l' vi-end-of-line
 bindkey '^[h' vi-beginning-of-line
 bindkey '^[[H' vi-beginning-of-line
 bindkey '^[[F' vi-end-of-line
 bindkey '^[[3~' delete-char
 bindkey '^[[2~' vi-insert
+bindkey '^?' backward-delete-char
+
+# Normal mode keybinds
+bindkey -M vicmd '^[l' vi-end-of-line
+bindkey -M vicmd '^[h' vi-beginning-of-line
 bindkey -M vicmd '^[[H' vi-beginning-of-line
 bindkey -M vicmd '^[[F' vi-end-of-line
 bindkey -M vicmd '^[[3~' delete-char
