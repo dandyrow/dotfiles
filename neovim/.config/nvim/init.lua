@@ -1,2 +1,1 @@
-require('dandyrow')
-
+require("dandyrow")

@@ -1,14 +1,14 @@
 return {
-  'utilyre/barbecue.nvim',
+  "utilyre/barbecue.nvim",
 
-  name = 'barbecue',
+  name = "barbecue",
 
   dependencies = {
-    'SmiteshP/nvim-navic',
-    'nvim-tree/nvim-web-devicons',
+    "SmiteshP/nvim-navic",
+    "nvim-tree/nvim-web-devicons",
   },
 
-  init = function ()
+  init = function()
     -- Gain better performance when moving cursor around
     vim.api.nvim_create_autocmd({
       "WinScrolled", -- or WinResized on NVIM-v0.9 and higher
@@ -28,6 +28,6 @@ return {
 
   opts = {
     create_autocmd = false,
-    theme = 'catppuccin-mocha',
+    theme = "catppuccin-mocha",
   },
 }

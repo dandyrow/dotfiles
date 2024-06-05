@@ -1,15 +1,15 @@
 return {
-	"nvimtools/none-ls.nvim",
+  "nvimtools/none-ls.nvim",
 
   dependencies = {
-    'nvimtools/none-ls-extras.nvim',
+    "nvimtools/none-ls-extras.nvim",
   },
 
-	config = function()
-		local null_ls = require("null-ls")
+  config = function()
+    local null_ls = require("null-ls")
 
-		null_ls.setup({
-			sources = {
+    null_ls.setup({
+      sources = {
         -- Completion
         null_ls.builtins.completion.luasnip,
         null_ls.builtins.completion.spell,
@@ -37,17 +37,17 @@ return {
         null_ls.builtins.formatting.stylua,
         null_ls.builtins.formatting.terraform_fmt,
         null_ls.builtins.formatting.yamlfmt,
-        require('none-ls.formatting.eslint'),
+        require("none-ls.formatting.eslint"),
 
         -- Hover
         null_ls.builtins.hover.dictionary,
         null_ls.builtins.hover.printenv,
-			},
-		})
+      },
+    })
 
-		vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, {
-			desc = "Format Buffer",
-			silent = true,
-		})
-	end,
+    vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, {
+      desc = "Format Buffer",
+      silent = true,
+    })
+  end,
 }

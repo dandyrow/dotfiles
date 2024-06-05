@@ -1,24 +1,24 @@
 return {
-  'romgrk/barbar.nvim',
+  "romgrk/barbar.nvim",
 
   dependencies = {
-    'lewis6991/gitsigns.nvim',
-    'nvim-tree/nvim-web-devicons',
+    "lewis6991/gitsigns.nvim",
+    "nvim-tree/nvim-web-devicons",
   },
 
-  init = function ()
+  init = function()
     vim.g.barbar_auto_setup = false
 
     -- Navigate open buffers
-    vim.keymap.set('n', '<S-l>', ':bnext<CR>', { desc = 'Move to next buffer', silent = true })
-    vim.keymap.set('n', '<S-h>', ':bprevious<CR>', { desc = 'Move to previous buffer', silent = true })
-    vim.keymap.set('n', '<C-q>', ':BufferClose<CR>', { desc = 'Close current buffer', silent = true })
+    vim.keymap.set("n", "<S-l>", ":bnext<CR>", { desc = "Move to next buffer", silent = true })
+    vim.keymap.set("n", "<S-h>", ":bprevious<CR>", { desc = "Move to previous buffer", silent = true })
+    vim.keymap.set("n", "<C-q>", ":BufferClose<CR>", { desc = "Close current buffer", silent = true })
   end,
 
   opts = {
     insert_at_end = true,
     sidebar_filetypes = {
-      NvimTree = true
+      NvimTree = true,
     },
     icons = {
       diagnostics = {
@@ -30,19 +30,19 @@ return {
       gitsigns = {
         added = {
           enabled = true,
-          icon = '+'
+          icon = "+",
         },
         changed = {
           enabled = true,
-          icon = '~'
+          icon = "~",
         },
         deleted = {
           enabled = true,
-          icon = '-',
+          icon = "-",
         },
       },
     },
   },
 
-  version = '^1.0.0',
+  version = "^1.0.0",
 }

@@ -1,30 +1,30 @@
 return {
-  'nvim-treesitter/nvim-treesitter',
+  "nvim-treesitter/nvim-treesitter",
 
-  build = ':TSUpdate',
+  build = ":TSUpdate",
 
   dependencies = {
-    'nvim-treesitter/nvim-treesitter-refactor',
-    'HiPhish/nvim-ts-rainbow2',
+    "nvim-treesitter/nvim-treesitter-refactor",
+    "HiPhish/nvim-ts-rainbow2",
   },
 
-  config = function ()
-    require('nvim-treesitter.configs').setup {
+  config = function()
+    require("nvim-treesitter.configs").setup({
       ensure_installed = {
-        'lua',
-        'vim',
-        'vimdoc',
-        'python',
-        'dockerfile',
-        'yaml',
-        'terraform',
-        'go',
-        'git_rebase',
-        'gitcommit',
-        'gitignore',
-        'properties',
-        'markdown',
-        'markdown_inline',
+        "lua",
+        "vim",
+        "vimdoc",
+        "python",
+        "dockerfile",
+        "yaml",
+        "terraform",
+        "go",
+        "git_rebase",
+        "gitcommit",
+        "gitignore",
+        "properties",
+        "markdown",
+        "markdown_inline",
       },
 
       sync_install = false,
@@ -39,8 +39,8 @@ return {
       -- Enable coloured bracket pairs
       rainbow = {
         enable = true,
-        query = 'rainbow-parens',
-        strategy = require('ts-rainbow').strategy.global,
+        query = "rainbow-parens",
+        strategy = require("ts-rainbow").strategy.global,
       },
       -- Use treesitter for indentation
       indent = {
@@ -57,11 +57,10 @@ return {
         smart_rename = {
           enable = true,
           keymaps = {
-            smart_rename = '<leader>rn',
+            smart_rename = "<leader>rn",
           },
         },
       },
-    }
-  end
+    })
+  end,
 }
-

@@ -35,7 +35,7 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { desc = "Make current 
 
 -- Source open buffer
 vim.keymap.set("n", "<leader><space>", function()
-	vim.cmd("so")
+  vim.cmd("so")
 end, { desc = "Source current file for neovim config", silent = true })
 
 -- Move highlighted text around with shift + j and shift + k

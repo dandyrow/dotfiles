@@ -1,40 +1,40 @@
 return {
-  'neovim/nvim-lspconfig',
+  "neovim/nvim-lspconfig",
 
   dependencies = {
     {
-      'williamboman/mason.nvim',
-      build = ':MasonUpdate',
+      "williamboman/mason.nvim",
+      build = ":MasonUpdate",
       config = true,
     },
     {
-      'williamboman/mason-lspconfig.nvim',
+      "williamboman/mason-lspconfig.nvim",
       opts = {
         -- Automatically install LSPs configured below using Mason
         automatic_installation = true,
       },
     },
     {
-      'folke/neodev.nvim',
+      "folke/neodev.nvim",
       opts = {},
     },
   },
 
-  config = function ()
+  config = function()
     -- Find server configs using :help lspconfig-all or on nvim-lspconfig GitHub
     local lspconfig = require("lspconfig")
 
     -- Setup language servers
-    lspconfig.lua_ls.setup {
+    lspconfig.lua_ls.setup({
       settings = {
         Lua = {
           runtime = {
             -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-            version = 'LuaJIT',
+            version = "LuaJIT",
           },
           diagnostics = {
             -- Get the language server to recognize the `vim` global
-            globals = { 'vim' },
+            globals = { "vim" },
           },
           workspace = {
             -- Make the server aware of Neovim runtime files
@@ -47,47 +47,62 @@ return {
           },
         },
       },
-    }
+    })
 
-    lspconfig.ansiblels.setup {}
-    lspconfig.eslint.setup {}
+    lspconfig.ansiblels.setup({})
+    lspconfig.eslint.setup({})
 
-    lspconfig.tsserver.setup {
+    lspconfig.tsserver.setup({
       init_options = {
         preferences = {
           disableSuggestions = true,
         },
       },
-    }
+    })
 
     -- Global mappings.
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-    vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-    vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic list' })
+    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
+    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
+    vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
+    vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, { desc = "Open diagnostic list" })
 
     -- Use LspAttach autocommand to only map the following keys
     -- after the language server attaches to the current buffer
-    vim.api.nvim_create_autocmd('LspAttach', {
-      group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    vim.api.nvim_create_autocmd("LspAttach", {
+      group = vim.api.nvim_create_augroup("UserLspConfig", {}),
       callback = function(ev)
         -- Buffer local mappings
         -- Code actions.
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'Rename', buffer = ev.buf })
-        vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, { desc = 'Code actions', buffer = ev.buf })
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename", buffer = ev.buf })
+        vim.keymap.set(
+          { "n", "v" },
+          "<space>ca",
+          vim.lsp.buf.code_action,
+          { desc = "Code actions", buffer = ev.buf }
+        )
         -- Jump to
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'Goto declaration', buffer = ev.buf })
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Goto definition', buffer = ev.buf })
-        vim.keymap.set('n', 'gr', require("telescope.builtin").lsp_references, { desc = 'Goto references', buffer = ev.buf })
-        vim.keymap.set('n', 'gI', vim.lsp.buf.implementation, { desc = 'Goto implementation', buffer = ev.buf })
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Goto declaration", buffer = ev.buf })
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition", buffer = ev.buf })
+        vim.keymap.set(
+          "n",
+          "gr",
+          require("telescope.builtin").lsp_references,
+          { desc = "Goto references", buffer = ev.buf }
+        )
+        vim.keymap.set("n", "gI", vim.lsp.buf.implementation, { desc = "Goto implementation", buffer = ev.buf })
         -- Documentation
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'Hover documentation', buffer = ev.buf })
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { desc = 'Signature documentation', buffer = ev.buf })
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation", buffer = ev.buf })
+        vim.keymap.set(
+          "n",
+          "<C-k>",
+          vim.lsp.buf.signature_help,
+          { desc = "Signature documentation", buffer = ev.buf }
+        )
         -- Format
-        vim.keymap.set('n', '<space>F', function()
-          vim.lsp.buf.format { async = true }
-        end, { desc = 'Format current buffer with LSP', buffer = ev.buf })
+        vim.keymap.set("n", "<space>F", function()
+          vim.lsp.buf.format({ async = true })
+        end, { desc = "Format current buffer with LSP", buffer = ev.buf })
       end,
     })
   end,
