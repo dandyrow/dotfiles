@@ -1,38 +1,103 @@
 return {
   {
-    'nvim-telescope/telescope.nvim',
-
-    tag = '0.1.2',
+    "nvim-telescope/telescope.nvim",
 
     dependencies = {
-      'nvim-lua/plenary.nvim'
+      "nvim-lua/plenary.nvim",
+
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+      },
     },
 
-    init = function ()
-      local builtin = require('telescope.builtin')
-      vim.keymap.set('n', '<leader>gf', builtin.git_files, { desc = 'Search git files', silent = true })
-      vim.keymap.set('n', '<leader>tb', builtin.buffers, { desc = 'Search open buffers', silent = true })
-      vim.keymap.set('n', '<leader>tf', builtin.find_files, { desc = 'Search files', silent = true })
-      vim.keymap.set('n', '<leader>tg', builtin.live_grep, { desc = 'Search by grep', silent = true })
-      vim.keymap.set('n', '<leader>th', builtin.help_tags, { desc = 'Search help', silent = true })
-    end,
+    opts = {
+      defaults = {
+        mappings = {
+          i = {
+            ["<C-u>"] = false,
+            ["<C-d>"] = false,
+            ["<C-j>"] = require("telescope.actions").move_selection_next,
+            ["<C-k>"] = require("telescope.actions").move_selection_previous,
+          },
+        },
+      },
+    },
 
-    opts = {},
+    keys = {
+      {
+        "<leader>sf",
+        "<CMD>Telescope find_files hidden=true<CR>",
+        desc = "Search Files",
+      },
+      {
+        "<leader>so",
+        "<CMD>Telescope oldfiles<CR>",
+        desc = "Search recent files",
+      },
+      {
+        "<leader>sh",
+        "<CMD>Telescope help_tags<CR>",
+        desc = "Search Help",
+      },
+      {
+        "<leader>sw",
+        "<CMD>Telescope grep_string<CR>",
+        desc = "Search current Word",
+      },
+      {
+        "<leader>sg",
+        "<CMD>Telescope live_grep<CR>",
+        desc = "Search by Grep",
+      },
+      {
+        "<leader>sd",
+        "<CMD>Telescope diagnostics<CR>",
+        desc = "Searc Diagnostics",
+      },
+      {
+        "<leader>sb",
+        "<CMD>Telescope buffers<CR>",
+        desc = "Search open Buffers",
+      },
+      {
+        "<leader>st",
+        "<CMD>TodoTelescope<CR>",
+        desc = "Search Todo, bug, etc. comments",
+      },
+      {
+        "<leader>gf",
+        "<CMD>Telescope git_files<CR>",
+        desc = "Git Files",
+      },
+      {
+        "<leader>/",
+        "<CMD>Telescope current_buffer_fuzzy_find<CR>",
+        desc = "Fuzzily search in current buffer",
+      },
+      {
+        "<leader>sr",
+        function()
+          require("telescope.builtin").lsp_references()
+        end,
+        desc = "Show references",
+      },
+    },
   },
   {
-    'nvim-telescope/telescope-ui-select.nvim',
+    -- Used for code actions
+    "nvim-telescope/telescope-ui-select.nvim",
 
     config = function()
       require("telescope").setup({
         extensions = {
           ["ui-select"] = {
-            require("telescope.themes").get_dropdown {}
-          }
-        }
+            require("telescope.themes").get_dropdown({}),
+          },
+        },
       })
 
       require("telescope").load_extension("ui-select")
-    end
+    end,
   },
 }
-
