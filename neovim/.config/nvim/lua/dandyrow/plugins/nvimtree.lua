@@ -19,7 +19,7 @@ return {
 
   keys = {
     {
-      "<leader>d",
+      "<leader>a",
       "<CMD>NvimTreeToggle<CR>",
       desc = "Toggle nvimtree side window",
     },
