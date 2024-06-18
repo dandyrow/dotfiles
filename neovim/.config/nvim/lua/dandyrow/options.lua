@@ -65,6 +65,9 @@ vim.opt.showmode = false
 
 vim.opt.signcolumn = "yes"
 
+vim.opt.spell = true
+vim.opt.spelllang = { "en_gb" }
+
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 
