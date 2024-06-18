@@ -1,24 +1,23 @@
 return {
-  'romgrk/barbar.nvim',
+  "romgrk/barbar.nvim",
+
+  version = "^1.0.0",
 
   dependencies = {
-    'lewis6991/gitsigns.nvim',
-    'nvim-tree/nvim-web-devicons',
+    "lewis6991/gitsigns.nvim",
+    "nvim-tree/nvim-web-devicons",
   },
 
-  init = function ()
-    vim.g.barbar_auto_setup = false
+  lazy = false,
 
-    -- Navigate open buffers
-    vim.keymap.set('n', '<S-l>', ':bnext<CR>', { desc = 'Move to next buffer', silent = true })
-    vim.keymap.set('n', '<S-h>', ':bprevious<CR>', { desc = 'Move to previous buffer', silent = true })
-    vim.keymap.set('n', '<C-q>', ':BufferClose<CR>', { desc = 'Close current buffer', silent = true })
+  init = function()
+    vim.g.barbar_auto_setup = false
   end,
 
   opts = {
     insert_at_end = true,
     sidebar_filetypes = {
-      NvimTree = true
+      NvimTree = true,
     },
     icons = {
       diagnostics = {
@@ -30,19 +29,35 @@ return {
       gitsigns = {
         added = {
           enabled = true,
-          icon = '+'
+          icon = "+",
         },
         changed = {
           enabled = true,
-          icon = '~'
+          icon = "~",
         },
         deleted = {
           enabled = true,
-          icon = '-',
+          icon = "-",
         },
       },
     },
   },
 
-  version = '^1.0.0',
+  keys = {
+    {
+      "<S-l>",
+      "<CMD>bnext<CR>",
+      desc = "Move to next buffer",
+    },
+    {
+      "<S-h>",
+      "<CMD>bprevious<CR>",
+      desc = "Move to previous buffer",
+    },
+    {
+      "<C-q>",
+      "<CMD>BufferClose<CR>",
+      desc = "Close current buffer",
+    },
+  },
 }
