@@ -16,6 +16,7 @@ return {
 
   opts = {
     insert_at_end = true,
+    tabpages = false,
     sidebar_filetypes = {
       NvimTree = true,
     },
