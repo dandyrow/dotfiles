@@ -90,50 +90,43 @@ return {
         desc = "Open diagnostic list",
       },
       {
-        "K",
+        "<leader>k",
         vim.lsp.buf.hover,
         desc = "Hover symbol documentation",
       },
       {
-        "S",
+        "<leader>ls",
         vim.lsp.buf.signature_help,
         desc = "Hover signature documentation",
       },
       {
-        "gd",
+        "<leader>ld",
         vim.lsp.buf.definition,
         desc = "Go to definition",
       },
       {
-        "gt",
+        "<leader>lt",
         vim.lsp.buf.type_definition,
         desc = "Go to type definition",
       },
       {
-        "gD",
+        "<leader>lD",
         vim.lsp.buf.declaration,
         desc = "Go to declaration",
       },
       {
-        "gi",
+        "<leader>li",
         vim.lsp.buf.implementation,
         desc = "Go to implementation",
       },
       {
-        "gr",
-        function()
-          require("telescope.builtin").lsp_references()
-        end,
-        desc = "Show references",
-      },
-      {
-        "<leader>ca",
+        "<leader>la",
         vim.lsp.buf.code_action,
         mode = { "n", "v" },
         desc = "Show code actions",
       },
       {
-        "<leader>rn",
+        "<leader>lr",
         vim.lsp.buf.rename,
         mode = { "n", "v" },
         desc = "Rename symbol",
