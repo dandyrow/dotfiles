@@ -70,16 +70,6 @@ return {
 
     keys = {
       {
-        "]d",
-        vim.diagnostic.goto_next,
-        desc = "Go to next diagnostic message",
-      },
-      {
-        "[d",
-        vim.diagnostic.goto_next,
-        desc = "Go to previous diagnostic message",
-      },
-      {
         "<leader>e",
         vim.diagnostic.open_float,
         desc = "Open floating diagnostic message",
@@ -88,11 +78,6 @@ return {
         "<leader>q",
         vim.diagnostic.setloclist,
         desc = "Open diagnostic list",
-      },
-      {
-        "<leader>k",
-        vim.lsp.buf.hover,
-        desc = "Hover symbol documentation",
       },
       {
         "<leader>ls",
