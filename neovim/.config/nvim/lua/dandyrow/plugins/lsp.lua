@@ -68,6 +68,10 @@ return {
       })
 
       lspconfig.marksman.setup{}
+
+      lspconfig.rnix.setup({
+        capabilities = capabilities,
+      })
     end,
 
     keys = {
