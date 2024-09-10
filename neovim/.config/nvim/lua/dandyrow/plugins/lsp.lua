@@ -26,8 +26,8 @@ return {
 
     opts = {
       library = {
-        { plugins = { "nvim-dap-ui" }, types = true }
-      }
+        { plugins = { "nvim-dap-ui" }, types = true },
+      },
     },
   },
   {
@@ -65,6 +65,10 @@ return {
             disableSuggestions = true,
           },
         },
+      })
+
+      lspconfig.rnix.setup({
+        capabilities = capabilities,
       })
     end,
 
