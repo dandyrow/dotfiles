@@ -5,19 +5,12 @@
 
   systemd-boot.enable = true;
 
-  networking = {
-    hostName = "LivsLaptop";
-    networkmanager.enable = true;
-  };
-
   gnome.enable = true;
   gnome.enable-gnome-software = true;
 
+  networking.hostName = "LivsLaptop";
+
   documentation.nixos.enable = false;
-
-  time.timeZone = "Europe/London";
-
-  console.keyMap = "uk";
 
   # Replace this in modules later
   environment.systemPackages = with pkgs; [
@@ -26,7 +19,12 @@
 
   users.users.dandyrow = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "networkmanager" ];
+  };
+
+  users.users.olivia = {
+    isNormalUser = true;
+    extraGroups = [ "networkmanager" ];
   };
 
   system.stateVersion = "24.05";
