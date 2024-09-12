@@ -9,6 +9,7 @@
   gnome.enable-gnome-software = true;
 
   printing.enable = true;
+  passwordless-printer-setup.enable = true;
 
   networking.hostName = "LivsLaptop";
 
@@ -21,12 +22,12 @@
 
   users.users.dandyrow = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "print" ];
   };
 
   users.users.olivia = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" ];
+    extraGroups = [ "networkmanager" "print" ];
   };
 
   system.stateVersion = "24.05";
