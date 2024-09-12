@@ -108,6 +108,7 @@ to all dotfiles within this repo.
 * icu _(libicu required by marksman)_
 * unzip
 * wl-clipboard _[wayland desktop] (copy & paste to & from system clipboard)_
+* xclip _[x11 desktop] (copy & paster to & from system clipbaord)_
 * ttf-dejavu-nerd _(nerdfont)_
 
 ### Steps to install

@@ -7,19 +7,6 @@ vim.opt.breakindentopt = "shift:2"
 
 -- yank to "+" register instead of "*"
 vim.opt.clipboard = "unnamedplus"
--- Yank to system clipboard in WSL
-vim.g.clipboard = {
-  name = "WslClipboard",
-  copy = {
-    ["+"] = "clip.exe",
-    ["*"] = "clip.exe",
-  },
-  paste = {
-    ["+"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    ["*"] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-  },
-  cache_enable = 0,
-}
 
 vim.opt.colorcolumn = "80"
 
