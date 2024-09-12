@@ -1,6 +1,8 @@
 return {
   "nvimtools/none-ls.nvim",
 
+  lazy = false,
+
   dependencies = {
     "nvimtools/none-ls-extras.nvim",
   },
@@ -43,11 +45,6 @@ return {
         null_ls.builtins.hover.dictionary,
         null_ls.builtins.hover.printenv,
       },
-    })
-
-    vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, {
-      desc = "Format Buffer",
-      silent = true,
     })
   end,
 }

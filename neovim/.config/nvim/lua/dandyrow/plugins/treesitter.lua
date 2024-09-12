@@ -5,7 +5,7 @@ return {
 
   dependencies = {
     "nvim-treesitter/nvim-treesitter-refactor",
-    "HiPhish/nvim-ts-rainbow2",
+    "HiPhish/rainbow-delimiters.nvim",
   },
 
   config = function()
@@ -14,35 +14,23 @@ return {
         "lua",
         "vim",
         "vimdoc",
-        "python",
-        "dockerfile",
-        "yaml",
-        "terraform",
-        "go",
-        "git_rebase",
-        "gitcommit",
-        "gitignore",
-        "properties",
         "markdown",
         "markdown_inline",
+        "nix",
+        "typescript",
+        "regex",
+        "gitignore",
+        "gitcommit",
+        "git_rebase",
+        "yaml",
+        "dockerfile",
       },
-
       sync_install = false,
-
       auto_install = true,
-
       ignore_install = {},
-
       highlight = {
         enable = true,
       },
-      -- Enable coloured bracket pairs
-      rainbow = {
-        enable = true,
-        query = "rainbow-parens",
-        strategy = require("ts-rainbow").strategy.global,
-      },
-      -- Use treesitter for indentation
       indent = {
         enable = true,
       },

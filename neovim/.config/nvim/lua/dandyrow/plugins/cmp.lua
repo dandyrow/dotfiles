@@ -2,20 +2,26 @@ return {
   "hrsh7th/nvim-cmp",
 
   dependencies = {
+    -- Snippets
+    {
+      "L3MON4D3/LuaSnip",
+      build = "make install_jsregexp",
+      version = "v2.*",
+      dependencies = {
+        "saadparwaiz1/cmp_luasnip",
+        "rafamadriz/friendly-snippets",
+      },
+    },
+
     -- Completion addons
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
     "hrsh7th/cmp-cmdline",
     "hrsh7th/cmp-nvim-lsp",
-
-    -- Snippets
-    {
-      "L3MON4D3/LuaSnip",
-      version = "v1.*",
-      config = true,
-    },
-    "saadparwaiz1/cmp_luasnip",
-    "rafamadriz/friendly-snippets",
+    "hrsh7th/cmp-nvim-lsp-signature-help",
+    "hrsh7th/cmp-nvim-lsp-document-symbol",
+    "hrsh7th/cmp-emoji",
+    "f3fora/cmp-spell",
   },
 
   config = function()
@@ -123,19 +129,25 @@ return {
         end,
       },
       sources = cmp.config.sources({
-        { name = "nvim_lsp" },
         { name = "luasnip" },
+        { name = "nvim_lsp" },
+        { name = "nvim_lsp_signature_help" },
         { name = "buffer" },
         { name = "path" },
+        { name = "spell" },
+        { name = "git" },
+        { name = "emoji" },
       }),
     })
 
     -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
     cmp.setup.cmdline({ "/", "?" }, {
       mapping = cmp.mapping.preset.cmdline(),
-      sources = {
+      sources = cmp.config.sources({
+        { name = "nvim_lsp_document_symbol" },
+      }, {
         { name = "buffer" },
-      },
+      }),
     })
 
     -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).

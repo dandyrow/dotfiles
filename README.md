@@ -1,6 +1,6 @@
 # dotfiles
 
-This repo contains my configuration dotfiles for my linux systems.
+This repo contains my configuration dotfiles for my Linux systems.
 It is structured in such a way that GNU stow can be used to install the dotfiles
 in their correct location within the target user's home directory.
 
@@ -44,11 +44,11 @@ to all dotfiles within this repo.
 1. Install requirements.
 2. Run `stow starship` from within repo root.
 
-## Neofetch
+## Fastfetch
 
 ### Requirements
 
-* neofetch
+* fastfetch
 
 ### Steps to install
 
@@ -104,8 +104,11 @@ to all dotfiles within this repo.
 * wget
 * tree-sitter
 * fd
+* marksman
+* icu _(libicu required by marksman)_
 * unzip
 * wl-clipboard _[wayland desktop] (copy & paste to & from system clipboard)_
+* xclip _[x11 desktop] (copy & paster to & from system clipbaord)_
 * ttf-dejavu-nerd _(nerdfont)_
 
 ### Steps to install

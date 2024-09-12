@@ -5,8 +5,21 @@ return {
     "kevinhwang91/promise-async",
   },
 
-  config = function()
-    local handler = function(virtText, lnum, endLnum, width, truncate)
+  lazy = false,
+
+  init = function()
+    vim.opt.foldcolumn = "0"
+    vim.opt.foldlevel = 99
+    vim.opt.foldlevelstart = 99
+    vim.opt.foldenable = true
+  end,
+
+  opts = {
+    provider_selector = function(bufnr, filetype, buftype)
+      return { "treesitter", "indent" }
+    end,
+
+    fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
       local newVirtText = {}
       local suffix = (" 󰁂 %d "):format(endLnum - lnum)
       local sufWidth = vim.fn.strdisplaywidth(suffix)
@@ -32,27 +45,33 @@ return {
       end
       table.insert(newVirtText, { suffix, "MoreMsg" })
       return newVirtText
-    end
+    end,
+  },
 
-    require("ufo").setup({
-      provider_selector = function(bufnr, filetype, buftype)
-        return { "lsp", "indent" }
+  keys = {
+    {
+      "zR",
+      function()
+        require("ufo").openAllFolds()
       end,
-      fold_virt_text_handler = handler,
-    })
-
-    vim.opt.foldcolumn = "1"
-    vim.opt.foldlevel = 99
-    vim.opt.foldlevelstart = 99
-    vim.opt.foldenable = true
-
-    vim.keymap.set("n", "zR", require("ufo").openAllFolds, { desc = "Open all folds" })
-    vim.keymap.set("n", "zM", require("ufo").closeAllFolds, { desc = "Close all folds" })
-    vim.keymap.set("n", "zK", function()
-      local winid = require("ufo").peekFoldedLinesUnderCursor()
-      if not winid then
-        vim.lsp.buf.hover()
-      end
-    end, { desc = "Peek Fold" })
-  end,
+      desc = "Open All Folds",
+    },
+    {
+      "zM",
+      function()
+        require("ufo").closeAllFolds()
+      end,
+      desc = "Close All Folds",
+    },
+    {
+      "zK",
+      function()
+        local winid = require("ufo").peekFoldedLinesUnderCursor()
+        if not winid then
+          vim.lsp.buf.hover()
+        end
+      end,
+      desc = "Peek Fold",
+    },
+  },
 }
