@@ -53,7 +53,7 @@ return {
       {
         "<leader>sd",
         "<CMD>Telescope diagnostics<CR>",
-        desc = "Searc Diagnostics",
+        desc = "Search Diagnostics",
       },
       {
         "<leader>sb",

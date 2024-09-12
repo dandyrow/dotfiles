@@ -26,8 +26,8 @@ return {
 
     opts = {
       library = {
-        { plugins = { "nvim-dap-ui" }, types = true }
-      }
+        { plugins = { "nvim-dap-ui" }, types = true },
+      },
     },
   },
   {
@@ -58,7 +58,7 @@ return {
         capabilities = capabilities,
       })
 
-      lspconfig.tsserver.setup({
+      lspconfig.ts_ls.setup({
         capabilities = capabilities,
         init_options = {
           preferences = {
@@ -66,6 +66,8 @@ return {
           },
         },
       })
+
+      lspconfig.marksman.setup{}
     end,
 
     keys = {

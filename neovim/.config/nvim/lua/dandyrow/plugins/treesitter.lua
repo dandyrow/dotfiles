@@ -10,6 +10,16 @@ return {
 
   config = function()
     require("nvim-treesitter.configs").setup({
+      ensure_installed = {
+        "lua",
+        "vim",
+        "vimdoc",
+        "markdown",
+        "markdown_inline",
+        "nix",
+        "typescript",
+        "regex",
+      },
       sync_install = false,
       auto_install = true,
       ignore_install = {},
