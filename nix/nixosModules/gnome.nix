@@ -16,7 +16,6 @@
     environment.gnome.excludePackages = (with pkgs; [
       gnome-tour
       xterm
-    ]) ++ (with pkgs.gnome; [
       epiphany
       gnome-music
       geary
@@ -31,9 +30,9 @@
       gnome-font-viewer
     ]);
 
-    environment.systemPackages = lib.mkIf config.gnome.enable-gnome-software [
-      pkgs.gnome.gnome-software
-    ];
+    environment.systemPackages = lib.mkIf config.gnome.enable-gnome-software (with pkgs; [
+      gnome-software
+    ]);
 
     services.flatpak.enable = config.gnome.enable-gnome-software;
   };
