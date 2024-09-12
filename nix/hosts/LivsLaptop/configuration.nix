@@ -3,15 +3,15 @@
     ./hardware-configuration.nix
   ];
 
-  boot.loader.timeout = 5;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.consoleMode = "max";
-  boot.loader.systemd-boot.configurationLimit = 14;
+  systemd-boot.enable = true;
+
+  networking = {
+    hostName = "LivsLaptop";
+    networkmanager.enable = true;
+  };
 
   gnome.enable = true;
   gnome.enable-gnome-software = true;
-
-  networking.networkmanager.enable = true;
 
   documentation.nixos.enable = false;
 
