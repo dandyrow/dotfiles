@@ -8,6 +8,8 @@
   gnome.enable = true;
   gnome.enable-gnome-software = true;
 
+  printing.enable = true;
+
   networking.hostName = "LivsLaptop";
 
   documentation.nixos.enable = false;
