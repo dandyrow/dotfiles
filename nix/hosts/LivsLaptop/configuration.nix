@@ -4,6 +4,8 @@
   ];
 
   systemd-boot.enable = true;
+  systemd-boot.logo = true;
+  systemd-boot.theme = "breeze";
 
   gnome.enable = true;
   gnome.enable-gnome-software = true;
