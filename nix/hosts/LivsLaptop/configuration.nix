@@ -7,6 +7,10 @@
 
   gnome.enable = true;
   gnome.enable-gnome-software = true;
+  services.flatpak.packages = [
+    "org.mozilla.firefox"
+    "org.libreoffice.LibreOffice"
+  ];
 
   printing.enable = true;
   passwordless-printer-setup.enable = true;
