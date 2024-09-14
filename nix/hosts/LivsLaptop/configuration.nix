@@ -26,14 +26,9 @@
     git
   ];
 
-  users.users.dandyrow = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "print" ];
-  };
-
   users.users.olivia = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "print" ];
+    extraGroups = [ "wheel" "networkmanager" "print" ];
   };
 
   system.stateVersion = "24.05";
