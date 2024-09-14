@@ -28,10 +28,12 @@
       totem
       gnome-weather
       gnome-font-viewer
+      gnome-text-editor
     ]);
 
     environment.systemPackages = lib.mkIf config.gnome.enable-gnome-software (with pkgs; [
       gnome-software
+      gnome-tweaks
     ]);
 
     services.flatpak.enable = config.gnome.enable-gnome-software;
