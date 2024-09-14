@@ -11,7 +11,7 @@
   gnome.enable-gnome-software = true;
   services.flatpak.packages = [
     "org.mozilla.firefox"
-    "org.libreoffice.LibreOffice"
+    "org.onlyoffice.desktopeditors"
   ];
 
   printing.enable = true;
