@@ -34,6 +34,9 @@
     environment.systemPackages = lib.mkIf config.gnome.enable-gnome-software (with pkgs; [
       gnome-software
       gnome-tweaks
+      gnomeExtensions.blur-my-shell
+      gnomeExtensions.dash-to-dock
+      gnomeExtensions.gnome-40-ui-improvements
     ]);
 
     services.flatpak.enable = config.gnome.enable-gnome-software;
