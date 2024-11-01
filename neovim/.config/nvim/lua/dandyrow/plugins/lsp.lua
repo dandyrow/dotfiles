@@ -69,8 +69,18 @@ return {
 
       lspconfig.marksman.setup{}
 
-      lspconfig.rnix.setup({
-        capabilities = capabilities,
+      lspconfig.nixd.setup({
+        cmd = { "nixd" },
+        settings = {
+          nixd = {
+            nixpkgs = {
+              expr = "import (builtins.getFlake \"/home/dandyrow/.dotfiles/nix/\").inputs.nixpkgs { }",
+            },
+            formatting = {
+              command = { "nixfmt" },
+            }
+          }
+        }
       })
     end,
 
