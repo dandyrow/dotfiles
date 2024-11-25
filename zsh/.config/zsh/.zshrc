@@ -36,6 +36,88 @@ alias exa="exa --icons --grid --long --git --all --group-directories-first"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 
+##########################
+# Git Worktree Functions #
+##########################
+
+# Used to clone a git repository such that it is setup to use git worktrees.
+# The resulting repository will be a bare clone with all git files placed in
+# the .git directory. Worktrees can then be added in the root of the repository.
+function git-worktree-clone() {
+  local repository_url=$1
+  local target_directory=$2
+
+  if [ -z $repository_url ]; then
+    echo "Usage: git-worktree-clone <repository_url> [<target_directory>]"
+    return 1
+  fi
+
+  if [ -z $target_directory ]; then
+    target_directory=$(basename $repository_url .git)
+  fi
+
+  mkdir $target_directory
+  git clone --bare --single-branch $repository_url $target_directory/.git
+
+  cd $target_directory || { echo "Failed to change directory to $target_directory. Please execute 'git checkout \$(git commit_-tree \$(git hash-object -t tree /dev/null) < /dev/null)' manually within cloned repository to prepare it for use with git worktrees."; return 2 }
+
+  git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+  git fetch --quiet
+  git for-each-ref --format='%(refname:short)' refs/heads | xargs -I{} git branch --set-upstream-to=origin/{} {}
+}
+
+# Used to add a worktree corresponding to an existing remote branch. The local
+# branch will have the remote checked out and be setup to track the remote.
+function git-worktree-add() {
+  local commit_ish=$1
+  local target_directory=$2
+
+  if [ -z $commit_ish ]; then
+    echo "Usage: $0 <commit_ish> [<target_directory>]"
+    return 1
+  fi
+
+  if [ -z $target_directory ]; then
+    target_directory=./$commit_ish
+  fi
+
+  git worktree add $target_directory $commit_ish
+  return 0
+}
+
+# Used to create a new branch based off of the current worktree's branch
+# (by default) in the parent directory.
+function git-worktree-branch() {
+  local new_branch=$1
+  local target_directory=$2
+
+  if [ -z $new_branch ]; then
+    echo "Usage: $0 <new_branch> [<target_directory]"
+    return 1
+  fi
+
+  if [ -z $target_directory ]; then
+    target_directory=../$new_branch
+  fi
+
+  git worktree add -b $new_branch $target_directory
+  return 0
+}
+
+# Used to remove a git worktree as well as the branch with the corresponding
+# name.
+function git-worktree-delete() {
+  local worktree_name=$1
+
+  if [ -z $worktree_name ]; then
+    echo "Usage: $0 <worktree_name>"
+    return 1
+  fi
+
+  git worktree remove $worktree_name
+  git branch -D $worktree_name
+}
+
 ###########
 # Options #
 ###########
