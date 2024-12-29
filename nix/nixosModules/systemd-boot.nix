@@ -1,16 +1,18 @@
-{ pkgs, lib, config, ... }: {
+{ lib, config, ... }: {
   options = {
-    systemd-boot.enable = lib.mkEnableOption "enable systemd-boot";
-    systemd-boot.timeout = lib.mkOption {
-      type = lib.types.int;
-      description = "Number of seconds to wait before booting to the first option in the bootloader";
-      default = 0;
-    };
-    systemd-boot.logo = lib.mkEnableOption "enable boot logo";
-    systemd-boot.theme = lib.mkOption {
-      type = lib.types.str;
-      description = "Boot logo (plymouth) theme";
-      default = "bgrt";
+    systemd-boot = {
+      enable = lib.mkEnableOption "enable systemd-boot";
+      timeout = lib.mkOption {
+        type = lib.types.int;
+        description = "Number of seconds to wait before booting to the first option in the bootloader";
+        default = 0;
+      };
+      logo = lib.mkEnableOption "enable boot logo";
+      theme = lib.mkOption {
+        type = lib.types.str;
+        description = "Boot logo (plymouth) theme";
+        default = "bgrt";
+      };
     };
   };
 
