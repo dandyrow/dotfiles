@@ -26,7 +26,11 @@
   passwordless-printer-setup.enable = true;
 
   networking.hostName = "New-H0Ryzen";
-  services.qemuGuest.enable = true;
+
+  services = {
+    qemuGuest.enable = true;
+    openssh.enable = true;
+  };
 
   documentation.nixos.enable = false;
 
