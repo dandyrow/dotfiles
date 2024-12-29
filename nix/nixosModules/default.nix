@@ -1,8 +1,7 @@
 {...}: {
   imports = [
-    ./gnome.nix
+    ./desktop/default.nix
     ./systemd-boot.nix
     ./locale.nix
-    ./printing.nix
   ];
 }
