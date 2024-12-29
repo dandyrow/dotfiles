@@ -11,10 +11,18 @@
     "virtio_blk"
   ];
 
-  gnome.enable = true;
-  gnome.enable-gnome-software = true;
+  gnome = {
+    enable = true;
+    enable-gnome-software = true;
+  };
 
   printing.enable = true;
+
+  zsh = {
+    enable = true;
+    defaultShell = true;
+  };
+
   passwordless-printer-setup.enable = true;
 
   networking.hostName = "New-H0Ryzen";
@@ -22,9 +30,13 @@
 
   documentation.nixos.enable = false;
 
-  programs.command-not-found.enable = true;
-  programs.firefox.enable = true;
-  programs.git.enable = true;
+  programs = {
+    command-not-found.enable = true;
+    firefox.enable = true;
+    git.enable = true;
+    starship.enable = true;
+    neovim.enable = true;
+  };
 
   users.users = {
     root = {
