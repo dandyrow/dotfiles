@@ -16,14 +16,10 @@
     enable-gnome-software = true;
   };
 
-  printing.enable = true;
-
   zsh = {
     enable = true;
     defaultShell = true;
   };
-
-  passwordless-printer-setup.enable = true;
 
   networking.hostName = "New-H0Ryzen";
 
