@@ -1,7 +1,9 @@
 { lib, config, ... }: {
   options = {
-    printing.enable = lib.mkEnableOption "enables printing";
-    passwordless-printer-setup.enable = lib.mkEnableOption "enables polkit for passwordless printer setup for users in the print group";
+    printing = {
+      enable = lib.mkEnableOption "printing";
+      passwordlessPrinterSetup = lib.mkEnableOption "polkit for passwordless printer setup for users in the print group";
+    };
   };
 
   config = lib.mkIf config.printing.enable {
@@ -18,7 +20,7 @@
       };
     };
 
-    security.polkit = lib.mkIf config.passwordless-printer-setup.enable {
+    security.polkit = lib.mkIf config.printing.passwordlessPrinterSetup {
       enable = true;
       extraConfig = ''
         polkit.addRule(function(action, subject) {

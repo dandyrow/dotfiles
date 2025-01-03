@@ -3,19 +3,21 @@
     ./hardware-configuration.nix
   ];
 
-  systemd-boot.enable = true;
-  systemd-boot.logo = true;
-  systemd-boot.theme = "breeze";
+  systemd-boot = {
+    enable = true;
+    logo = true;
+    theme = "breeze";
+  };
 
-  gnome.enable = true;
-  gnome.enable-gnome-software = true;
+  gnome = {
+    enable = true;
+    enable-gnome-software = true;
+  };
+
   services.flatpak.packages = [
     "org.mozilla.firefox"
     "org.onlyoffice.desktopeditors"
   ];
-
-  printing.enable = true;
-  passwordless-printer-setup.enable = true;
 
   networking.hostName = "LivsLaptop";
 
