@@ -5,8 +5,15 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-flatpak.url = "github:gmodena/nix-flatpak/v0.4.1";
 
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -14,6 +21,7 @@
       nixpkgs,
       nix-flatpak,
       disko,
+      home-manager,
       ...
     }@inputs:
     {
@@ -47,6 +55,12 @@
             ./nixosModules
           ];
         };
+      };
+
+      homeConfigurations.dandyrow = home-manager.lib.homeManagerConfiguration {
+        modules = [
+          ./home
+        ];
       };
     };
 }
