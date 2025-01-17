@@ -230,6 +230,9 @@ source "$ZDOTDIR/catppuccin_mocha-zsh-syntax-highlighting.zsh"
 # Enable completions
 autoload -U compinit && compinit
 
+# Enable GitHub CLI completions
+source "$ZDOTDIR/gh-completions.zsh"
+
 # Enable prompt
 eval "$(starship init zsh)"
 
