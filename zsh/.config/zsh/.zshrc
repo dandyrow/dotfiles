@@ -9,6 +9,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
 export EDITOR=nvim
+export VISUAL=nvim
 export GPG_TTY=$(tty)  # Allow GPG signing
 
 # Force packages to use XDG base directories
@@ -88,19 +89,42 @@ function git-worktree-add() {
 # Used to create a new branch based off of the current worktree's branch
 # (by default) in the parent directory.
 function git-worktree-branch() {
-  local new_branch=$1
-  local target_directory=$2
+  local new_branch=""
+  local base_branch=""
+  local target_directory=""
+
+  print_usage() {
+    echo "Usage: $0 <new_branch> [<base_branch>] [ -d <target_directory> ]"
+  }
+
+  while [[ "$1" != "" ]]; do
+    case $1 in
+      -d | --directory) shift
+                        target_directory=$1 ;;
+      *) if [ -z "$new_branch" ]; then
+          new_branch=$1
+        elif [ -z "$base_branch" ]; then
+          base_branch=$1
+        else
+          print_usage
+          return 1
+        fi
+        ;;
+    esac
+    shift
+  done
 
   if [ -z $new_branch ]; then
-    echo "Usage: $0 <new_branch> [<target_directory]"
+    print_usage
     return 1
   fi
 
-  if [ -z $target_directory ]; then
-    target_directory=../$new_branch
+  if [ -z "$target_directory" ]; then
+    target_directory="./$new_branch"
   fi
 
-  git worktree add -b $new_branch $target_directory
+  git worktree add --no-track -b $new_branch $target_directory $base_branch
+
   return 0
 }
 
