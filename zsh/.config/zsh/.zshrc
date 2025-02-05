@@ -74,7 +74,7 @@ function git-worktree-add() {
   local target_directory=$2
 
   if [ -z $commit_ish ]; then
-    echo "Usage: $0 <commit_ish> [<target_directory>]"
+    echo "Usage: git-worktree-add <commit_ish> [<target_directory>]"
     return 1
   fi
 
@@ -94,7 +94,7 @@ function git-worktree-branch() {
   local target_directory=""
 
   print_usage() {
-    echo "Usage: $0 <new_branch> [<base_branch>] [ -d <target_directory> ]"
+    echo "Usage: git-worktree-branch <new_branch> [<base_branch>] [ -d <target_directory> ]"
   }
 
   while [[ "$1" != "" ]]; do
