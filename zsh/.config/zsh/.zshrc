@@ -142,6 +142,10 @@ function git-worktree-delete() {
   git branch -D $worktree_name
 }
 
+function git-checkout-pr() {
+  GH_FORCE_TTY=100% gh pr list | fzf --ansi --preview 'GH_FORCE_TTY=100% gh pr view {1}' --header-lines 4 | awk '{print $1}' | xargs gh pr checkout
+}
+
 ###########
 # Options #
 ###########
