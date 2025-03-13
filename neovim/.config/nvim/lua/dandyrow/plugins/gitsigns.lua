@@ -3,7 +3,6 @@ return {
 
   opts = {
     current_line_blame = true,
-    numhl = true,
     attach_to_untracked = true,
   },
 

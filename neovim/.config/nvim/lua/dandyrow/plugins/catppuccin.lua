@@ -52,8 +52,9 @@ return {
         },
       },
       nvimtree = true,
-      telescope = {
+      snacks = {
         enabled = true,
+        indent_scope_color = "lavender",
       },
       treesitter = true,
       ts_rainbow2 = true,

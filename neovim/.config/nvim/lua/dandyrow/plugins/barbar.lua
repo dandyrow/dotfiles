@@ -55,10 +55,5 @@ return {
       "<CMD>bprevious<CR>",
       desc = "Move to previous buffer",
     },
-    {
-      "<C-q>",
-      "<CMD>BufferClose<CR>",
-      desc = "Close current buffer",
-    },
   },
 }

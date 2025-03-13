@@ -5,7 +5,6 @@ return {
 
   opts = {
     disable_filetype = {
-      "TelescopePrompt",
       "markdown",
     },
     enable_check_bracket_line = true, -- Prevents pair when there's already a closing symbol nearby
