@@ -12,10 +12,6 @@ return {
 
     null_ls.setup({
       sources = {
-        -- Completion
-        null_ls.builtins.completion.luasnip,
-        null_ls.builtins.completion.spell,
-
         -- Diagnostics
         null_ls.builtins.diagnostics.actionlint,
         null_ls.builtins.diagnostics.ansiblelint,

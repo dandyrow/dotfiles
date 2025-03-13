@@ -29,7 +29,7 @@ return {
         dim_context = false,
         alt_background = false,
       },
-      cmp = true,
+      blink_cmp = true,
       gitsigns = true,
       lsp_trouble = true,
       markdown = true,
@@ -60,4 +60,14 @@ return {
       which_key = true,
     },
   },
+
+  config = function ()
+    require("catppuccin").setup {
+      custom_highlights = function (colors)
+        return {
+          BlinkCmpGhostText = { fg = colors.overlay0, style = { "italic" } },
+        }
+      end,
+    }
+  end,
 }
