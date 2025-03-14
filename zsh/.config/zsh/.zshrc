@@ -33,7 +33,7 @@ export KEYTIMEOUT=1
 ###########
 
 alias ls='ls -al --color'
-alias exa="exa --icons --grid --long --git --all --group-directories-first"
+alias exa="exa --icons --long --git --all --group-directories-first"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 
