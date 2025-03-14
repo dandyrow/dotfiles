@@ -199,8 +199,8 @@ done
 bindkey -v
 
 # Insert mode keybinds
-bindkey '^[k' history-search-backward
-bindkey '^[j' history-search-forward
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
 bindkey '^[l' vi-end-of-line
 bindkey '^[h' vi-beginning-of-line
 bindkey '^[[H' vi-beginning-of-line
