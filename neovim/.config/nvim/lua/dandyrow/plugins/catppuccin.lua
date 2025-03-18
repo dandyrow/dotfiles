@@ -23,12 +23,6 @@ return {
       percentage = 0.15,
     },
     integrations = {
-      barbecue = {
-        dim_dirname = true,
-        bold_basename = true,
-        dim_context = false,
-        alt_background = false,
-      },
       blink_cmp = true,
       gitsigns = true,
       lsp_trouble = true,
