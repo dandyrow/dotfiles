@@ -8,12 +8,14 @@
         update_cache: true
         upgrade: true
       when: ansible_distribution == "Archlinux"
+      become: true
 
     - name: Update packages
       ansible.builtin.apt:
         update_cache: true
         upgrade: true
       when: ansible_os_family == "Debian"
+      become: true
 
   roles:
     - role: dandyrow.linux.timezone
@@ -44,12 +46,12 @@
           - permit persist :wheel
         remove_sudo: true
         remove_sudo_config: true
-        install_doas_sudo_shim: true
+        install_doas_sudo_shim: false
         non_root_user: "dandyrow"
 
   tasks:
     - name: Install desired packages
-      ansible.builtin.packages:
+      ansible.builtin.package:
         name:
           - github-cli
           - sl

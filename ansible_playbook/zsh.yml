@@ -9,13 +9,15 @@
       - starship
       - zoxide
       - ttf-dejavu-nerd
-  state: present
+    state: present
+  become: true
 
 - name: Install pkgfile for Arch command not found support
   ansible.builtin.package:
     name: pkgfile
     state: present
   when: ansible_distribution == "Archlinux"
+  become: true
 
 - name: Set ZSH as default shell
   ansible.builtin.include_role:
@@ -25,7 +27,7 @@
     xdg_directory: true
 
 - name: Stow ZSH dotfiles
-  ansible.builtin.include_roles:
+  ansible.builtin.include_role:
     name: dandyrow.linux.stow_dotfiles
   vars:
     dotfiles_remote_repo: https://github.com/dandyrow/dotfiles

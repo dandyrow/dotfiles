@@ -1,10 +1,12 @@
 ---
 - name: Install Zellij dependencies
-  ansible.builtin.package: zellij
-  state: present
+  ansible.builtin.package:
+    name: zellij
+    state: present
+  become: true
 
 - name: Stow Zellij dotfiles
-  ansible.builtin.include_roles:
+  ansible.builtin.include_role:
     name: dandyrow.linux.stow_dotfiles
   vars:
     dotfiles_remote_repo: https://github.com/dandyrow/dotfiles
