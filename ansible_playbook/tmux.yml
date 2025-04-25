@@ -1,0 +1,13 @@
+---
+- name: Install Tmux dependencies
+  ansible.builtin.package:
+    name: tmux
+    state: present
+  become: true
+
+- name: Stow Tmux dotfiles
+  ansible.builtin.include_role:
+    name: dandyrow.linux.stow_dotfiles
+  vars:
+    dotfiles_remote_repo: https://github.com/dandyrow/dotfiles
+    dotfiles_to_install: tmux

@@ -1,0 +1,85 @@
+---
+- name: Install dotfiles and dependencies
+  hosts: all
+
+  pre_tasks:
+    - name: Update packages
+      community.general.pacman:
+        update_cache: true
+        upgrade: true
+      when: ansible_distribution == "Archlinux"
+      become: true
+
+    - name: Update packages
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
+      when: ansible_os_family == "Debian"
+      become: true
+
+  roles:
+    - role: dandyrow.linux.timezone
+      vars:
+        city: Dublin
+        region: Europe
+
+    - role: dandyrow.linux.locale
+      vars:
+        keymap: uk
+        lang: en_GB.UTF-8
+        locale: en_GB.UTF-8 UTF-8
+
+    - role: dandyrow.archlinux.pacman
+
+    - role: dandyrow.archlinux.reflector
+      vars:
+        countries: [United Kingdom]
+        latest: 5
+        protocols: [https]
+        save_path: /etc/pacman.d/mirrorlist
+        sort: age
+      when: ansible_distribution == "Archlinux"
+
+    - role: dandyrow.linux.doas
+      vars:
+        doas_conf_lines:
+          - permit persist :wheel
+        remove_sudo: true
+        remove_sudo_config: true
+        install_doas_sudo_shim: false
+        non_root_user: "dandyrow"
+
+  tasks:
+    - name: Install desired packages
+      ansible.builtin.package:
+        name:
+          - github-cli
+          - sl
+
+    - name: Stow git
+      ansible.builtin.include_role:
+        name: dandyrow.linux.stow_dotfiles
+      vars:
+        dotfiles_remote_repo: https://github.com/dandyrow/dotfiles
+        dotfiles_to_install:
+          - git
+
+    - name: Install ZSH
+      ansible.builtin.include_tasks:
+        file: ./zsh.yml
+      when: install_zsh | default(true)
+
+    - name: Install Tmux
+      ansible.builtin.include_tasks:
+        file: ./tmux.yml
+      when: install_tmux | default(false)
+
+    - name: Install zellij
+      ansible.builtin.include_tasks:
+        file: ./zellij.yml
+      when: install_zellij | default(false)
+
+    - name: Install Neovim
+      ansible.builtin.include_tasks:
+        file: ./neovim.yml
+      when: Install_nvim | default(true)
