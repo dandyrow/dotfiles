@@ -269,6 +269,13 @@ return {
 			end,
 			desc = "Notification History",
 		},
+    {
+      "<leader>w",
+      function ()
+        Snacks.picker.worktrees()
+      end,
+      desc = "Switch Git Worktree"
+    },
 
 		-- buffer
 		{
