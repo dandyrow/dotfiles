@@ -247,7 +247,7 @@ return {
 		{
 			"<leader>/",
 			function()
-				Snacks.picker.grep({ hidden = true })
+				Snacks.picker.grep({ hidden = true, layout = "ivy_split" })
 			end,
 			desc = "Grep",
 		},
