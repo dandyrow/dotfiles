@@ -93,23 +93,27 @@ to all dotfiles within this repo.
 ### Requirements
 
 * neovim
-* gcc _(required for treesitter)_
-* ripgrep _(required for telescope)_
-* yamllint
-* ansible-lint
-* codespell
-* proselint
-* gitlint
-* npm
+* curl
 * wget
-* tree-sitter
-* fd
-* marksman
-* icu _(libicu required by marksman)_
 * unzip
-* wl-clipboard _[wayland desktop] (copy & paste to & from system clipboard)_
-* xclip _[x11 desktop] (copy & paster to & from system clipbaord)_
-* ttf-dejavu-nerd _(nerdfont)_
+* tar
+* gzip
+* ripgrep
+* wl-clipboard
+* git
+* ttf-dejavu-nerd
+* python
+* python-pip
+* github-cli
+* npm
+* gcc
+* codespell
+* stylua
+* actionlint
+* ansible-lint
+* yamllint
+* yamlfmt
+* eslint
 
 ### Steps to install
 

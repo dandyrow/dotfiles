@@ -33,7 +33,7 @@ export KEYTIMEOUT=1
 ###########
 
 alias ls='ls -al --color'
-alias exa="exa --icons --grid --long --git --all --group-directories-first"
+alias exa="exa --icons --long --git --all --group-directories-first"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 
@@ -199,8 +199,8 @@ done
 bindkey -v
 
 # Insert mode keybinds
-bindkey '^[k' history-search-backward
-bindkey '^[j' history-search-forward
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
 bindkey '^[l' vi-end-of-line
 bindkey '^[h' vi-beginning-of-line
 bindkey '^[[H' vi-beginning-of-line

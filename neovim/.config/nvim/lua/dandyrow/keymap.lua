@@ -35,6 +35,10 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Page up", silent = true })
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result", silent = true })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result", silent = true })
 
+-- Create splits
+vim.keymap.set("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "Create vertical split", silent = true })
+vim.keymap.set("n", "<leader>-", "<cmd>split<cr>", { desc = "Create horizontal split", silent = true })
+
 -- Quick find and replace. Type word to find then \>/ and it's replacement
 vim.keymap.set(
   "n",

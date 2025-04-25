@@ -23,13 +23,7 @@ return {
       percentage = 0.15,
     },
     integrations = {
-      barbecue = {
-        dim_dirname = true,
-        bold_basename = true,
-        dim_context = false,
-        alt_background = false,
-      },
-      cmp = true,
+      blink_cmp = true,
       gitsigns = true,
       lsp_trouble = true,
       markdown = true,
@@ -52,12 +46,23 @@ return {
         },
       },
       nvimtree = true,
-      telescope = {
+      snacks = {
         enabled = true,
+        indent_scope_color = "lavender",
       },
       treesitter = true,
       ts_rainbow2 = true,
       which_key = true,
     },
   },
+
+  config = function ()
+    require("catppuccin").setup {
+      custom_highlights = function (colors)
+        return {
+          BlinkCmpGhostText = { fg = colors.overlay0, style = { "italic" } },
+        }
+      end,
+    }
+  end,
 }

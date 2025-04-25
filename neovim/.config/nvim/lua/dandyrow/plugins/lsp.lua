@@ -19,25 +19,17 @@ return {
     },
   },
   {
-    -- Configures lua_ls for editing Neovim config
-    "folke/lazydev.nvim",
-
-    ft = "lua",
-
-    opts = {
-      library = {
-        { plugins = { "nvim-dap-ui" }, types = true },
-      },
-    },
-  },
-  {
     "neovim/nvim-lspconfig",
+
+    dependencies = {
+      "saghen/blink.cmp",
+    },
 
     lazy = false,
 
     config = function()
       local lspconfig = require("lspconfig")
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
 
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
@@ -67,7 +59,12 @@ return {
         },
       })
 
-      lspconfig.marksman.setup{}
+      lspconfig.marksman.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+      })
     end,
 
     keys = {
