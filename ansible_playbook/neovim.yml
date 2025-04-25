@@ -1,0 +1,33 @@
+---
+- name: Install Neovim dependencies
+  ansible.builtin.package:
+    - neovim
+    - curl
+    - wget
+    - unzip
+    - tar
+    - gzip
+    - ripgrep
+    - wl-clipboard
+    - git
+    - ttf-dejavu-nerd
+    - python
+    - python-pip
+    - github-cli
+    - npm
+    - gcc
+    - codespell
+    - stylua
+    - actionlint
+    - ansible-lint
+    - yamllint
+    - yamlfmt
+    - eslint
+  state: present
+
+- name: Stow Neovim dotfiles
+  ansible.builtin.include_roles:
+    name: dandyrow.linux.stow_dotfiles
+  vars:
+    dotfiles_remote_repo: https://github.com/dandyrow/dotfiles
+    dotfiles_to_install: neovim
