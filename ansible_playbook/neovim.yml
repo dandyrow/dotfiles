@@ -38,8 +38,8 @@
 
 - name: Find gnupg directories
   find:
-    paths: ~/.gnupg
-    recurse: yes
+    paths: ~/.local/share/gnupg
+    recurse: true
     file_type: directory
   register: gnupg_dirs
 
@@ -52,7 +52,7 @@
 - name: Find gnupg files
   find:
     paths: ~/.local/share/gnupg
-    recurse: yes
+    recurse: true
     file_type: file
   register: gnupg_files
 
