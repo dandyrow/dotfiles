@@ -32,4 +32,32 @@
     name: dandyrow.linux.stow_dotfiles
   vars:
     dotfiles_remote_repo: https://github.com/dandyrow/dotfiles
-    dotfiles_to_install: neovim
+    dotfiles_to_install:
+      - neovim
+      - gnupg
+
+- name: Find gnupg directories
+  find:
+    paths: ~/.gnupg
+    recurse: yes
+    file_type: directory
+  register: gnupg_dirs
+
+- name: Change directory permissions to 700
+  file:
+    path: "{{ item.path }}"
+    mode: '0700'
+  loop: "{{ gnupg_dirs.files }}"
+
+- name: Find gnupg files
+  find:
+    paths: ~/.local/share/gnupg
+    recurse: yes
+    file_type: file
+  register: gnupg_files
+
+- name: Change file permissions to 600
+  file:
+    path: "{{ item.path }}"
+    mode: '0600'
+  loop: "{{ gnupg_files.files }}"
