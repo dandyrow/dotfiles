@@ -8,6 +8,15 @@ This README lists any requirements and / or instructions that are required for
 the dotfiles to be installed correctly. Below are the basic requirements common
 to all dotfiles within this repo.
 
+## Installing TLS Certs
+
+To install TLS certs for use when the Arch linux environment is behind a corporate
+proxy run the following command for each certificate that needs installed:
+`# trust anchor --store myCA.crt`
+
+On Debian systems copy the certificates to `/usr/local/share/ca-certificates`
+with the file ending in .crt. Then run `update-ca-certificates` as root.
+
 ### Requirements
 
 * git
