@@ -37,7 +37,7 @@
         latest: 5
         protocols: [https]
         save_path: /etc/pacman.d/mirrorlist
-        sort: age
+        sort: rate
       when: ansible_distribution == "Archlinux"
 
     - role: dandyrow.linux.doas
@@ -55,6 +55,7 @@
         name:
           - github-cli
           - sl
+          - bat
 
     - name: Stow git
       ansible.builtin.include_role:
