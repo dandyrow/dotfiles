@@ -1,2 +1,7 @@
 **/zsh/plugins
 .zcompdump
+
+# Ignore all gnupg files apart from the config files
+gnupg/.local/share/gnupg/
+!gnupg/.local/share/gnupg/gpg-agent.conf
+!gnupg/.local/share/gnupg/gpg.conf
