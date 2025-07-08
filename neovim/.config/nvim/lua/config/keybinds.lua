@@ -4,7 +4,11 @@ vim.g.maplocalleader = " "
 -- Better copy & paste
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 vim.keymap.set("n", "p", "p`[", { desc = "Keep cursor at start of pasted text" })
-vim.keymap.set("x", "p", [["_d"0P`["]], { desc = "Allow pasting over visual selection without yanking said selection while keeping cursor at start of pasted text" })
+vim.keymap.set("x", "p", [["_d"0P`["]], { desc = "Paste over selected text" })
+
+-- Prevent delete commands from yanking
+vim.keymap.set("n", "d", '"_d', { desc = "Prevent delete from yanking" })
+vim.keymap.set("n", "dd", '"_dd', { desc = "Prevent delete line from yanking" })
 
 -- Centre screen when jumping
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
@@ -50,8 +54,14 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-N>", { desc = "Enter normal mode whe
 -- Clear search highlight
 vim.keymap.set("n", "<leader>c", ":nohl<CR>", { desc = "Clear search highlight", silent = true })
 
+-- Print file path and copy it to clipboard
 vim.keymap.set("n", "<leader>pa", function()
 	local path = vim.fn.expand("%:p")
 	vim.fn.setreg("+", path)
 	print("file:", path)
 end)
+
+-- Hover LSP Documentation
+vim.keymap.set("n", "<leader>k", function()
+	vim.lsp.buf.hover()
+end, { desc = "Hover LSP documentation" })
