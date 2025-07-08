@@ -58,3 +58,9 @@ vim.opt.wildmenu = true
 vim.opt.wildmode = "longest:full,full"
 vim.opt.wildignore:append({ "*.o", "*.obj", "*.pyc", "*.class", "*.jar" })
 vim.opt.diffopt:append("linematch:60")
+
+-- Disable unused providers
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_ruby_provider = 0
