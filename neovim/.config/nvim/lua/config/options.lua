@@ -18,6 +18,7 @@ vim.opt.incsearch = true
 -- Visual
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.numberwidth = 1
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes"
