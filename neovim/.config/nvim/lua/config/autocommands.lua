@@ -32,10 +32,12 @@ vim.api.nvim_create_autocmd("VimResized", {
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = augroup,
 	callback = function()
-		local dir = vim.fn.expand("<afile>:p:h")
-		if vim.fn.isdirectory(dir) == 0 then
-			vim.fn.mkdir(dir, p)
-		end
+    if vim.bo.filetype ~= "oil" then
+      local dir = vim.fn.expand("<afile>:p:h")
+      if vim.fn.isdirectory(dir) == 0 then
+        vim.fn.mkdir(dir, p)
+      end
+    end
 	end,
 })
 

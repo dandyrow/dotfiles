@@ -65,3 +65,6 @@ end)
 vim.keymap.set("n", "<leader>k", function()
 	vim.lsp.buf.hover()
 end, { desc = "Hover LSP documentation" })
+
+-- Remove windows line endings
+vim.keymap.set("n", "<leader>cr", [[:%s/\r//g<CR>]], { desc = "Remove Windows line endings in current file" })
