@@ -59,7 +59,7 @@ vim.keymap.set("n", "<leader>pa", function()
 	local path = vim.fn.expand("%:p")
 	vim.fn.setreg("+", path)
 	print("file:", path)
-end)
+end, { desc = "Print file path & copy it to clipboard" })
 
 -- Hover LSP Documentation
 vim.keymap.set("n", "<leader>k", function()
