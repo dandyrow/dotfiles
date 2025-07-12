@@ -20,6 +20,7 @@ return {
 		},
 
 		integrations = {
+			blink_cmp = { style = "bordered" },
 			native_lsp = {
 				enabled = true,
 				virtual_text = {
@@ -36,10 +37,9 @@ return {
 					information = { "underline" },
 					ok = { "underline" },
 				},
-				inlay_hints = {
-					background = true,
-				},
+				inlay_hints = { background = true },
 			},
+			which_key = true,
 		},
 	},
 }
