@@ -10,22 +10,22 @@ return {
     {
       "]h",
       "<CMD>Gitsigns next_hunk<CR>",
-      desc = "Next Git Hunk",
+      desc = "Git hunk next",
     },
     {
       "[h",
       "<CMD>Gitsigns prev_hunk<CR>",
-      desc = "Previous Git Hunk",
+      desc = "Git hunk previous",
     },
     {
       "<leader>hs",
       "<CMD>Gitsigns stage_hunk<CR>",
-      desc = "Git Hunk Stage",
+      desc = "Git hunk stage",
     },
     {
       "<leader>hr",
       "<CMD>Gitsigns reset_hunk<CR>",
-      desc = "Git Hunk Reset",
+      desc = "Git hunk reset",
     },
     {
       "<leader>hs",
@@ -36,7 +36,7 @@ return {
         })
       end,
       mode = "v",
-      desc = "Git Hunk Stage",
+      desc = "Git hunk stage",
     },
     {
       "<leader>hr",
@@ -47,39 +47,49 @@ return {
         })
       end,
       mode = "v",
-      desc = "Git Hunk Reset",
+      desc = "Git hunk reset",
     },
     {
-      "<leader>hu",
-      "<CMD>Gitsigns undo_stage_hunk<CR>",
-      desc = "Git Hunk Unstage",
+      "<leader>hS",
+      "<CMD>Gitsigns stage_buffer<CR>",
+      desc = "Git buffer stage"
+    },
+    {
+      "<leader>hR",
+      "<CMD>Gitsigns reset_buffer<CR>",
+      desc = "Git buffer reset",
     },
     {
       "<leader>hp",
       "<CMD>Gitsigns preview_hunk<CR>",
-      desc = "Git Preview Hunk",
+      desc = "Git hunk preview",
+    },
+    {
+      "<leader>hi",
+      "<CMD>Gitsigns preview_hunk_inline<CR>",
+      desc = "Git hunk preview (inline)"
     },
     {
       "<leader>hb",
       function()
         require("gitsigns").blame_line({ full = true })
       end,
-      desc = "Git Hunk Blame Line",
+      desc = "Git hunk blame line",
     },
     {
-      "<leader>hi",
+      "<leader>hu",
+      "<CMD>Gitsigns undo_stage_hunk<CR>",
+      desc = "Git hunk unstage",
+    },
+    {
+      "<leader>hv",
       "<CMD>Gitsigns select_hunk<CR>",
-      desc = "Git Hunk Select",
+      desc = "Git hunk select",
     },
     {
       "<leader>hd",
       "<CMD>Gitsigns toggle_deleted<CR>",
-      desc = "Git Hunk Toggle Deleted",
-    },
-    {
-      "<leader>hR",
-      "<CMD>Gitsigns reset_buffer<CR>",
-      desc = "Git Buffer Reset",
+      desc = "Git hunk toggle deleted",
     },
   },
 }

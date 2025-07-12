@@ -21,6 +21,7 @@ return {
 
 		integrations = {
 			blink_cmp = { style = "bordered" },
+      gitsigns = true,
 			native_lsp = {
 				enabled = true,
 				virtual_text = {
