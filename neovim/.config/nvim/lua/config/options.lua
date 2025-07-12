@@ -16,6 +16,7 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 -- Visual
+vim.o.winborder = "rounded"
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.numberwidth = 1
@@ -26,7 +27,6 @@ vim.opt.colorcolumn = "100"
 vim.opt.showmatch = true
 vim.opt.matchtime = 2
 vim.opt.cmdheight = 1
-vim.opt.completeopt = "menuone,noselect,popup"
 vim.opt.showmode = false
 vim.opt.pumheight = 20
 vim.opt.lazyredraw = true

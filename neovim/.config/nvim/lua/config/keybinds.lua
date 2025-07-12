@@ -52,7 +52,7 @@ vim.keymap.set("t", "<C-l>", "<C-\\><C-N><C-w>l", { desc = "Move to window to th
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-N>", { desc = "Enter normal mode when in terminal mode" })
 
 -- Clear search highlight
-vim.keymap.set("n", "<leader>c", ":nohl<CR>", { desc = "Clear search highlight", silent = true })
+vim.keymap.set("n", "<leader>cs", ":nohl<CR>", { desc = "Clear search highlight", silent = true })
 
 -- Print file path and copy it to clipboard
 vim.keymap.set("n", "<leader>pa", function()
