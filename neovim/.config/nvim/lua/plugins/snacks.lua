@@ -1,10 +1,6 @@
 return {
 	"folke/snacks.nvim",
-
-  dependencies = {
-    "nvim-tree/nvim-web-devicons",
-  },
-
+	dependencies = { "echasnovski/mini.icons" },
 	lazy = false,
 	priority = 1000,
 
@@ -13,16 +9,17 @@ return {
 			preset = {
 				keys = {
 					{
-            icon = " ",
-            key = "f",
-            desc = "Find File",
-            action = ":lua Snacks.dashboard.pick('smart')"
-          },
-					{ icon = " ",
-            key = "n",
-            desc = "New File",
-            action = ":ene | startinsert"
-          },
+						icon = " ",
+						key = "f",
+						desc = "Find File",
+						action = ":lua Snacks.dashboard.pick('smart')",
+					},
+					{
+						icon = " ",
+						key = "n",
+						desc = "New File",
+						action = ":ene | startinsert",
+					},
 					{
 						icon = " ",
 						key = "g",
@@ -41,11 +38,12 @@ return {
 						desc = "Config",
 						action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
 					},
-					{ icon = " ",
-            key = "s",
-            desc = "Restore Session",
-            section = "session"
-          },
+					{
+						icon = " ",
+						key = "s",
+						desc = "Restore Session",
+						section = "session",
+					},
 					{
 						icon = "󰒲 ",
 						key = "L",
@@ -54,11 +52,11 @@ return {
 						enabled = package.loaded.lazy ~= nil,
 					},
 					{
-            icon = " ",
-            key = "q",
-            desc = "Quit",
-            action = ":qa"
-          },
+						icon = " ",
+						key = "q",
+						desc = "Quit",
+						action = ":qa",
+					},
 				},
 			},
 			sections = {
@@ -134,16 +132,16 @@ return {
 			style = "fancy",
 		},
 
-    picker = {
-      win = {
-        input = {
-          keys = {
-            ["<c-u>"] = { "preview_scroll_up", mode = { "i", "n" }},
-            ["<c-d>"] = { "preview_scroll_down", mode = {"i", "n" }},
-          },
-        },
-      },
-    },
+		picker = {
+			win = {
+				input = {
+					keys = {
+						["<c-u>"] = { "preview_scroll_up", mode = { "i", "n" } },
+						["<c-d>"] = { "preview_scroll_down", mode = { "i", "n" } },
+					},
+				},
+			},
+		},
 
 		statuscolumn = {
 			enabled = true,
@@ -198,33 +196,12 @@ return {
 			desc = "Toggle Terminal",
 		},
 		{
-			"<c-_>",
-			function()
-				Snacks.terminal()
-			end,
-			desc = "which_key_ignore",
-		},
-		{
-			"<leader>cR",
-			function()
-				Snacks.rename.rename_file()
-			end,
-			desc = "Rename File",
-		},
-		{
-			"<leader>gB",
+			"<leader>gb",
 			function()
 				Snacks.gitbrowse()
 			end,
 			desc = "Git Browse",
 			mode = { "n", "v" },
-		},
-		{
-			"<leader>gg",
-			function()
-				Snacks.lazygit()
-			end,
-			desc = "Lazygit",
 		},
 		{
 			"<leader>z",
@@ -242,7 +219,7 @@ return {
 			function()
 				Snacks.picker.smart()
 			end,
-			desc = "Smart Find Files",
+			desc = "Smart find files",
 		},
 		{
 			"<leader>/",
@@ -256,7 +233,7 @@ return {
 			function()
 				Snacks.picker.command_history()
 			end,
-			desc = "Command History",
+			desc = "Command history",
 		},
 		{
 			"<leader>n",
@@ -267,23 +244,30 @@ return {
 					end,
 				})
 			end,
-			desc = "Notification History",
+			desc = "Notification history",
+		},
+		{
+			"<leader>w",
+			function()
+				Snacks.picker.worktrees()
+			end,
+			desc = "Switch git worktree",
 		},
     {
-      "<leader>w",
-      function ()
-        Snacks.picker.worktrees()
+      '"',
+      function()
+        Snacks.picker.registers()
       end,
-      desc = "Switch Git Worktree"
+      desc = "Registers",
     },
 
 		-- buffer
 		{
-			"<leader>bl",
+			"<leader>b",
 			function()
 				Snacks.picker.buffers()
 			end,
-			desc = "Buffers",
+			desc = "Buffer list",
 		},
 
 		-- search
@@ -292,14 +276,14 @@ return {
 			function()
 				Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
 			end,
-			desc = "Find Config File",
+			desc = "Config files",
 		},
 		{
 			"<leader>sf",
 			function()
 				Snacks.picker.smart()
 			end,
-			desc = "Smart Find Files",
+			desc = "Smart find files",
 		},
 		{
 			"<leader>sp",
@@ -313,43 +297,36 @@ return {
 			function()
 				Snacks.picker.recent()
 			end,
-			desc = "Recent",
+			desc = "Recent files",
 		},
 		{
 			"<leader>sw",
 			function()
 				Snacks.picker.grep_word()
 			end,
-			desc = "Visual selection or word",
+			desc = "Grep visual selection or word under cursor",
 			mode = { "n", "x" },
-		},
-		{
-			'<leader>s"',
-			function()
-				Snacks.picker.registers()
-			end,
-			desc = "Registers",
 		},
 		{
 			"<leader>s/",
 			function()
 				Snacks.picker.search_history()
 			end,
-			desc = "Search History",
+			desc = "Search history",
 		},
 		{
 			"<leader>sb",
 			function()
 				Snacks.picker.lines()
 			end,
-			desc = "Buffer Lines",
+			desc = "Buffer lines",
 		},
 		{
 			"<leader>sB",
 			function()
 				Snacks.picker.grep_buffers()
 			end,
-			desc = "Grep Open Buffers",
+			desc = "Grep open buffers",
 		},
 		{
 			"<leader>sC",
@@ -358,8 +335,23 @@ return {
 			end,
 			desc = "Commands",
 		},
+    {
+      "<leader>sd",
+      function()
+        Snacks.picker.diagnostics_buffer({
+          layout = {
+            preview = "main",
+            preset = "ivy",
+          },
+          on_show = function()
+            vim.cmd.stopinsert()
+          end,
+        })
+      end,
+      desc = "Current buffer diagnostics",
+    },
 		{
-			"<leader>sd",
+			"<leader>sD",
 			function()
 				Snacks.picker.diagnostics({
 					layout = {
@@ -371,57 +363,35 @@ return {
 					end,
 				})
 			end,
-			desc = "Diagnostics",
-		},
-		{
-			"<leader>sD",
-			function()
-				Snacks.picker.diagnostics_buffer({
-					layout = {
-						preview = "main",
-						preset = "ivy",
-					},
-					on_show = function()
-						vim.cmd.stopinsert()
-					end,
-				})
-			end,
-			desc = "Buffer Diagnostics",
+			desc = "All diagnostics",
 		},
 		{
 			"<leader>sh",
 			function()
 				Snacks.picker.help()
 			end,
-			desc = "Help Pages",
-		},
-		{
-			"<leader>sH",
-			function()
-				Snacks.picker.highlights()
-			end,
-			desc = "Highlights",
+			desc = "Search help",
 		},
 		{
 			"<leader>si",
 			function()
 				Snacks.picker.icons()
 			end,
-			desc = "Icons",
+			desc = "Search icons",
 		},
 		{
 			"<leader>sm",
 			function()
 				Snacks.picker.man()
 			end,
-			desc = "Man Pages",
+			desc = "Search man pages",
 		},
 		{
 			"<leader>su",
 			function()
 				Snacks.picker.undo()
 			end,
-			desc = "Undo History",
+			desc = "Undo history",
 		},
 		{
 			"<leader>uC",
@@ -464,7 +434,7 @@ return {
 					end,
 				})
 			end,
-			desc = "Git Log",
+			desc = "Git log",
 		},
 		{
 			"<leader>gL",
@@ -475,7 +445,7 @@ return {
 					end,
 				})
 			end,
-			desc = "Git Log Line",
+			desc = "Git log line",
 		},
 		{
 			"<leader>gS",
@@ -486,7 +456,7 @@ return {
 					end,
 				})
 			end,
-			desc = "Git Stash",
+			desc = "Git stash",
 		},
 		{
 			"<leader>gf",
@@ -497,65 +467,7 @@ return {
 					end,
 				})
 			end,
-			desc = "Git Log File",
-		},
-
-		-- LSP
-		{
-			"gd",
-			function()
-				Snacks.picker.lsp_definitions({
-					on_show = function()
-						vim.cmd.stopinsert()
-					end,
-				})
-			end,
-			desc = "Goto Definition",
-		},
-		{
-			"gD",
-			function()
-				Snacks.picker.lsp_declarations({
-					on_show = function()
-						vim.cmd.stopinsert()
-					end,
-				})
-			end,
-			desc = "Goto Declaration",
-		},
-		{
-			"gr",
-			function()
-				Snacks.picker.lsp_references({
-					on_show = function()
-						vim.cmd.stopinsert()
-					end,
-				})
-			end,
-			nowait = true,
-			desc = "References",
-		},
-		{
-			"gI",
-			function()
-				Snacks.picker.lsp_implementations({
-					on_show = function()
-						vim.cmd.stopinsert()
-					end,
-				})
-			end,
-			desc = "Goto Implementation",
-		},
-		{
-			"gy",
-			function()
-				Snacks.picker.lsp_type_definitions({
-					on_show = function()
-						vim.cmd.stopinsert()
-					end,
-				})
-			end,
-			desc = "Goto Type Definition",
+			desc = "Git log file",
 		},
 	},
 }

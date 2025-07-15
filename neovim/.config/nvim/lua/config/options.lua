@@ -17,6 +17,7 @@ vim.opt.incsearch = true
 
 -- Visual
 vim.o.winborder = "rounded"
+vim.g.statuscolumn = ""
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.numberwidth = 1
