@@ -324,13 +324,6 @@ return {
 			end,
 			desc = "Undo history",
 		},
-		{
-			"<leader>uC",
-			function()
-				Snacks.picker.colorschemes()
-			end,
-			desc = "Colorschemes",
-		},
 
 		-- git
 		{

@@ -29,9 +29,6 @@ vim.opt.matchtime = 2
 vim.opt.cmdheight = 1
 vim.opt.showmode = false
 vim.opt.pumheight = 20
-vim.opt.lazyredraw = true
-vim.opt.redrawtime = 10000
-vim.opt.maxmempattern = 20000
 vim.opt.guicursor =
 	"n-v-c-sm:block-blinkon600-blinkoff400-blinkwait600,i-ci-ve:ver25-blinkon600-blinkoff400-blinkwait600,r-cr-o:hor20-blinkon600-blinkoff400-blinkwait600,t:block-blinkon600-blinkoff400-TermCursor"
 
