@@ -21,7 +21,7 @@ return {
 
 		integrations = {
 			blink_cmp = { style = "bordered" },
-      gitsigns = true,
+			gitsigns = true,
 			native_lsp = {
 				enabled = true,
 				virtual_text = {
@@ -40,6 +40,13 @@ return {
 				},
 				inlay_hints = { background = true },
 			},
+			noice = true,
+			render_markdown = true,
+			snacks = {
+				enabled = true,
+				indent_scope_color = "lavender",
+			},
+      treesitter = true,
 			which_key = true,
 		},
 	},
