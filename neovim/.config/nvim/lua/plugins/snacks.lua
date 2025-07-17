@@ -3,23 +3,16 @@ return {
 	dependencies = { "echasnovski/mini.icons" },
 	lazy = false,
 	priority = 1000,
+  init = function()
+    vim.o.statuscolumn = " "
+  end,
 
 	opts = {
 		dashboard = {
 			preset = {
 				keys = {
-					{
-						icon = " ",
-						key = "f",
-						desc = "Find File",
-						action = ":lua Snacks.dashboard.pick('smart')",
-					},
-					{
-						icon = " ",
-						key = "n",
-						desc = "New File",
-						action = ":ene | startinsert",
-					},
+					{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('smart')" },
+					{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
 					{
 						icon = " ",
 						key = "g",
@@ -33,17 +26,23 @@ return {
 						action = ":lua Snacks.dashboard.pick('oldfiles')",
 					},
 					{
+						icon = " ",
+						key = "b",
+						desc = "Browse Repo",
+						action = function()
+							Snacks.gitbrowse()
+						end,
+						enabled = function()
+							return Snacks.git.get_root() ~= nil
+						end,
+					},
+					{
 						icon = " ",
 						key = "c",
 						desc = "Config",
 						action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
 					},
-					{
-						icon = " ",
-						key = "s",
-						desc = "Restore Session",
-						section = "session",
-					},
+					{ icon = " ", key = "s", desc = "Restore Session", section = "session" },
 					{
 						icon = "󰒲 ",
 						key = "L",
@@ -51,86 +50,24 @@ return {
 						action = ":Lazy",
 						enabled = package.loaded.lazy ~= nil,
 					},
-					{
-						icon = " ",
-						key = "q",
-						desc = "Quit",
-						action = ":qa",
-					},
+					{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
 				},
 			},
 			sections = {
 				{ section = "header" },
 				{ section = "keys", gap = 1, padding = 1 },
-				{
-					-- pane = 2,
-					icon = " ",
-					desc = "Browse Repo",
-					padding = 1,
-					key = "b",
-					action = function()
-						Snacks.gitbrowse()
-					end,
-				},
-				function()
-					local in_git = Snacks.git.get_root() ~= nil
-					local cmds = {
-						{
-							title = "Open Issues",
-							cmd = "gh issue list -L 5",
-							key = "i",
-							action = function()
-								vim.fn.jobstart("gh issue list --web", { detach = true })
-							end,
-							icon = " ",
-							height = 7,
-						},
-						{
-							icon = " ",
-							title = "Open PRs",
-							cmd = "gh pr list -L 5",
-							key = "P",
-							action = function()
-								vim.fn.jobstart("gh pr list --web", { detach = true })
-							end,
-							height = 7,
-						},
-						{
-							icon = " ",
-							title = "Git Status",
-							cmd = "git --no-pager diff --stat -B -M -C",
-							height = 7,
-						},
-					}
-					return vim.tbl_map(function(cmd)
-						return vim.tbl_extend("force", {
-							pane = 2,
-							section = "terminal",
-							enabled = in_git,
-							padding = 1,
-							ttl = 5 * 60,
-							indent = 3,
-						}, cmd)
-					end, cmds)
-				end,
+				{ section = "recent_files", pane = 2, icon = " ", title = "Recent Files", indent = 2, padding = 1 },
+				{ section = "projects", pane = 2, icon = " ", title = "Projects", indent = 2, padding = 1 },
 				{ section = "startup" },
 			},
 		},
 
 		indent = {
-			indent = {
-				char = "▏",
-			},
-
-			scope = {
-				underline = true,
-				char = "▏",
-			},
+			indent = { char = "▏" },
+			scope = { underline = true, char = "▏" },
 		},
 
-		notifier = {
-			style = "fancy",
-		},
+		notifier = { style = "fancy" },
 
 		picker = {
 			win = {
@@ -145,17 +82,11 @@ return {
 
 		statuscolumn = {
 			enabled = true,
-			folds = {
-				open = true,
-				git_hl = true,
-			},
+			folds = { open = true, git_hl = true },
 		},
 
 		zen = {
-			toggles = {
-				git_signs = false,
-				indent = false,
-			},
+			toggles = { git_signs = false, indent = false },
 		},
 	},
 
@@ -253,13 +184,13 @@ return {
 			end,
 			desc = "Switch git worktree",
 		},
-    {
-      '"',
-      function()
-        Snacks.picker.registers()
-      end,
-      desc = "Registers",
-    },
+		{
+			'"',
+			function()
+				Snacks.picker.registers()
+			end,
+			desc = "Registers",
+		},
 
 		-- buffer
 		{
@@ -335,21 +266,21 @@ return {
 			end,
 			desc = "Commands",
 		},
-    {
-      "<leader>sd",
-      function()
-        Snacks.picker.diagnostics_buffer({
-          layout = {
-            preview = "main",
-            preset = "ivy",
-          },
-          on_show = function()
-            vim.cmd.stopinsert()
-          end,
-        })
-      end,
-      desc = "Current buffer diagnostics",
-    },
+		{
+			"<leader>sd",
+			function()
+				Snacks.picker.diagnostics_buffer({
+					layout = {
+						preview = "main",
+						preset = "ivy",
+					},
+					on_show = function()
+						vim.cmd.stopinsert()
+					end,
+				})
+			end,
+			desc = "Current buffer diagnostics",
+		},
 		{
 			"<leader>sD",
 			function()
@@ -399,29 +330,6 @@ return {
 				Snacks.picker.colorschemes()
 			end,
 			desc = "Colorschemes",
-		},
-		{
-			"<leader>st",
-			function()
-				Snacks.picker.todo_comments({
-					on_show = function()
-						vim.cmd.stopinsert()
-					end,
-				})
-			end,
-			desc = "Todo",
-		},
-		{
-			"<leader>sT",
-			function()
-				Snacks.picker.todo_comments({
-					keywords = { "TODO", "FIX", "FIXME", "BUG" },
-					on_show = function()
-						vim.cmd.stopinsert()
-					end,
-				})
-			end,
-			desc = "Todo/Fix/Fixme/Bug",
 		},
 
 		-- git
