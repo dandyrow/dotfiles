@@ -1,7 +1,27 @@
 return {
   "saghen/blink.cmp",
   dependencies = {
-    "rafamadriz/friendly-snippets",
+    {
+      "L3MON4D3/LuaSnip",
+      version = "2.*",
+      build = "make install_jsregexp",
+      dependencies = {
+        "rafamadriz/friendly-snippets",
+        config = function()
+          require("luasnip.loaders.from_vscode").lazy_load()
+        end,
+      },
+      opts = {},
+    },
+    {
+      "folke/lazydev.nvim",
+      ft = "lua",
+      opts = {
+        library = {
+          { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        },
+      },
+    },
     "moyiz/blink-emoji.nvim",
   },
   version = "1.*",
@@ -53,8 +73,6 @@ return {
       },
     },
 
-    signature = { enabled = true },
-
     cmdline = {
       enabled = true,
       completion = { menu = { auto_show = true } },
@@ -79,7 +97,9 @@ return {
       },
     },
 
+    snippets = { preset = "luasnip" },
     fuzzy = { implementation = "lua" }, -- Rust binary won't download due to 403 error
+    signature = { enabled = true },
   },
 
   opts_extend = { "sources.default" },
