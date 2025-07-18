@@ -56,15 +56,18 @@ vim.keymap.set("n", "<leader>cs", ":nohl<CR>", { desc = "Clear search highlight"
 
 -- Print file path and copy it to clipboard
 vim.keymap.set("n", "<leader>pa", function()
-	local path = vim.fn.expand("%:p")
-	vim.fn.setreg("+", path)
-	print("file:", path)
+  local path = vim.fn.expand("%:p")
+  vim.fn.setreg("+", path)
+  print("file:", path)
 end, { desc = "Print file path & copy it to clipboard" })
 
 -- Hover LSP Documentation
 vim.keymap.set("n", "<leader>k", function()
-	vim.lsp.buf.hover()
+  vim.lsp.buf.hover()
 end, { desc = "Hover LSP documentation" })
+
+-- Open diagnostic list
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic quickfix list" })
 
 -- Remove windows line endings
 vim.keymap.set("n", "<leader>cr", [[:%s/\r//g<CR>]], { desc = "Remove Windows line endings in current file" })
