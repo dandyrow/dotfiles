@@ -4,7 +4,12 @@ return {
 	branch = "main",
 	build = ":TSUpdate",
 	config = function()
-		require("nvim-treesitter").install({ "markdown", "markdown-inline" })
+		require("nvim-treesitter").install({
+			"markdown",
+			"markdown-inline",
+			"regex",
+			"bash",
+		})
 
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = { "markdown" },

@@ -47,6 +47,7 @@ return {
 				indent_scope_color = "lavender",
 			},
       treesitter = true,
+      ufo = true,
 			which_key = true,
 		},
 	},

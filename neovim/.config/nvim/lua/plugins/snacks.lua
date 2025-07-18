@@ -4,7 +4,7 @@ return {
 	lazy = false,
 	priority = 1000,
   init = function()
-    vim.o.statuscolumn = " "
+    vim.o.statuscolumn = ""
   end,
 
 	opts = {

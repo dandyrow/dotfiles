@@ -73,6 +73,8 @@ return {
 				},
 			},
 		},
+
+    fuzzy = { implementation = "lua" },  -- Rust binary won't download due to 403 error
 	},
 
 	opts_extend = { "sources.default" },
