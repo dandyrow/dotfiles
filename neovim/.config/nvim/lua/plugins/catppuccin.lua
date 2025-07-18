@@ -1,54 +1,56 @@
 return {
-	"catppuccin/nvim",
-	name = "catppuccin",
-	priority = 1000,
+  "catppuccin/nvim",
+  name = "catppuccin",
+  priority = 1000,
 
-	init = function()
-		-- Safely activate colourscheme
-		local status_ok, _ = pcall(vim.cmd.colorscheme, "catppuccin")
-		if not status_ok then
-			vim.notify("colorscheme catppuccin not found!")
-			return
-		end
-	end,
+  init = function()
+    -- Safely activate colourscheme
+    local status_ok, _ = pcall(vim.cmd.colorscheme, "catppuccin")
+    if not status_ok then
+      vim.notify("colorscheme catppuccin not found!")
+      return
+    end
+  end,
 
-	opts = {
-		dim_inactive = {
-			enabled = true,
-			shade = "dark",
-			percentage = 0.15,
-		},
+  opts = {
+    dim_inactive = {
+      enabled = true,
+      shade = "dark",
+      percentage = 0.15,
+    },
 
-		integrations = {
-			blink_cmp = { style = "bordered" },
-			gitsigns = true,
-			native_lsp = {
-				enabled = true,
-				virtual_text = {
-					errors = { "italic" },
-					hints = { "italic" },
-					warnings = { "italic" },
-					information = { "italic" },
-					ok = { "italic" },
-				},
-				underlines = {
-					errors = { "underline" },
-					hints = { "underline" },
-					warnings = { "underline" },
-					information = { "underline" },
-					ok = { "underline" },
-				},
-				inlay_hints = { background = true },
-			},
-			noice = true,
-			render_markdown = true,
-			snacks = {
-				enabled = true,
-				indent_scope_color = "lavender",
-			},
+    integrations = {
+      blink_cmp = { style = "bordered" },
+      diffview = true,
+      gitsigns = true,
+      native_lsp = {
+        enabled = true,
+        virtual_text = {
+          errors = { "italic" },
+          hints = { "italic" },
+          warnings = { "italic" },
+          information = { "italic" },
+          ok = { "italic" },
+        },
+        underlines = {
+          errors = { "underline" },
+          hints = { "underline" },
+          warnings = { "underline" },
+          information = { "underline" },
+          ok = { "underline" },
+        },
+        inlay_hints = { background = true },
+      },
+      neogit = true,
+      noice = true,
+      render_markdown = true,
+      snacks = {
+        enabled = true,
+        indent_scope_color = "lavender",
+      },
       treesitter = true,
       ufo = true,
-			which_key = true,
-		},
-	},
+      which_key = true,
+    },
+  },
 }
