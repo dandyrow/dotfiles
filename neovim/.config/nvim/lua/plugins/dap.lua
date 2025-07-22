@@ -11,6 +11,7 @@ return {
     local dapui = require("dapui")
 
     require("mason-nvim-dap").setup({})
+    ---@diagnostic disable: missing-fields
     dapui.setup({
       icons = { expanded = "", collapsed = "", current_frame = "󰛄" },
       controls = {
@@ -27,6 +28,7 @@ return {
         },
       },
     })
+    ---@diagnostic enable: missing-fields
 
     local breakpoint_icons =
       { Breakpoint = "●", BreakpointCondition = "", BreakpointRejected = "⊘", LogPoint = "", Stopped = "" }
@@ -38,7 +40,48 @@ return {
     dap.listeners.after.event_initialized["dapui_config"] = dapui.open
     dap.listeners.before.event_terminated["dapui_config"] = dapui.close
     dap.listeners.before.event_exited["dapui_config"] = dapui.close
+
+    dap.adapters.codelldb = {
+      type = "executable",
+      command = "codelldb",
+    }
+
+    dap.configurations.rust = {
+      {
+        name = "Launch file",
+        type = "codelldb",
+        request = "launch",
+        program = function()
+          -- return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          -- Run cargo build before launching
+          local build = vim.fn.system("cargo build")
+          print(build)
+
+          -- Get binary path
+          local handle = io.popen("cargo metadata --format-version 1 --no-deps")
+          if not handle then
+            error("Failed to run 'cargo metadata'")
+          end
+          local result = handle:read("*a")
+          handle:close()
+
+          local ok, metadata = pcall(vim.fn.json_decode, result)
+          if not ok or not metadata then
+            error("Failed to parse cargo metadata")
+          end
+
+          local target_dir = metadata["target_directory"]
+          local package_name = metadata.packages[1].name
+          return target_dir .. "/debug/" .. package_name
+        end,
+        cwd = "${workspaceFolder}",
+        stopOnEntry = false,
+      },
+    }
   end,
+  ensure_installed = {
+    "codelldb",
+  },
   keys = {
     {
       "<leader>dc",

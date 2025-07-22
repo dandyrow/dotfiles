@@ -33,14 +33,25 @@ return {
     -- Enter names of LSP servers to install here
     local servers = {
       lua_ls = {},
+      rust_analyzer = {
+        settings = {
+          ["rust-analyzer"] = {
+            cargo = { allFeatures = true },
+          },
+        },
+      },
     }
 
-    -- Enter names of non-LSP tools to install here
     local ensure_installed = vim.tbl_keys(servers or {})
-    vim.list_extend(ensure_installed, {
-      "stylua",
+    -- Formatting tools
+    vim.list_extend(ensure_installed, require("plugins.conform").ensure_installed)
+    -- Debug tools
+    vim.list_extend(ensure_installed, require("plugins.dap").ensure_installed)
+
+    require("mason-tool-installer").setup({
+      ensure_installed = ensure_installed,
+      auto_update = true,
     })
-    require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
     local capabilities = require("blink.cmp").get_lsp_capabilities()
     require("mason-lspconfig").setup({
