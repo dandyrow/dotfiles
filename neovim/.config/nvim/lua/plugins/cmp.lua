@@ -80,11 +80,11 @@ return {
     },
 
     sources = {
-      default = { "lazydev", "lsp", "path", "snippets", "buffer", "emoji" },
+      default = { "lazydev", "lsp", "path", "buffer", "emoji", "snippets" },
 
       providers = {
         lazydev = {
-          name = "LzayDev",
+          name = "LazyDev",
           module = "lazydev.integrations.blink",
           score_offset = 100,
         },
