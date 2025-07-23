@@ -40,13 +40,31 @@ return {
           },
         },
       },
+      bashls = {},
     }
 
-    local ensure_installed = vim.tbl_keys(servers or {})
-    -- Formatting tools
-    vim.list_extend(ensure_installed, require("plugins.conform").ensure_installed)
-    -- Debug tools
-    vim.list_extend(ensure_installed, require("plugins.dap").ensure_installed)
+    local function merge_unique(...)
+      local seen = {}
+      local result = {}
+
+      for _, list in ipairs({ ... }) do
+        for _, item in ipairs(list) do
+          if not seen[item] then
+            seen[item] = true
+            table.insert(result, item)
+          end
+        end
+      end
+
+      return result
+    end
+
+    local ensure_installed = merge_unique(
+      vim.tbl_keys(servers or {}),
+      require("plugins.conform").ensure_installed or {},
+      require("plugins.lint").ensure_installed or {},
+      require("plugins.dap").ensure_installed or {}
+    )
 
     require("mason-tool-installer").setup({
       ensure_installed = ensure_installed,
