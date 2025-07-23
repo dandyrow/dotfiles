@@ -31,6 +31,7 @@ return {
     })
 
     -- Enter names of LSP servers to install here
+    -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
     local servers = {
       lua_ls = {},
       rust_analyzer = {
@@ -41,6 +42,11 @@ return {
         },
       },
       bashls = {},
+      basedpyright = {
+        settings = {
+          basedpyright = { disableOrganizeImports = true },
+        },
+      },
     }
 
     local function merge_unique(...)
@@ -73,6 +79,9 @@ return {
 
     local capabilities = require("blink.cmp").get_lsp_capabilities()
     require("mason-lspconfig").setup({
+      automatic_enable = {
+        exclude = { "ruff" },
+      },
       handlers = {
         function(server_name)
           local server = servers[server_name] or {}

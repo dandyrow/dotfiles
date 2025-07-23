@@ -2,10 +2,12 @@ return {
   "mfussenegger/nvim-lint",
   event = { "BufReadPre", "BufNewFile" },
   config = function()
+    -- Link to docs: https://github.com/mfussenegger/nvim-lint
     local lint = require("lint")
     lint.linters_by_ft = {
       -- lua = { "luacheck" }, requires luarocks
       sh = { "shellcheck" },
+      python = { "ruff" },
     }
 
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
@@ -23,5 +25,6 @@ return {
   ensure_installed = {
     -- "luacheck",
     "shellcheck",
+    "ruff",
   },
 }

@@ -45,6 +45,7 @@ return {
   ensure_installed = {
     "codelldb",
     "bash-debug-adapter",
+    "debugpy",
   },
   keys = {
     {
