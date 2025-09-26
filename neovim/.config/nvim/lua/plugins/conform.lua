@@ -9,6 +9,7 @@ return {
       rust = { "rustfmt" },
       sh = { "beautysh" },
       python = { "ruff_organize_imports", "ruff_fix", "ruff_format" },
+      yaml = { "yamlfmt" },
     },
     default_format_opts = { lsp_format = "fallback" },
     format_on_save = { timeout_ms = 500 },
@@ -18,6 +19,7 @@ return {
     -- rustfmt should be installed by rustup
     "beautysh",
     "ruff",
+    "yamlfmt",
   },
   keys = {
     {

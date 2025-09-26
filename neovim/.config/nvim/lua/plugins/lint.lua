@@ -8,6 +8,8 @@ return {
       -- lua = { "luacheck" }, requires luarocks
       sh = { "shellcheck" },
       python = { "ruff" },
+      github = { "actionlint" },
+      ["yaml.github"] = { "actionlint" },
     }
 
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
@@ -26,5 +28,6 @@ return {
     -- "luacheck",
     "shellcheck",
     "ruff",
+    "actionlint",
   },
 }

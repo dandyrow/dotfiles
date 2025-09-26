@@ -30,7 +30,7 @@ return {
       },
     })
 
-    -- Enter names of LSP servers to install here
+    -- Enter names of LSP servers to install below
     -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
     local servers = {
       lua_ls = {},
@@ -46,6 +46,9 @@ return {
         settings = {
           basedpyright = { disableOrganizeImports = true },
         },
+      },
+      gh_actions_ls = {
+        filetypes = { "yaml.github" },
       },
     }
 
@@ -72,23 +75,20 @@ return {
       require("plugins.dap").ensure_installed or {}
     )
 
+    -- Auto install all lsps, formatters, linters, and daps
+    -- (mason-lspconfig auto enable disabled as lsps are enabled below)
+    require("mason-lspconfig").setup({ automatic_enable = false })
     require("mason-tool-installer").setup({
       ensure_installed = ensure_installed,
       auto_update = true,
     })
 
+    -- Add capabilities, merge lsp configs & enable
     local capabilities = require("blink.cmp").get_lsp_capabilities()
-    require("mason-lspconfig").setup({
-      automatic_enable = {
-        exclude = { "ruff" },
-      },
-      handlers = {
-        function(server_name)
-          local server = servers[server_name] or {}
-          server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-          require("lspconfig")[server_name].setup(server)
-        end,
-      },
-    })
+    for server_name, server_config in pairs(servers) do
+      server_config.capabilities = vim.tbl_deep_extend("force", capabilities, server_config.capabilities or {})
+      vim.lsp.config[server_name] = server_config
+      vim.lsp.enable(server_name)
+    end
   end,
 }
