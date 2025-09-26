@@ -23,6 +23,7 @@ return {
       },
     },
     "moyiz/blink-emoji.nvim",
+    "fang2hou/blink-copilot",
   },
   version = "1.*",
   opts = {
@@ -80,7 +81,7 @@ return {
     },
 
     sources = {
-      default = { "lazydev", "lsp", "path", "buffer", "emoji", "snippets" },
+      default = { "lazydev", "lsp", "path", "buffer", "emoji", "snippets", "copilot" },
 
       providers = {
         lazydev = {
@@ -93,6 +94,12 @@ return {
           name = "Emoji",
           score_offset = 15, -- Tune by preference
           opts = { insert = true }, -- Insert emoji (default) or complete its name
+        },
+        copilot = {
+          name = "Copilot",
+          module = "blink-copilot",
+          score_offset = 100,
+          async = true,
         },
       },
     },
