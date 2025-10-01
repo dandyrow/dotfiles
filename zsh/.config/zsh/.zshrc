@@ -33,7 +33,7 @@ export KEYTIMEOUT=1
 ###########
 
 alias ls='ls -al --color'
-alias exa="exa --icons --long --git --all --group-directories-first"
+alias eza="eza --icons --long --git --all --group-directories-first"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 
@@ -183,12 +183,12 @@ zstyle ':completion:*' menu no
 fzfPreviewCommands=(
   'cd'
   'ls'
-  'exa'
+  'eza'
   '__zoxide_z'
 )
 
 for cmd in $fzfPreviewCommands; do
-  zstyle ":fzf-tab:complete:$cmd:*" fzf-preview 'exa --icons --grid --oneline --group-directories-first $realpath'
+  zstyle ":fzf-tab:complete:$cmd:*" fzf-preview 'eza --icons --grid --oneline --group-directories-first $realpath'
 done
 
 ###############
