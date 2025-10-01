@@ -1,12 +1,9 @@
 return {
   "folke/todo-comments.nvim",
-
   dependencies = { "nvim-lua/plenary.nvim" },
-
-  config = true,
-
+  version = "*",
+  opts = {},
   lazy = false,
-
   keys = {
     {
       "]t",

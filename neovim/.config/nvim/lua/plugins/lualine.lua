@@ -1,41 +1,28 @@
----@diagnostic disable: deprecated
 return {
   "nvim-lualine/lualine.nvim",
-
-  dependencies = {
-    "nvim-tree/nvim-web-devicons",
-  },
-
+  dependencies = { "echasnovski/mini.icons" },
   config = function()
     require("lualine").setup({
       options = {
         theme = "catppuccin",
-        icons_enabled = true,
       },
-      extensions = { "nvim-tree" },
       sections = {
         lualine_a = { "mode" },
         lualine_b = { "branch", "diff", "diagnostics" },
         lualine_c = { "filename", "filesize" },
         lualine_x = {
           {
+            ---@diagnostic disable: deprecated, undefined-field
             require("noice").api.statusline.mode.get,
             cond = require("noice").api.statusline.mode.has,
+            ---@diagnostic enable: deprecated, undefined-field
           },
           "encoding",
           "fileformat",
           "filetype",
         },
-        lualine_y = { "searchcount", "selectioncount", "progress", "location" },
+        lualine_y = { "searchcount", "selectioncount", "location" },
         lualine_z = { "tabs" },
-      },
-      inactive_sections = {
-        lualine_a = {},
-        lualine_b = {},
-        lualine_c = { "filename" },
-        lualine_x = { "location" },
-        lualine_y = {},
-        lualine_z = {},
       },
     })
   end,
