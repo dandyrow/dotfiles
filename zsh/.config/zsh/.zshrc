@@ -28,6 +28,9 @@ export TMUX_PLUGIN_MANAGER_PATH="$XDG_STATE_HOME/tmux/plugins"
 
 export KEYTIMEOUT=1
 
+# Use bat as the pager for man (this works with man-db but not mandoc)
+export MANPAGER="sh -c 'awk '\''{ gsub(/\x1B\[[0-9;]*m/, \"\", \$0); gsub(/.\x08/, \"\", \$0); print }'\'' | bat -p -lman'"
+
 ###########
 # Aliases #
 ###########
@@ -36,6 +39,10 @@ alias ls='ls -al --color'
 alias eza="eza --icons --long --git --all --group-directories-first"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
+
+# Use bat to colourise help text (use \-h to escape flag when not used as help)
+alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
+alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 
 ##########################
 # Git Worktree Functions #
