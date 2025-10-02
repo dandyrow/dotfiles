@@ -31,6 +31,14 @@ export KEYTIMEOUT=1
 # Use bat as the pager for man (this works with man-db but not mandoc)
 export MANPAGER="sh -c 'awk '\''{ gsub(/\x1B\[[0-9;]*m/, \"\", \$0); gsub(/.\x08/, \"\", \$0); print }'\'' | bat -p -lman'"
 
+# Use Catppuccin for fzf
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
+--color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
+--color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
+--color=selected-bg:#45475A \
+--color=border:#6C7086,label:#CDD6F4"
+
 ###########
 # Aliases #
 ###########
@@ -185,18 +193,11 @@ setopt hist_find_no_dups
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-
-# Add commands here which should show directory contents preview in fzf
-fzfPreviewCommands=(
-  'cd'
-  'ls'
-  'eza'
-  '__zoxide_z'
-)
-
-for cmd in $fzfPreviewCommands; do
-  zstyle ":fzf-tab:complete:$cmd:*" fzf-preview 'eza --icons --grid --oneline --group-directories-first $realpath'
-done
+zstyle ':fzf-tab:*' fzf-flags $(echo $FZF_DEFAULT_OPTS)
+zstyle ':fzf-tab:complete:-command-:*' fzf-preview ''
+zstyle ':fzf-tab:*' fzf-preview '[[ -d "${realpath}" ]] && \
+  eza --color=always -l --tree --level=3 "${realpath}" || \
+  bat --color=always --style=plain --line-range=1:100 "${realpath}"'
 
 ###############
 # Keybindings #
@@ -272,7 +273,7 @@ source "$ZDOTDIR/gh-completions.zsh"
 eval "$(starship init zsh)"
 
 # Enable fzf integration
-eval "$(fzf --zsh)"
+source <(fzf --zsh)
 
 # Enable zoxide
 eval "$(zoxide init --cmd cd zsh)"
