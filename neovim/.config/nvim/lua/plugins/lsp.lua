@@ -50,6 +50,18 @@ return {
       gh_actions_ls = {
         filetypes = { "yaml.github" },
       },
+      jsonls = {},
+      gopls = {
+        settings = {
+          gopls = {
+            analyses = {
+              unusedparams = true,
+            },
+            staticcheck = true,
+            gofumpt = true,
+          },
+        },
+      },
     }
 
     local function merge_unique(...)
