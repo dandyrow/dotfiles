@@ -2,6 +2,12 @@ return {
   "saghen/blink.cmp",
   dependencies = {
     {
+      "saghen/blink.compat",
+      version = "2.*",
+      lazy = true,
+      opts = {},
+    },
+    {
       "L3MON4D3/LuaSnip",
       version = "2.*",
       build = "make install_jsregexp",
@@ -81,7 +87,19 @@ return {
     },
 
     sources = {
-      default = { "lazydev", "lsp", "path", "buffer", "emoji", "snippets", "copilot" },
+      default = {
+        "lazydev",
+        "lsp",
+        "path",
+        "buffer",
+        "emoji",
+        "snippets",
+        "copilot",
+        "avante_commands",
+        "avante_mentions",
+        "avante_shortcuts",
+        "avante_files",
+      },
 
       providers = {
         lazydev = {
@@ -100,6 +118,30 @@ return {
           module = "blink-copilot",
           score_offset = 100,
           async = true,
+        },
+        avante_commands = {
+          name = "avante_commands",
+          module = "blink.compat.source",
+          score_offset = 90, -- show at a higher priority than lsp
+          opts = {},
+        },
+        avante_files = {
+          name = "avante_files",
+          module = "blink.compat.source",
+          score_offset = 100, -- show at a higher priority than lsp
+          opts = {},
+        },
+        avante_mentions = {
+          name = "avante_mentions",
+          module = "blink.compat.source",
+          score_offset = 1000, -- show at a higher priority than lsp
+          opts = {},
+        },
+        avante_shortcuts = {
+          name = "avante_shortcuts",
+          module = "blink.compat.source",
+          score_offset = 1000, -- show at a higher priority than lsp
+          opts = {},
         },
       },
     },

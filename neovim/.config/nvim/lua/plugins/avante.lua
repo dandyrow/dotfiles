@@ -13,5 +13,10 @@ return {
   opts = {
     instructions_file = "copilot-instructions.md",
     provider = "copilot",
+    providers = {
+      copilot = {
+        model = "claude-sonnet-4",
+      },
+    },
   },
 }
