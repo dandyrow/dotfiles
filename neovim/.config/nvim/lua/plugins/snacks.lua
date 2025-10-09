@@ -92,46 +92,39 @@ return {
 
   keys = {
     {
-      "<leader>un",
+      "<leader>cn",
       function()
         Snacks.notifier.hide()
       end,
-      desc = "Dismiss All Notifications",
+      desc = "Clear notifications from screen",
     },
     {
-      "<leader>bd",
+      "<c-x>",
       function()
         Snacks.bufdelete()
       end,
-      desc = "Delete Buffer",
+      desc = "Delete buffer",
     },
     {
       "<leader>.",
       function()
         Snacks.scratch()
       end,
-      desc = "Toggle Scratch Buffer",
+      desc = "Toggle scratch buffer",
     },
     {
       "<leader>S",
       function()
         Snacks.scratch.select()
       end,
-      desc = "Select Scratch Buffer",
-    },
-    {
-      "<c-/>",
-      function()
-        Snacks.terminal()
-      end,
-      desc = "Toggle Terminal",
+      desc = "Select bcratch buffer",
     },
     {
       "<leader>gb",
       function()
         Snacks.gitbrowse()
       end,
-      desc = "Git Browse",
+      desc = "Git browse",
       mode = { "n", "v" },
     },
     {
@@ -139,19 +132,12 @@ return {
       function()
         Snacks.zen()
       end,
-      desc = "Toggle Zen Mode",
+      desc = "Toggle zen mode",
     },
 
     ------------
     -- Picker --
     ------------
-    {
-      "<leader><space>",
-      function()
-        Snacks.picker.smart()
-      end,
-      desc = "Smart find files",
-    },
     {
       "<leader>/",
       function()
@@ -162,7 +148,11 @@ return {
     {
       "<leader>:",
       function()
-        Snacks.picker.command_history()
+        Snacks.picker.command_history({
+          on_show = function()
+            vim.cmd.stopinsert()
+          end,
+        })
       end,
       desc = "Command history",
     },
@@ -178,16 +168,13 @@ return {
       desc = "Notification history",
     },
     {
-      "<leader>w",
-      function()
-        Snacks.picker.worktrees()
-      end,
-      desc = "Switch git worktree",
-    },
-    {
       '"',
       function()
-        Snacks.picker.registers()
+        Snacks.picker.registers({
+          on_show = function()
+            vim.cmd.stopinsert()
+          end,
+        })
       end,
       desc = "Registers",
     },
@@ -221,18 +208,25 @@ return {
       desc = "Smart find files",
     },
     {
+      "<leader>sg",
+      function()
+        Snacks.picker.git_files({ untracked = true })
+      end,
+      desc = "Search git files",
+    },
+    {
       "<leader>sp",
       function()
         Snacks.picker.projects()
       end,
-      desc = "Projects",
+      desc = "Search projects",
     },
     {
       "<leader>sr",
       function()
         Snacks.picker.recent()
       end,
-      desc = "Recent files",
+      desc = "Search recent files",
     },
     {
       "<leader>sw",
@@ -254,7 +248,7 @@ return {
       function()
         Snacks.picker.lines()
       end,
-      desc = "Buffer lines",
+      desc = "Search buffer lines",
     },
     {
       "<leader>sB",
@@ -268,7 +262,7 @@ return {
       function()
         Snacks.picker.commands()
       end,
-      desc = "Commands",
+      desc = "Search commands",
     },
     {
       "<leader>sd",
@@ -324,9 +318,24 @@ return {
     {
       "<leader>su",
       function()
-        Snacks.picker.undo()
+        Snacks.picker.undo({
+          on_show = function()
+            vim.cmd.stopinsert()
+          end,
+        })
       end,
       desc = "Undo history",
+    },
+    {
+      "<leader>sj",
+      function()
+        Snacks.picker.jumps({
+          on_show = function()
+            vim.cmd.stopinsert()
+          end,
+        })
+      end,
+      desc = "Jump list",
     },
 
     -- git
