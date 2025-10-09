@@ -14,7 +14,11 @@ return {
   keys = {
     {
       "<leader>gs",
-      "<CMD>Neogit<CR>",
+      function()
+        local neogit = require("neogit")
+
+        neogit.open({ cwd = vim.fn.systemlist("git -C " .. vim.fn.expand("%:p:h") .. " rev-parse --show-toplevel")[1] })
+      end,
       desc = "Git Status",
     },
     {
