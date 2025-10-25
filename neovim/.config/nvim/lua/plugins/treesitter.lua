@@ -11,6 +11,9 @@ return {
       "bash",
       "python",
       "yaml",
+      "go",
+      "json",
+      "javascript",
     })
 
     vim.api.nvim_create_autocmd("FileType", {

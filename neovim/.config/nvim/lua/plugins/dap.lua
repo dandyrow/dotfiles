@@ -3,6 +3,10 @@ return {
   dependencies = {
     "rcarriga/nvim-dap-ui",
     "nvim-neotest/nvim-nio",
+    {
+      "leoluz/nvim-dap-go",
+      opts = {},
+    },
   },
   config = function()
     -- Link to docs: https://github.com/mfussenegger/nvim-dap
@@ -46,6 +50,7 @@ return {
     "codelldb",
     "bash-debug-adapter",
     "debugpy",
+    "delve",
   },
   keys = {
     {
@@ -97,6 +102,22 @@ return {
         require("dapui").toggle()
       end,
       desc = "Debug: See last session result.",
+    },
+    {
+      "<leader>dt",
+      function()
+        require("dap-go").debug_test()
+      end,
+      ft = "go",
+      desc = "Debug: Run closest test above cursor",
+    },
+    {
+      "<leader>dT",
+      function()
+        require("dap-go").debug_last_test()
+      end,
+      ft = "go",
+      desc = "Debug: Re-run last test",
     },
   },
 }

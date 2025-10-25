@@ -10,7 +10,9 @@ return {
       python = { "ruff" },
       github = { "actionlint" },
       ["yaml.github"] = { "actionlint" },
+      ["yaml.ansible"] = { "ansible_lint" },
       json = { "jsonlint" },
+      go = { "golangcilint" },
     }
 
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
@@ -30,6 +32,8 @@ return {
     "shellcheck",
     "ruff",
     "actionlint",
+    "ansible-lint",
     "jsonlint",
+    "golangci-lint",
   },
 }
