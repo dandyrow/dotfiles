@@ -209,19 +209,29 @@ bindkey -v
 # Insert mode keybinds
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
-bindkey '^[l' vi-end-of-line
-bindkey '^[h' vi-beginning-of-line
+bindkey '^[l' forward-word
+bindkey '^[L' vi-end-of-line
+bindkey '^[h' backward-word
+bindkey '^[H' vi-beginning-of-line
 bindkey '^[[H' vi-beginning-of-line
+bindkey '^[[1~' vi-beginning-of-line
 bindkey '^[[F' vi-end-of-line
+bindkey '^[[4~' vi-end-of-line
 bindkey '^[[3~' delete-char
 bindkey '^[[2~' vi-insert
 bindkey '^?' backward-delete-char
 
 # Normal mode keybinds
-bindkey -M vicmd '^[l' vi-end-of-line
-bindkey -M vicmd '^[h' vi-beginning-of-line
+bindkey -M vicmd '^p' history-search-backward
+bindkey -M vicmd '^n' history-search-backward
+bindkey -M vicmd '^[l' forward-word
+bindkey -M vicmd '^[L' vi-end-of-line
+bindkey -M vicmd '^[h' backward-word
+bindkey -M vicmd '^[H' vi-beginning-of-line
 bindkey -M vicmd '^[[H' vi-beginning-of-line
+bindkey -M vicmd '^[[1~' vi-beginning-of-line
 bindkey -M vicmd '^[[F' vi-end-of-line
+bindkey -M vicmd '^[[4~' vi-end-of-line
 bindkey -M vicmd '^[[3~' delete-char
 bindkey -M vicmd '^[[2~' vi-insert
 
