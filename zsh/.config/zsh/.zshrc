@@ -26,6 +26,8 @@ export ANSIBLE_GALAXY_CACHE_DIR="$XDG_CACHE_HOME/ansible/galaxy_cache"
 export WINEPREFIX="$XDG_DATA_HOME/wineprefixes/default"
 export TMUX_PLUGIN_MANAGER_PATH="$XDG_STATE_HOME/tmux/plugins"
 
+export PATH="$PATH:$GOPATH/bin"
+
 export KEYTIMEOUT=1
 
 # Use bat as the pager for man (this works with man-db but not mandoc)
