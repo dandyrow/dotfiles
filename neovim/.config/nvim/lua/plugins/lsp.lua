@@ -63,6 +63,7 @@ return {
         },
       },
       ansiblels = {},
+      ts_ls = {},
     }
 
     local function merge_unique(...)

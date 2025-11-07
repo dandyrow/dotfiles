@@ -12,6 +12,8 @@ return {
       ["yaml.ansible"] = { "ansible-lint" },
       yaml = { "yamlfmt" },
       go = { "gofumpt" },
+      javascript = { "eslint_d" },
+      typescript = { "eslint_d" },
     },
     default_format_opts = { lsp_format = "fallback" },
     format_on_save = { timeout_ms = 500 },
@@ -24,6 +26,7 @@ return {
     "ansible-lint",
     "yamlfmt",
     "gofumpt",
+    "eslint_d",
   },
   keys = {
     {

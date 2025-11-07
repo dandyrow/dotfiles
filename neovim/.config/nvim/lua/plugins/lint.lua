@@ -13,6 +13,8 @@ return {
       ["yaml.ansible"] = { "ansible_lint" },
       json = { "jsonlint" },
       go = { "golangcilint" },
+      javascript = { "eslint_d" },
+      typescript = { "eslint_d" },
     }
 
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
@@ -35,5 +37,6 @@ return {
     "ansible-lint",
     "jsonlint",
     "golangci-lint",
+    "eslint_d",
   },
 }
