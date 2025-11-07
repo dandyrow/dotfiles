@@ -16,10 +16,6 @@ vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" }
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered) " })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
 
--- Buffer navigation
-vim.keymap.set("n", "L", ":bnext<CR>", { desc = "Next buffer", silent = true })
-vim.keymap.set("n", "H", ":bprevious<CR>", { desc = "Previous buffer", silent = true })
-
 -- Splitting & Resizing
 vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically", silent = true })
 vim.keymap.set("n", "<leader>sh", ":split<CR>", { desc = "Split window horizontally", silent = true })
@@ -62,7 +58,7 @@ vim.keymap.set("n", "<leader>pa", function()
 end, { desc = "Print file path & copy it to clipboard" })
 
 -- Hover LSP Documentation
-vim.keymap.set("n", "<leader>k", function()
+vim.keymap.set("n", "gh", function()
   vim.lsp.buf.hover()
 end, { desc = "Hover LSP documentation" })
 
