@@ -24,12 +24,6 @@ vim.keymap.set("n", "<C-Down>", ":resize -2 <CR>", { desc = "Decrease window hei
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2 <CR>", { desc = "Decrease window width", silent = true })
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2 <CR>", { desc = "Decrease window width", silent = true })
 
--- Better window navigation
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to window on the left" })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to window below" })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to window above" })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to window to the right" })
-
 -- Move lines up/down
 vim.keymap.set("n", "J", ":m .+1<CR>==", { desc = "Move line down", silent = true })
 vim.keymap.set("n", "K", ":m .-2<CR>==", { desc = "Move line up", silent = true })
