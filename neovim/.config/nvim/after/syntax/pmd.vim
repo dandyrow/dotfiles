@@ -10,6 +10,15 @@ unlet! b:current_syntax
 syntax include @JavaScript syntax/javascript.vim
 unlet! b:current_syntax
 
+" Override JavaScript's built-in 'location' as a member keyword
+" We need to remove it from javaScriptMember and add our own definition
+silent! syntax clear javaScriptMember
+silent! syntax clear javaScriptGlobal
+" Redefine javaScriptMember without 'location'
+syntax keyword javaScriptMember document event contained
+" Redefine javaScriptGlobal without 'location'
+syntax keyword javaScriptGlobal self window top parent contained
+
 " JSON structural elements
 syntax match jsonNoise /\%(:\|,\)/
 syntax region jsonFold matchgroup=jsonBraces start="{" end=/}\(\\_s\+\ze\("\|{\)\)\@!/ transparent fold
@@ -29,7 +38,10 @@ syn region jsonString matchgroup=jsonQuote start=/"/ end=/"/ skip=/\\./ contains
 
 " JavaScript code regions using containedin to embed in strings
 " This is the key: containedin tells Vim this region can appear inside jsonString
-syntax region pmdJavaScriptCode matchgroup=pmdDelimiter start="<%\s*" end="\s*%>" contains=@JavaScript containedin=jsonString,jsonKeyword keepend
+syntax region pmdJavaScriptCode matchgroup=pmdDelimiter start="<%\s*" end="\s*%>" contains=@JavaScript,pmdReservedWord containedin=jsonString,jsonKeyword keepend
+
+" PMD-specific reserved words (Workday scripting extensions)
+syntax keyword pmdReservedWord empty contained
 
 " JSON numbers
 syntax match jsonNumber "-\=\<\%(0\|[1-9]\d*\)\%(\.\d\+\)\=\%([eE][-+]\=\d\+\)\=\>\ze[[:blank:]\r\n]*[,}\]]"
@@ -54,6 +66,7 @@ highlight default link jsonNumber Number
 highlight default link jsonBoolean Boolean
 highlight default link jsonNull Function
 highlight default link pmdDelimiter Special
+highlight default link pmdReservedWord Keyword
 
 let b:current_syntax = "pmd"
 
