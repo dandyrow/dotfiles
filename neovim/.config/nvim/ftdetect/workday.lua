@@ -1,9 +1,10 @@
 vim.filetype.add({
   extension = {
-    pmd = "javascript",
+    pmd = "pmd",
     amd = "json",
     smd = "json",
     orchestration = "json",
     suborchestration = "json",
+    script = "pmd",
   },
 })
