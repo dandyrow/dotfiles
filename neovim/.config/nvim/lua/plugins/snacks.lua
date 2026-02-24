@@ -1,6 +1,6 @@
 return {
   "folke/snacks.nvim",
-  dependencies = { "echasnovski/mini.icons" },
+  dependencies = { "nvim-mini/mini.icons" },
   lazy = false,
   priority = 1000,
   init = function()
@@ -70,6 +70,10 @@ return {
     notifier = { style = "fancy" },
 
     picker = {
+      matcher = {
+        cwd_bonus = true,
+        frecency = true,
+      },
       win = {
         input = {
           keys = {
@@ -203,7 +207,9 @@ return {
     {
       "<leader>sf",
       function()
-        Snacks.picker.smart()
+        Snacks.picker.smart({ matcher = {
+          hidden = true,
+        } })
       end,
       desc = "Smart find files",
     },
@@ -227,14 +233,6 @@ return {
         Snacks.picker.recent()
       end,
       desc = "Search recent files",
-    },
-    {
-      "<leader>sw",
-      function()
-        Snacks.picker.grep_word()
-      end,
-      desc = "Grep visual selection or word under cursor",
-      mode = { "n", "x" },
     },
     {
       "<leader>s/",
