@@ -26,7 +26,7 @@ export ANSIBLE_GALAXY_CACHE_DIR="$XDG_CACHE_HOME/ansible/galaxy_cache"
 export WINEPREFIX="$XDG_DATA_HOME/wineprefixes/default"
 export TMUX_PLUGIN_MANAGER_PATH="$XDG_STATE_HOME/tmux/plugins"
 
-export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin"
 
 export KEYTIMEOUT=1
 
@@ -278,8 +278,9 @@ source "$ZDOTDIR/catppuccin_mocha-zsh-syntax-highlighting.zsh"
 # Enable completions
 autoload -U compinit && compinit
 
-# Enable GitHub CLI completions
+# Enable completion scripts
 source "$ZDOTDIR/gh-completions.zsh"
+source "$ZDOTDIR/acli-completions.sh"
 
 # Enable prompt
 eval "$(starship init zsh)"
