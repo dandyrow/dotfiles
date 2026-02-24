@@ -61,3 +61,37 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- Remove windows line endings
 vim.keymap.set("n", "<leader>cr", [[:%s/\r//g<CR>]], { desc = "Remove Windows line endings in current file" })
+
+-- Find and replace
+vim.keymap.set("n", "<leader>r", function()
+  local ok, _ = pcall(function()
+    local search = vim.fn.input("Search term: ")
+    if search == "" then
+      return
+    end
+
+    local path = vim.fn.input("Search path, leave blank for cwd (**/*): ")
+    if path == "" then
+      path = "**/*"
+    end
+
+    vim.cmd("silent! vimgrep /" .. search .. "/j " .. path)
+
+    local qf = vim.fn.getqflist()
+    if #qf == 0 then
+      vim.notify("No matches found", vim.log.levels.INFO)
+      return
+    end
+
+    local replace = vim.fn.input("Replace with: ")
+    if replace == "" then
+      return
+    end
+
+    vim.cmd("cfdo %s/" .. search .. "/" .. replace .. "/gc | update")
+  end)
+
+  if not ok then
+    vim.notify("Operation cancelled", vim.log.levels.INFO)
+  end
+end, { desc = "Find & replace" })
