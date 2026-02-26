@@ -38,7 +38,13 @@ syn region jsonString matchgroup=jsonQuote start=/"/ end=/"/ skip=/\\./ contains
 
 " JavaScript code regions using containedin to embed in strings
 " This is the key: containedin tells Vim this region can appear inside jsonString
-syntax region pmdJavaScriptCode matchgroup=pmdDelimiter start="<%\s*" end="\s*%>" contains=@JavaScript,pmdReservedWord containedin=jsonString,jsonKeyword keepend
+syntax region pmdJavaScriptCode matchgroup=pmdDelimiter start="<%\s*" end="\s*%>" contains=@JavaScript,pmdReservedWord,pmdTemplateString containedin=jsonString,jsonKeyword keepend
+
+" Template string literals with backticks (can contain {{}} interpolation)
+syntax region pmdTemplateString matchgroup=pmdTemplateDelim start="`" end="`" contains=pmdTemplateInterpolation contained
+
+" {{}} interpolation within template strings
+syntax region pmdTemplateInterpolation matchgroup=pmdInterpolationDelim start="{{" end="}}" contains=@JavaScript,pmdReservedWord contained
 
 " PMD-specific reserved words (Workday scripting extensions)
 syntax keyword pmdReservedWord empty contained
@@ -67,6 +73,9 @@ highlight default link jsonBoolean Boolean
 highlight default link jsonNull Function
 highlight default link pmdDelimiter Special
 highlight default link pmdReservedWord Keyword
+highlight default link pmdTemplateString String
+highlight default link pmdTemplateDelim String
+highlight default link pmdInterpolationDelim Special
 
 let b:current_syntax = "pmd"
 
