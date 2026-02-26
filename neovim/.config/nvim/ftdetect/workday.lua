@@ -5,6 +5,6 @@ vim.filetype.add({
     smd = "json",
     orchestration = "json",
     suborchestration = "json",
-    script = "pmd",
+    script = "script",
   },
 })
