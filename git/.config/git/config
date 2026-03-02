@@ -20,3 +20,6 @@
 
 [includeIf "gitdir:~/projects/work/"]
   path = ~/projects/work/.gitconfig
+
+[rerere]
+	enabled = true
