@@ -7,5 +7,6 @@ vim.filetype.add({
     orchestration = "json",
     suborchestration = "json",
     script = "script",
+    attributes = "json",
   },
 })
