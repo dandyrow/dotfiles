@@ -33,6 +33,11 @@ export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export OLLAMA_MODELS="$XDG_DATA_HOME/ollama/models"
 
+# Source Home Manager session variables (adds ~/.nix-profile/bin to PATH,
+# sets NIX_PATH, etc.). Guard ensures this is a no-op before first HM run.
+[ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] && \
+  source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+
 export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin"
 
 export KEYTIMEOUT=1
