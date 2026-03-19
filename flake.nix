@@ -34,7 +34,6 @@
           ".config/starship".source  = mkLink "starship/.config/starship";
           ".config/tmux".source      = mkLink "tmux/.config/tmux";
           ".config/yazi".source      = mkLink "yazi/.config/yazi";
-          ".config/zellij".source    = mkLink "zellij/.config/zellij";
           ".config/zsh".source       = mkLink "zsh/.config/zsh";
 
           # gnupg: symlink individual config files only, not the whole directory.
