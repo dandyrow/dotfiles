@@ -108,6 +108,8 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 * tar
 * gzip
 * ripgrep
+* fd
+* tree-sitter
 * wl-clipboard
 * git
 * ttf-dejavu-nerd
@@ -116,6 +118,7 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 * github-cli
 * npm
 * gcc
+* make
 * codespell
 * stylua
 * actionlint
