@@ -4,7 +4,7 @@
   signingKey = development@daniellowry.co.uk
 
 [init]
-  defaultBranch = master
+	defaultBranch = main
 
 [push]
   autosetupremote = true
