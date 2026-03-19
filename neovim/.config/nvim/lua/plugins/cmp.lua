@@ -147,7 +147,7 @@ return {
     },
 
     snippets = { preset = "luasnip" },
-    fuzzy = { implementation = "lua" }, -- Rust binary won't download due to 403 error
+    fuzzy = { implementation = "prefer_rust_with_warning" }, -- Rust binary won't download due to 403 error
     signature = { enabled = true },
   },
 
