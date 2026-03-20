@@ -1,0 +1,2 @@
+[local]
+arch ansible_host=localhost ansible_connection=local ansible_become_method=doas
