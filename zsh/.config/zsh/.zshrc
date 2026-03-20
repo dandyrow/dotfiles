@@ -32,6 +32,9 @@ export TMUX_PLUGIN_MANAGER_PATH="$XDG_STATE_HOME/tmux/plugins"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export OLLAMA_MODELS="$XDG_DATA_HOME/ollama/models"
+export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
+export PYTHONPYCACHEPREFIX="$XDG_CACHE_HOME/python"
+export PYTHONUSERBASE="$XDG_DATA_HOME/python"
 
 # Source Home Manager session variables (adds ~/.nix-profile/bin to PATH,
 # sets NIX_PATH, etc.). Guard ensures this is a no-op before first HM run.
