@@ -41,7 +41,7 @@ export PYTHONUSERBASE="$XDG_DATA_HOME/python"
 [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] && \
   source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
-export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin"
+export PATH="$PATH:$HOME/.local/bin:$HOME/.local/bin/wdcli/bin:$GOPATH/bin"
 
 export KEYTIMEOUT=1
 
