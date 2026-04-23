@@ -18,8 +18,8 @@
 [tag]
   gpgSign = true
 
-[includeIf "gitdir:~/projects/work/"]
-  path = ~/projects/work/.gitconfig
+[includeIf "gitdir:~/Documents/projects/work/"]
+  path = ~/Documents/projects/work/.gitconfig
 
 [rerere]
 	enabled = true
