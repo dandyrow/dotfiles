@@ -17,6 +17,7 @@ return {
       "json",
       "javascript",
       "typescript",
+      "nix",
     })
 
     vim.api.nvim_create_autocmd("FileType", {

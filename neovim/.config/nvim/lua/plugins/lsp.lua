@@ -64,6 +64,24 @@ return {
       },
       ansiblels = {},
       ts_ls = {},
+      nixd = {
+        mason = false,
+        settings = {
+          nixd = {
+            nixpkgs = {
+              expr = 'import (builtins.getFlake "/etc/nixos").inputs.nixpkgs { }',
+            },
+            options = {
+              nixos = {
+                expr = '(builtins.getFlake "/etc/nixos").nixosConfigurations.$HOSTNAME.options',
+              },
+              home_manager = {
+                expr = '(builtins.getFlake "/etc/nixos").homeConfigurations."$USER".options',
+              },
+            },
+          },
+        },
+      },
     }
 
     local function merge_unique(...)
@@ -82,8 +100,16 @@ return {
       return result
     end
 
+    -- Filter out servers which shouldn't be downloaded by Brave
+    local mason_servers = {}
+    for name, config in pairs(servers) do
+      if config.mason ~= false then
+        table.insert(mason_servers, name)
+      end
+    end
+
     local ensure_installed = merge_unique(
-      vim.tbl_keys(servers or {}),
+      mason_servers,
       require("plugins.conform").ensure_installed or {},
       require("plugins.lint").ensure_installed or {},
       require("plugins.dap").ensure_installed or {}

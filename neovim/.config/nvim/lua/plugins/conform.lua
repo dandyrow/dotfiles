@@ -14,6 +14,7 @@ return {
       go = { "gofumpt" },
       javascript = { "eslint_d" },
       typescript = { "eslint_d" },
+      nix = { "nixfmt-rfc-style" },
     },
     default_format_opts = { lsp_format = "fallback" },
     format_on_save = { timeout_ms = 500 },
