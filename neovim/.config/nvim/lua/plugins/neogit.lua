@@ -1,10 +1,12 @@
 return {
   "NeogitOrg/neogit",
+  lazy = true,
   dependencies = {
     "nvim-lua/plenary.nvim",
     "sindrets/diffview.nvim",
     "folke/snacks.nvim",
   },
+  cmd = "Neogit",
   opts = {
     graph_style = "unicode",
     process_spinner = true,

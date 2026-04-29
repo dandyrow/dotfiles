@@ -15,7 +15,7 @@ return {
     provider = "copilot",
     providers = {
       copilot = {
-        model = "claude-sonnet-4.5",
+        model = "claude-sonnet-4.6",
       },
     },
   },
