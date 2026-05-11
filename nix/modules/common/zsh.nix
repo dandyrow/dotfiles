@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 {
   options = {
     zsh.enable = lib.mkOption {
@@ -8,6 +8,9 @@
   };
 
   config = lib.mkIf config.zsh.enable {
+    # ttf-dejavu-nerd is required by the zsh config for prompt glyphs.
+    fonts.packages = [ pkgs.nerd-fonts.dejavu-sans-mono ];
+
     programs.zsh = {
       enable = true;
       enableCompletion = true;

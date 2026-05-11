@@ -1,12 +1,46 @@
 # dotfiles
 
-This repo contains my configuration dotfiles for my Linux systems.
-It is structured in such a way that GNU stow can be used to install the dotfiles
-in their correct location within the target user's home directory.
+This repo contains my configuration dotfiles and NixOS system configuration for my Linux systems.
 
-This README lists any requirements and / or instructions that are required for
-the dotfiles to be installed correctly. Below are the basic requirements common
-to all dotfiles within this repo.
+## Nix
+
+The `nix/` directory contains a NixOS configuration and Home Manager setup managed with Nix flakes.
+The flake at the repo root controls everything — NixOS hosts, home configuration, and dotfile deployment.
+
+### Prerequisites
+
+- Target machine booted into a NixOS live ISO (for fresh installs)
+- A `secrets/` directory containing `etc/secrets/dandyrow-password` (bcrypt-hashed password)
+  - Generate with: `mkpasswd -m bcrypt`
+
+### Install NixOS on a new machine
+
+Boot the target into a NixOS live ISO, then from this repo run:
+
+```bash
+./install.sh <host> <target-ip> ./secrets
+```
+
+Available hosts: `DansSpectre`, `New-H0Ryzen`
+
+### Apply config changes (existing NixOS machine)
+
+```bash
+doas nixos-rebuild switch --flake github:dandyrow/dotfiles#<host>
+```
+
+### Standalone Home Manager (non-NixOS Linux)
+
+```bash
+nix run nixpkgs#home-manager -- switch --flake github:dandyrow/dotfiles#dandyrow
+```
+
+> **Note:** `ttf-dejavu-nerd` must be installed manually on non-NixOS systems.
+
+---
+
+This README also lists any requirements and instructions required for the dotfiles to be installed
+correctly on non-Nix systems. Below are the basic requirements common to all dotfiles.
 
 ## Installing TLS Certs
 
