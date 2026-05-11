@@ -46,9 +46,9 @@
         };
 
       mkHome =
-        system:
+        hostSystem:
         inputs.home-manager.lib.homeManagerConfiguration {
-          pkgs = inputs.nixpkgs.legacyPackages.${system};
+          pkgs = inputs.nixpkgs.legacyPackages.${hostSystem};
           modules = [ ./nix/home ];
           extraSpecialArgs = {
             dotfilesRoot = ./.;
