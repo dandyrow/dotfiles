@@ -25,6 +25,12 @@ Available hosts: `DansSpectre`, `New-H0Ryzen`
 
 ### Apply config changes (existing NixOS machine)
 
+From a local clone:
+```bash
+doas nixos-rebuild switch --flake /path/to/repo#<host>
+```
+
+Or directly from GitHub (requires changes to be pushed first):
 ```bash
 doas nixos-rebuild switch --flake github:dandyrow/dotfiles#<host>
 ```
@@ -98,7 +104,7 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 ### Steps to install
 
 1. Install requirements
-2. Run `stow neofetch` from within repo root.
+2. Run `stow fastfetch` from within repo root.
 
 ## Tmux
 
@@ -112,6 +118,8 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 2. Run `stow tmux` from within repo root.
 
 ## Zellij
+
+> **Note:** Zellij config is kept in this repo for reference but is not actively used and is not installed by the Nix config.
 
 ### Requirements
 
