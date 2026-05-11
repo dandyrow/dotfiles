@@ -18,14 +18,14 @@
   outputs =
     inputs@{ ... }:
     let
-      nixosSystem = "x86_64-linux";
+      system = "x86_64-linux";
 
       lib = inputs.nixpkgs.lib;
 
       mkSystem =
         host:
         lib.nixosSystem {
-          system = nixosSystem;
+          inherit system;
           modules = [
             { networking.hostName = host; }
             ./nix/hosts/${host}
