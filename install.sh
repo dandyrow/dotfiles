@@ -31,6 +31,6 @@ fi
 echo "Installing NixOS (${HOST}) on ${TARGET_IP}..."
 
 nix run nixpkgs#nixos-anywhere -- \
-  --flake ".#${HOST}" \
+  --flake "$(dirname "$0")#${HOST}" \
   --extra-files "${SECRETS_DIR}" \
   "root@${TARGET_IP}"
