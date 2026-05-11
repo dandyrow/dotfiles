@@ -18,8 +18,6 @@
     command-not-found.enable = true;
     firefox.enable = true;
     git.enable = true;
-    starship.enable = true;
-    neovim.enable = true;
   };
 
   users.users = {

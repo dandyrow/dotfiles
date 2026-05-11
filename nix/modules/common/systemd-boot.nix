@@ -10,7 +10,7 @@
       logo = lib.mkEnableOption "enable boot logo";
       theme = lib.mkOption {
         type = lib.types.str;
-        description = "Boot logo (plymouth) theme. Logo must be enabled for setting to take affect";
+        description = "Boot logo (plymouth) theme. Logo must be enabled for setting to take effect";
         default = "bgrt";
       };
     };

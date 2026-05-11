@@ -18,15 +18,14 @@
   outputs =
     inputs@{ ... }:
     let
-      system = "x86_64-linux";
+      nixosSystem = "x86_64-linux";
 
       lib = inputs.nixpkgs.lib;
-      pkgs = inputs.nixpkgs.legacyPackages.${system};
 
       mkSystem =
         host:
         lib.nixosSystem {
-          inherit system;
+          system = nixosSystem;
           modules = [
             { networking.hostName = host; }
             ./nix/hosts/${host}
@@ -35,6 +34,9 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.dandyrow = import ./nix/home;
+              home-manager.extraSpecialArgs = {
+                dotfilesRoot = ./.;
+              };
             }
           ];
 
@@ -43,14 +45,24 @@
           };
         };
 
+      mkHome =
+        system:
+        inputs.home-manager.lib.homeManagerConfiguration {
+          pkgs = inputs.nixpkgs.legacyPackages.${system};
+          modules = [ ./nix/home ];
+          extraSpecialArgs = {
+            dotfilesRoot = ./.;
+          };
+        };
+
       hostDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./nix/hosts);
     in
     {
       nixosConfigurations = lib.mapAttrs (host: _: mkSystem host) hostDirs;
 
-      homeConfigurations.dandyrow = inputs.home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./nix/home ];
+      homeConfigurations = {
+        "dandyrow@x86_64-linux" = mkHome "x86_64-linux";
+        "dandyrow@aarch64-linux" = mkHome "aarch64-linux";
       };
     };
 }

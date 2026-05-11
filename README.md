@@ -31,8 +31,10 @@ doas nixos-rebuild switch --flake github:dandyrow/dotfiles#<host>
 
 ### Standalone Home Manager (non-NixOS Linux)
 
+Replace `x86_64-linux` with `aarch64-linux` if on an ARM machine.
+
 ```bash
-nix run nixpkgs#home-manager -- switch --flake github:dandyrow/dotfiles#dandyrow
+nix run nixpkgs#home-manager -- switch --flake github:dandyrow/dotfiles#dandyrow@x86_64-linux
 ```
 
 > **Note:** `ttf-dejavu-nerd` must be installed manually on non-NixOS systems.
