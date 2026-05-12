@@ -15,6 +15,7 @@
       "steam"
       "steam-original"
       "steam-run"
+      "steam-unwrapped"
     ];
 
   users.users = {
