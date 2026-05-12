@@ -1,6 +1,9 @@
 {
   config,
+  lib,
   pkgs,
+  # osConfig is populated when running as a NixOS module; null in standalone HM.
+  osConfig ? null,
   dotfilesRoot,
   ...
 }:
@@ -10,35 +13,41 @@
     homeDirectory = "/home/dandyrow";
     stateVersion = "25.11";
 
-    packages = with pkgs; [
-      # Dotfile tools
-      bat
-      btop
-      eza
-      fastfetch
-      kitty
-      tmux
-      yazi
+    packages =
+      with pkgs;
+      [
+        # Dotfile tools
+        bat
+        btop
+        eza
+        fastfetch
+        kitty
+        neovim
+        tmux
+        yazi
 
-      # Zsh dependencies (see zsh dotfile README)
-      fzf
-      starship
-      zoxide
+        # Zsh dependencies (see zsh dotfile README)
+        fzf
+        starship
+        zoxide
 
-      # Neovim dependencies (see neovim dotfile README)
-      fd
-      gcc
-      gh
-      gnumake
-      python3
-      ripgrep
-      stylua
-      tree-sitter
-      unzip
-      wl-clipboard
-      yamllint
-      nodePackages.npm
-    ];
+        # Neovim dependencies (see neovim dotfile README)
+        fd
+        gcc
+        gh
+        gnumake
+        python3
+        ripgrep
+        stylua
+        tree-sitter
+        unzip
+        wl-clipboard
+        yamllint
+        nodePackages.npm
+      ]
+      # gnupg is provided system-wide on NixOS via the gnupg common module;
+      # only add it here for standalone Home Manager (non-NixOS).
+      ++ lib.optionals (osConfig == null) [ pkgs.gnupg ];
 
     # Dotfiles are managed as Nix store paths — edit in the repo and run
     # nixos-rebuild switch (NixOS) or home-manager switch (non-NixOS) to apply.
