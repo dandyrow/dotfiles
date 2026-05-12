@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./dotfiles.nix
     ./locale.nix
     ./systemd-boot.nix
     ./ssh.nix

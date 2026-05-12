@@ -34,9 +34,6 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.dandyrow = import ./nix/home;
-              home-manager.extraSpecialArgs = {
-                dotfilesRoot = ./.;
-              };
             }
           ];
 
@@ -50,9 +47,6 @@
         inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = inputs.nixpkgs.legacyPackages.${hostSystem};
           modules = [ ./nix/home ];
-          extraSpecialArgs = {
-            dotfilesRoot = ./.;
-          };
         };
 
       hostDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./nix/hosts);

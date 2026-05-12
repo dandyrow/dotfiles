@@ -35,6 +35,9 @@ Or directly from GitHub (requires changes to be pushed first):
 doas nixos-rebuild switch --flake github:dandyrow/dotfiles#<host>
 ```
 
+> **Note:** Dotfile edits made in `~/.dotfiles` take effect immediately — no rebuild needed.
+> Only NixOS module changes (packages, services, users, etc.) require `nixos-rebuild switch`.
+
 ### Standalone Home Manager (non-NixOS Linux)
 
 Replace `x86_64-linux` with `aarch64-linux` if on an ARM machine.

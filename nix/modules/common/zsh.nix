@@ -34,6 +34,13 @@
         "hist_ignore_dups"
         "hist_find_no_dups"
       ];
+
+      # Set ZDOTDIR system-wide so zsh finds the user config before any shell
+      # initialisation runs. home.sessionVariables is too late — zsh reads
+      # /etc/zsh/zshenv before it knows where ZDOTDIR is.
+      shellInit = ''
+        export ZDOTDIR="$HOME/.config/zsh"
+      '';
     };
   };
 }
