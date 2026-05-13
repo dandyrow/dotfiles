@@ -177,4 +177,4 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 ### Steps to install
 
 1. Install requirements
-2. Run `stow neovim` from within repo root.
+2. Run `stow nvim` from within repo root.
