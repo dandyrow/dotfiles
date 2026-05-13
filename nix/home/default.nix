@@ -67,6 +67,7 @@ in
       ".config/tmux".source = mkLink "tmux/.config/tmux";
       ".config/yazi".source = mkLink "yazi/.config/yazi";
       ".config/zsh".source = mkLink "zsh/.config/zsh";
+      ".config/npm".source = mkLink "npm/.config/npm";
 
       # gnupg: manage individual files rather than the whole directory — gpg requires
       # strict 700 permissions on the directory itself, and the directory contains
