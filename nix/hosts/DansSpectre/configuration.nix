@@ -3,7 +3,6 @@
   documentation.nixos.enable = false;
 
   programs = {
-    command-not-found.enable = true;
     firefox.enable = true;
     git.enable = true;
     steam.enable = true;
