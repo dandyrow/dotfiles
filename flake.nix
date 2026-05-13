@@ -27,12 +27,36 @@
 
       lib = inputs.nixpkgs.lib;
 
+      overlays = [
+        (final: prev: {
+          xdg-user-dirs = prev.xdg-user-dirs.overrideAttrs (old: rec {
+            version = "0.20";
+            src = prev.fetchurl {
+              url = "https://user-dirs.freedesktop.org/releases/xdg-user-dirs-${version}.tar.xz";
+              hash = "sha256-uONChiePT+8+G/6WhcOVzMDrUMFNOi+0lT3QD7/Trzk=";
+            };
+            preFixup = ''
+              # fallback values need to be last
+              wrapProgram "$out/bin/xdg-user-dirs-update" \
+                --suffix XDG_CONFIG_DIRS : "$out/etc/xdg"
+
+              # Autostart, because the installed service is never explicitly enabled in NixOS
+              substituteInPlace "$out/etc/xdg/autostart/xdg-user-dirs.desktop" \
+                --replace-fail "X-systemd-skip=true" "X-systemd-skip=false"
+            '';
+          });
+        })
+      ];
+
       mkSystem =
         host:
         lib.nixosSystem {
           inherit system;
           modules = [
-            { networking.hostName = host; }
+            {
+              networking.hostName = host;
+              nixpkgs.overlays = overlays;
+            }
             ./nix/hosts/${host}
             inputs.home-manager.nixosModules.home-manager
             inputs.nix-index-database.nixosModules.nix-index
@@ -51,7 +75,10 @@
       mkHome =
         hostSystem:
         inputs.home-manager.lib.homeManagerConfiguration {
-          pkgs = inputs.nixpkgs.legacyPackages.${hostSystem};
+          pkgs = import inputs.nixpkgs {
+            system = hostSystem;
+            inherit overlays;
+          };
           modules = [ ./nix/home ];
         };
 
