@@ -11,8 +11,12 @@
     ./zsh.nix
   ];
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix.settings = {
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    # Move ~/.nix-defexpr and ~/.nix-profile to XDG state directories.
+    use-xdg-base-directories = true;
+  };
 }

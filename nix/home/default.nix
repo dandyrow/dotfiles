@@ -94,4 +94,8 @@ in
   systemd.user.sessionVariables = {
     GNUPGHOME = "${config.xdg.dataHome}/gnupg";
   };
+
+  # Move ~/.nix-defexpr and ~/.nix-profile to XDG state directory.
+  # use-xdg-base-directories is enabled system-wide in common/default.nix.
+  nix.assumeXdg = true;
 }
