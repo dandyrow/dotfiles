@@ -9,6 +9,7 @@
 let
   dotfilesDir = "${config.home.homeDirectory}/.dotfiles";
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
+  mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
 in
 {
   home = {
@@ -55,26 +56,28 @@ in
     # Dotfiles are symlinked from ~/.dotfiles — a clone of the dotfiles repo.
     # On NixOS the clone is created during system activation (see modules/common/dotfiles.nix).
     # On non-NixOS the clone is created by the cloneDotfiles activation script below.
-    file = {
-      ".config/bat".source = mkLink "bat/.config/bat";
-      ".config/btop".source = mkLink "btop/.config/btop";
-      ".config/eza".source = mkLink "eza/.config/eza";
-      ".config/fastfetch".source = mkLink "fastfetch/.config/fastfetch";
-      ".config/git".source = mkLink "git/.config/git";
-      ".config/kitty".source = mkLink "kitty/.config/kitty";
-      ".config/nvim".source = mkLink "neovim/.config/nvim";
-      ".config/starship".source = mkLink "starship/.config/starship";
-      ".config/tmux".source = mkLink "tmux/.config/tmux";
-      ".config/yazi".source = mkLink "yazi/.config/yazi";
-      ".config/zsh".source = mkLink "zsh/.config/zsh";
-      ".config/npm".source = mkLink "npm/.config/npm";
+    file = lib.mkMerge [
+      (mkConfigLink "bat")
+      (mkConfigLink "btop")
+      (mkConfigLink "eza")
+      (mkConfigLink "fastfetch")
+      (mkConfigLink "git")
+      (mkConfigLink "kitty")
+      (mkConfigLink "nvim")
+      (mkConfigLink "starship")
+      (mkConfigLink "tmux")
+      (mkConfigLink "yazi")
+      (mkConfigLink "zsh")
+      (mkConfigLink "npm")
 
       # gnupg: manage individual files rather than the whole directory — gpg requires
       # strict 700 permissions on the directory itself, and the directory contains
       # runtime files (sockets, keyrings) that should not be managed by Nix.
-      ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
-      ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
-    };
+      {
+        ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
+        ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
+      }
+    ];
 
     # On non-NixOS: clone the dotfiles repo if not already present before
     # symlinks are created. On NixOS this is handled by the system activation
