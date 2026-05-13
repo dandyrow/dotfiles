@@ -56,22 +56,22 @@ in
     # On NixOS the clone is created during system activation (see modules/common/dotfiles.nix).
     # On non-NixOS the clone is created by the cloneDotfiles activation script below.
     file = {
-      ".config/bat".source      = mkLink "bat/.config/bat";
-      ".config/btop".source     = mkLink "btop/.config/btop";
-      ".config/eza".source      = mkLink "eza/.config/eza";
+      ".config/bat".source = mkLink "bat/.config/bat";
+      ".config/btop".source = mkLink "btop/.config/btop";
+      ".config/eza".source = mkLink "eza/.config/eza";
       ".config/fastfetch".source = mkLink "fastfetch/.config/fastfetch";
-      ".config/git".source      = mkLink "git/.config/git";
-      ".config/kitty".source    = mkLink "kitty/.config/kitty";
-      ".config/nvim".source     = mkLink "neovim/.config/nvim";
+      ".config/git".source = mkLink "git/.config/git";
+      ".config/kitty".source = mkLink "kitty/.config/kitty";
+      ".config/nvim".source = mkLink "neovim/.config/nvim";
       ".config/starship".source = mkLink "starship/.config/starship";
-      ".config/tmux".source     = mkLink "tmux/.config/tmux";
-      ".config/yazi".source     = mkLink "yazi/.config/yazi";
-      ".config/zsh".source      = mkLink "zsh/.config/zsh";
+      ".config/tmux".source = mkLink "tmux/.config/tmux";
+      ".config/yazi".source = mkLink "yazi/.config/yazi";
+      ".config/zsh".source = mkLink "zsh/.config/zsh";
 
       # gnupg: manage individual files rather than the whole directory — gpg requires
       # strict 700 permissions on the directory itself, and the directory contains
       # runtime files (sockets, keyrings) that should not be managed by Nix.
-      ".local/share/gnupg/gpg.conf".source      = mkLink "gnupg/.local/share/gnupg/gpg.conf";
+      ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
       ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
     };
 
@@ -87,5 +87,11 @@ in
         fi
       '';
     };
+  };
+
+  # GNUPGHOME must be in the systemd user environment so gpg-agent (launched
+  # as a systemd user service at login) uses the XDG path rather than ~/.gnupg.
+  systemd.user.sessionVariables = {
+    GNUPGHOME = "${config.xdg.dataHome}/gnupg";
   };
 }
