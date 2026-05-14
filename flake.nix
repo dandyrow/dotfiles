@@ -73,13 +73,14 @@
         };
 
       mkHome =
-        hostSystem:
+        { hostSystem, wsl ? false }:
         inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = import inputs.nixpkgs {
             system = hostSystem;
             inherit overlays;
           };
           modules = [ ./nix/home ];
+          extraSpecialArgs = { inherit wsl; };
         };
 
       hostDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./nix/hosts);
@@ -88,8 +89,9 @@
       nixosConfigurations = lib.mapAttrs (host: _: mkSystem host) hostDirs;
 
       homeConfigurations = {
-        "dandyrow@x86_64-linux" = mkHome "x86_64-linux";
-        "dandyrow@aarch64-linux" = mkHome "aarch64-linux";
+        "dandyrow@x86_64-linux" = mkHome { hostSystem = "x86_64-linux"; };
+        "dandyrow@aarch64-linux" = mkHome { hostSystem = "aarch64-linux"; };
+        "dandyrow@wsl" = mkHome { hostSystem = "x86_64-linux"; wsl = true; };
       };
     };
 }
