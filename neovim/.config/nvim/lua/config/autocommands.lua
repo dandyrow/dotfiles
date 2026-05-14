@@ -35,7 +35,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     if vim.bo.filetype ~= "oil" then
       local dir = vim.fn.expand("<afile>:p:h")
       if vim.fn.isdirectory(dir) == 0 then
-        vim.fn.mkdir(dir, p)
+        vim.fn.mkdir(dir, "p")
       end
     end
   end,

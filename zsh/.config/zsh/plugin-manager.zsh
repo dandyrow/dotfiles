@@ -1,4 +1,4 @@
-ZPLUGINDIR=${ZPLUGINDIR:-${ZDOTDIR:-${$XDG_CONFIG_HOME:-$HOME/.config}/zsh}/plugins}
+ZPLUGINDIR=${ZPLUGINDIR:-${ZDOTDIR:-${XDG_CONFIG_HOME:-$HOME/.config}/zsh}/plugins}
 
 # Takes in an array of GitHub repos each containing a single ZSH plugin,
 # clones the repos then sources each of the plugins in order.

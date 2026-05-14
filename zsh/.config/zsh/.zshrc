@@ -35,6 +35,7 @@ export OLLAMA_MODELS="$XDG_DATA_HOME/ollama/models"
 export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 export PYTHONPYCACHEPREFIX="$XDG_CACHE_HOME/python"
 export PYTHONUSERBASE="$XDG_DATA_HOME/python"
+export COPILOT_HOME="$XDG_CONFIG_HOME/copilot"
 
 # Source Home Manager session variables (adds ~/.nix-profile/bin to PATH,
 # sets NIX_PATH, etc.). Guard ensures this is a no-op before first HM run.
@@ -43,7 +44,7 @@ export PYTHONUSERBASE="$XDG_DATA_HOME/python"
 
 export PATH="$PATH:$HOME/.local/bin:$HOME/.local/bin/wdcli/bin:$GOPATH/bin"
 
-export KEYTIMEOUT=1
+export KEYTIMEOUT=10
 
 # Use bat as the pager for man (this works with man-db but not mandoc)
 export MANPAGER="sh -c 'awk '\''{ gsub(/\x1B\[[0-9;]*m/, \"\", \$0); gsub(/.\x08/, \"\", \$0); print }'\'' | bat -p -lman'"
@@ -255,9 +256,9 @@ bindkey -M vicmd '^[[2~' vi-insert
 # Change cursor shape for different vi modes
 function zle-keymap-select {
   if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
-    echo -ne '\e[1 q'
+    print -n '\e[1 q' >$TTY
   elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]] || [[ ${KEYMAP} = '' ]] || [[ $1 = 'beam' ]]; then
-    echo -ne '\e[5 q'
+    print -n '\e[5 q' >$TTY
   fi
 }
 zle -N zle-keymap-select
@@ -265,13 +266,16 @@ zle -N zle-keymap-select
 # Needed to return cursor to insert mode after executing command from normal mode
 function zle-line-init {
   zle -K viins
-  echo -ne "\e[5 q"
+  print -n '\e[5 q' >$TTY
 }
 zle -N zle-line-init
 
 ###########
 # Plugins #
 ###########
+
+# Enable completions
+autoload -U compinit && compinit
 
 source $ZDOTDIR/plugin-manager.zsh
 
@@ -290,9 +294,6 @@ plugin-omz $omzPlugins
 
 source "$ZDOTDIR/catppuccin_mocha-zsh-syntax-highlighting.zsh"
 
-# Enable completions
-autoload -U compinit && compinit
-
 # Enable completion scripts
 source "$ZDOTDIR/gh-completions.zsh"
 source "$ZDOTDIR/acli-completions.sh"
@@ -306,4 +307,4 @@ source <(fzf --zsh)
 # Enable zoxide
 eval "$(zoxide init --cmd cd zsh)"
 
-fastfetch
+[[ $SHLVL -eq 1 && -z "$TMUX" ]] && fastfetch

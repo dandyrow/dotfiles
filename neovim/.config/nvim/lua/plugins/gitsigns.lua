@@ -54,7 +54,7 @@ return {
         gitsigns.setqflist("all")
       end, "Show quickfix list for project")
 
-      map("<leader>hb", gitsigns.toggle_current_line_blame, "Toggle current line blame")
+      map("<leader>hB", gitsigns.toggle_current_line_blame, "Toggle current line blame")
       map("<leader>hw", gitsigns.toggle_word_diff, "Toggle word diff")
 
       map("ih", gitsigns.select_hunk, "Select hunk", { "o", "x" })

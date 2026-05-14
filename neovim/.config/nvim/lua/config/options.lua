@@ -41,7 +41,7 @@ vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.updatetime = 300
 vim.opt.timeoutlen = 500
-vim.opt.ttimeoutlen = 0
+vim.opt.ttimeoutlen = 10
 
 -- Behaviour
 vim.opt.scrolloff = 8

@@ -1,14 +1,13 @@
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = "\\"
 
 -- Better copy & paste
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 vim.keymap.set("n", "p", "p`[", { desc = "Keep cursor at start of pasted text" })
 vim.keymap.set("x", "p", [["_d"0P`["]], { desc = "Paste over selected text" })
 
--- Prevent delete commands from yanking
-vim.keymap.set("n", "d", '"_d', { desc = "Prevent delete from yanking" })
-vim.keymap.set("n", "dd", '"_dd', { desc = "Prevent delete line from yanking" })
+-- Delete without yanking
+vim.keymap.set({ "n", "x" }, "<leader>d", '"_d', { desc = "Delete without yanking" })
 
 -- Centre screen when jumping
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
@@ -25,10 +24,10 @@ vim.keymap.set("n", "<C-Left>", ":vertical resize -2 <CR>", { desc = "Decrease w
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2 <CR>", { desc = "Decrease window width", silent = true })
 
 -- Move lines up/down
-vim.keymap.set("n", "J", ":m .+1<CR>==", { desc = "Move line down", silent = true })
-vim.keymap.set("n", "K", ":m .-2<CR>==", { desc = "Move line up", silent = true })
-vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down", silent = true })
-vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up", silent = true })
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down", silent = true })
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up", silent = true })
+vim.keymap.set("x", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down", silent = true })
+vim.keymap.set("x", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up", silent = true })
 
 -- Better indenting in visual mode
 vim.keymap.set("x", "<", "<gv", { desc = "Decrease selection indent" })
@@ -50,11 +49,6 @@ vim.keymap.set("n", "<leader>pa", function()
   vim.fn.setreg("+", path)
   print("file:", path)
 end, { desc = "Print file path & copy it to clipboard" })
-
--- Hover LSP Documentation
-vim.keymap.set("n", "gh", function()
-  vim.lsp.buf.hover()
-end, { desc = "Hover LSP documentation" })
 
 -- Open diagnostic list
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic quickfix list" })
