@@ -26,9 +26,6 @@
         histFile = "$HOME/.cache/zsh/history";
         histSize = 5000;
 
-        autosuggestions.enable = true;
-        syntaxHighlighting.enable = true;
-
         # hist_ignore_space: remove command lines from history when first character is a space
         # dups options: prevent duplicates from being stored in the history
         setOptions = [
