@@ -2,7 +2,10 @@ return {
   "NeogitOrg/neogit",
   lazy = true,
   dependencies = {
-    "sindrets/diffview.nvim",
+    {
+      "esmuellert/codediff.nvim",
+      cmd = "CodeDiff",
+    },
     "folke/snacks.nvim",
   },
   cmd = "Neogit",
