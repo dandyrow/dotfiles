@@ -21,8 +21,8 @@ vim.keymap.set("n", "<c-right>", "<cmd>vertical resize +2<cr>", { desc = "Increa
 -- Move lines up/down
 vim.keymap.set("n", "<a-j>", "<cmd>m .+1<cr>==", { desc = "Move line down", silent = true })
 vim.keymap.set("n", "<a-k>", "<cmd>m .-2<cr>==", { desc = "Move line up", silent = true })
-vim.keymap.set("x", "<a-j>", "<cmd>m '>+1<cr>gv=gv", { desc = "Move selection down", silent = true })
-vim.keymap.set("x", "<a-k>", "<cmd>m '<-2<cr>gv=gv", { desc = "Move selection up", silent = true })
+vim.keymap.set("x", "<a-j>", ":m '>+1<cr>gv=gv", { desc = "Move selection down", silent = true })
+vim.keymap.set("x", "<a-k>", ":m '<-2<cr>gv=gv", { desc = "Move selection up", silent = true })
 
 -- Better indenting in visual mode
 vim.keymap.set("x", "<", "<gv", { desc = "Decrease selection indent" })
