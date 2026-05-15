@@ -122,10 +122,6 @@ in
       name = "Yazi";
       noDisplay = true;
     };
-    system-config-printer = {
-      name = "Manage Printing";
-      noDisplay = true;
-    };
   };
 
   # Move ~/.nix-defexpr and ~/.nix-profile to XDG state directory.
