@@ -24,8 +24,10 @@
 
     # Remove unwanted GNOME default applications entirely.
     environment.gnome.excludePackages = with pkgs; [
+      decibels # Audio player
       epiphany # Web browser
       gnome-characters
+      gnome-console # Terminal emulator (kitty is used instead)
       gnome-contacts
       gnome-font-viewer
       gnome-maps
