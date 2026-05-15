@@ -1,7 +1,7 @@
 # Specific config for HP Spectre x360, Kaby Lake G.
 #
 # fileSystem settings are intentionally absent as disko generates it from disk-config.nix.
-{ ... }:
+{ pkgs, ... }:
 {
   boot = {
     initrd.availableKernelModules = [
@@ -29,8 +29,12 @@
   hardware = {
     cpu.intel.updateMicrocode = true;
 
-    # Kaby Lake G requires redistributable firmware blobs for the AMD GPU.
+    # enableRedistributableFirmware only covers firmware with a redistributable
+    # licence. The Radeon RX Vega M (Kaby Lake G) requires vegam_smu.bin which
+    # is only in the full linux-firmware package. Without it amdgpu fails to
+    # initialise, GNOME Shell cannot start a Wayland session, and login loops.
     enableRedistributableFirmware = true;
+    firmware = [ pkgs.linux-firmware ];
 
     bluetooth = {
       enable = true;
