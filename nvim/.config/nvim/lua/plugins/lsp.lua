@@ -108,11 +108,12 @@ return {
       end
     end
 
+    local tools = require("config.tools")
     local ensure_installed = merge_unique(
       mason_servers,
-      require("plugins.conform").ensure_installed or {},
-      require("plugins.lint").ensure_installed or {},
-      require("plugins.dap").ensure_installed or {}
+      tools.formatters,
+      tools.linters,
+      tools.dap_adapters
     )
 
     -- Auto install all lsps, formatters, linters, and daps
@@ -130,5 +131,43 @@ return {
       vim.lsp.config[server_name] = server_config
       vim.lsp.enable(server_name)
     end
+
+    -- Document highlight: highlight all references to the symbol under cursor
+    vim.api.nvim_create_autocmd("LspAttach", {
+      group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+      callback = function(event)
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
+        local method = vim.lsp.protocol.Methods.textDocument_documentHighlight
+        local supports = vim.fn.has("nvim-0.11") == 1
+          and function() return client:supports_method(method, event.buf) end
+          or function() return client.supports_method(method, { bufnr = event.buf }) end
+
+        if client and supports() then
+          local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+
+          -- Highlight references when cursor rests, clear when it moves
+          vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+            buffer = event.buf,
+            group = highlight_augroup,
+            callback = vim.lsp.buf.document_highlight,
+          })
+          vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+            buffer = event.buf,
+            group = highlight_augroup,
+            callback = vim.lsp.buf.clear_references,
+          })
+
+          -- Clear highlighting when LSP detaches from buffer
+          vim.api.nvim_create_autocmd("LspDetach", {
+            group = vim.api.nvim_create_augroup("lsp-detach", { clear = false }),
+            buffer = event.buf,
+            callback = function(event2)
+              vim.lsp.buf.clear_references()
+              vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
+            end,
+          })
+        end
+      end,
+    })
   end,
 }

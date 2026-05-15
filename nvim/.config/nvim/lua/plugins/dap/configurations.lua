@@ -8,19 +8,25 @@ dap.configurations.rust = {
     type = "codelldb",
     request = "launch",
     program = function()
-      -- Run cargo build before launching
-      local build = vim.fn.system("cargo build")
-      print(build)
-
-      -- Get binary path
-      local handle = io.popen("cargo metadata --format-version 1 --no-deps")
-      if not handle then
-        error("Failed to run 'cargo metadata'")
+      -- Build the project; vim.system() with wait() avoids blocking the event loop
+      vim.notify("cargo build running…", vim.log.levels.INFO)
+      local build = vim.system({ "cargo", "build" }, { text = true }):wait()
+      if build.code ~= 0 then
+        vim.notify("cargo build failed:\n" .. (build.stderr or ""), vim.log.levels.ERROR)
+        error("cargo build failed")
       end
-      local result = handle:read("*a")
-      handle:close()
+      vim.notify("cargo build succeeded", vim.log.levels.INFO)
 
-      local ok, metadata = pcall(vim.fn.json_decode, result)
+      -- Get binary path via cargo metadata
+      local meta = vim.system(
+        { "cargo", "metadata", "--format-version", "1", "--no-deps" },
+        { text = true }
+      ):wait()
+      if meta.code ~= 0 then
+        error("Failed to run 'cargo metadata': " .. (meta.stderr or ""))
+      end
+
+      local ok, metadata = pcall(vim.fn.json_decode, meta.stdout)
       if not ok or not metadata then
         error("Failed to parse cargo metadata")
       end

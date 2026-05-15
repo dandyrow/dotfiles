@@ -3,6 +3,6 @@ return {
   version = "*",
   config = function()
     require("mini.icons").setup()
-    MiniIcons.mock_nvim_web_devicons()
+    require("mini.icons").mock_nvim_web_devicons()
   end,
 }

@@ -30,7 +30,7 @@ dap.adapters.python = function(cb, config)
   else
     cb({
       type = "executable",
-      command = "/usr/sbin/python",
+      command = vim.fn.exepath("python3"),
       args = { "-m", "debugpy.adapter" },
       options = {
         source_filetype = "python",

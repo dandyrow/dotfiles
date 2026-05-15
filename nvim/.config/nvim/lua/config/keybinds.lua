@@ -1,47 +1,38 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Better copy & paste
-vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
-vim.keymap.set("n", "p", "p`[", { desc = "Keep cursor at start of pasted text" })
-vim.keymap.set("x", "p", [["_d"0P`["]], { desc = "Paste over selected text" })
-
 -- Delete without yanking
 vim.keymap.set({ "n", "x" }, "<leader>d", '"_d', { desc = "Delete without yanking" })
 
 -- Centre screen when jumping
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered) " })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
+vim.keymap.set("n", "<c-d>", "<c-d>zz", { desc = "Half page down (centered) " })
+vim.keymap.set("n", "<c-u>", "<c-u>zz", { desc = "Half page up (centered)" })
 
 -- Splitting & Resizing
-vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically", silent = true })
-vim.keymap.set("n", "<leader>sh", ":split<CR>", { desc = "Split window horizontally", silent = true })
-vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height", silent = true })
-vim.keymap.set("n", "<C-Down>", ":resize -2 <CR>", { desc = "Decrease window height", silent = true })
-vim.keymap.set("n", "<C-Left>", ":vertical resize -2 <CR>", { desc = "Decrease window width", silent = true })
-vim.keymap.set("n", "<C-Right>", ":vertical resize +2 <CR>", { desc = "Decrease window width", silent = true })
+vim.keymap.set("n", "<leader>sv", "<cmd>vsplit<cr>", { desc = "Split window vertically", silent = true })
+vim.keymap.set("n", "<leader>sh", "<cmd>split<cr>", { desc = "Split window horizontally", silent = true })
+vim.keymap.set("n", "<c-up>", "<cmd>resize +2<cr>", { desc = "Increase window height", silent = true })
+vim.keymap.set("n", "<c-down>", "<cmd>resize -2<cr>", { desc = "Decrease window height", silent = true })
+vim.keymap.set("n", "<c-left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width", silent = true })
+vim.keymap.set("n", "<c-right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width", silent = true })
 
 -- Move lines up/down
-vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down", silent = true })
-vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up", silent = true })
-vim.keymap.set("x", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down", silent = true })
-vim.keymap.set("x", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up", silent = true })
+vim.keymap.set("n", "<a-j>", "<cmd>m .+1<cr>==", { desc = "Move line down", silent = true })
+vim.keymap.set("n", "<a-k>", "<cmd>m .-2<cr>==", { desc = "Move line up", silent = true })
+vim.keymap.set("x", "<a-j>", "<cmd>m '>+1<cr>gv=gv", { desc = "Move selection down", silent = true })
+vim.keymap.set("x", "<a-k>", "<cmd>m '<-2<cr>gv=gv", { desc = "Move selection up", silent = true })
 
 -- Better indenting in visual mode
 vim.keymap.set("x", "<", "<gv", { desc = "Decrease selection indent" })
 vim.keymap.set("x", ">", ">gv", { desc = "Increase selection indent" })
 
--- Better window navigation with terminal mode
-vim.keymap.set("t", "<C-h>", "<C-\\><C-N><C-w>h", { desc = "Move to window on the left" })
-vim.keymap.set("t", "<C-j>", "<C-\\><C-N><C-w>j", { desc = "Move to window below" })
-vim.keymap.set("t", "<C-k>", "<C-\\><C-N><C-w>k", { desc = "Move to window above" })
-vim.keymap.set("t", "<C-l>", "<C-\\><C-N><C-w>l", { desc = "Move to window to the right" })
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-N>", { desc = "Enter normal mode when in terminal mode" })
+-- Terminal mode: exit to normal mode
+vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter normal mode when in terminal mode" })
 
 -- Clear search highlight
-vim.keymap.set("n", "<leader>cs", ":nohl<CR>", { desc = "Clear search highlight", silent = true })
+vim.keymap.set("n", "<leader>cs", "<cmd>nohl<cr>", { desc = "Clear search highlight", silent = true })
 
 -- Print file path and copy it to clipboard
 vim.keymap.set("n", "<leader>pa", function()
@@ -54,7 +45,7 @@ end, { desc = "Print file path & copy it to clipboard" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic quickfix list" })
 
 -- Remove windows line endings
-vim.keymap.set("n", "<leader>cr", [[:%s/\r//g<CR>]], { desc = "Remove Windows line endings in current file" })
+vim.keymap.set("n", "<leader>cr", [[<cmd>%s/\r//g<cr>]], { desc = "Remove Windows line endings in current file" })
 
 -- Find and replace
 vim.keymap.set("n", "<leader>r", function()

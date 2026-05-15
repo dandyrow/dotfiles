@@ -77,8 +77,8 @@ return {
       win = {
         input = {
           keys = {
-            ["<c-u>"] = { "preview_scroll_up", mode = { "i", "n" } },
-            ["<c-d>"] = { "preview_scroll_down", mode = { "i", "n" } },
+            ["<C-u>"] = { "preview_scroll_up", mode = { "i", "n" } },
+            ["<C-d>"] = { "preview_scroll_down", mode = { "i", "n" } },
           },
         },
       },
@@ -172,7 +172,7 @@ return {
       desc = "Notification history",
     },
     {
-      '"',
+      '<leader>"',
       function()
         Snacks.picker.registers({
           on_show = function()

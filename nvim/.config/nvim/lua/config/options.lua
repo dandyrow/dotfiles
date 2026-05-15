@@ -16,7 +16,7 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 -- Visual
-vim.o.winborder = "rounded"
+vim.opt.winborder = "rounded"
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.numberwidth = 1
@@ -46,7 +46,6 @@ vim.opt.ttimeoutlen = 10
 -- Behaviour
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
-vim.opt.iskeyword:append("-")
 vim.opt.path:append("**") -- include subdirectories in search
 vim.opt.mouse = "a"
 vim.schedule(function()

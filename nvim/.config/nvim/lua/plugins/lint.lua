@@ -30,14 +30,4 @@ return {
       lint.try_lint()
     end, { desc = "Lint current file" })
   end,
-  ensure_installed = {
-    -- "luacheck",
-    "shellcheck",
-    "ruff",
-    "actionlint",
-    "ansible-lint",
-    "jsonlint",
-    "golangci-lint",
-    "eslint_d",
-  },
 }

@@ -60,7 +60,7 @@ return {
 			desc = "Close All Folds",
 		},
 		{
-			"zK",
+			"zp",
 			function()
 				local winid = require("ufo").peekFoldedLinesUnderCursor()
 				if not winid then

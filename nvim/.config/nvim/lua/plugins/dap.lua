@@ -46,12 +46,6 @@ return {
     require("plugins.dap.adapters")
     require("plugins.dap.configurations")
   end,
-  ensure_installed = {
-    "codelldb",
-    "bash-debug-adapter",
-    "debugpy",
-    "delve",
-  },
   keys = {
     {
       "<leader>dc",

@@ -24,17 +24,6 @@ return {
     default_format_opts = { lsp_format = "fallback" },
     format_on_save = { timeout_ms = 500 },
   },
-  ensure_installed = {
-    "stylua",
-    -- rustfmt should be installed by rustup
-    "beautysh",
-    "ruff",
-    "ansible-lint",
-    "yamlfmt",
-    "goimports",
-    "gofumpt",
-    "eslint_d",
-  },
   keys = {
     {
       "<leader>f",
