@@ -18,10 +18,7 @@ dap.configurations.rust = {
       vim.notify("cargo build succeeded", vim.log.levels.INFO)
 
       -- Get binary path via cargo metadata
-      local meta = vim.system(
-        { "cargo", "metadata", "--format-version", "1", "--no-deps" },
-        { text = true }
-      ):wait()
+      local meta = vim.system({ "cargo", "metadata", "--format-version", "1", "--no-deps" }, { text = true }):wait()
       if meta.code ~= 0 then
         error("Failed to run 'cargo metadata': " .. (meta.stderr or ""))
       end
@@ -83,7 +80,7 @@ dap.configurations.python = {
       elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
         return cwd .. "/.venv/bin/python"
       else
-        return "/usr/bin/python"
+        return vim.fn.exepath("python3") ~= "" and vim.fn.exepath("python3") or "python3"
       end
     end,
   },

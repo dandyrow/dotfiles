@@ -64,24 +64,28 @@ return {
       },
       ansiblels = {},
       ts_ls = {},
-      nixd = {
-        mason = false,
-        settings = {
-          nixd = {
-            nixpkgs = {
-              expr = 'import (builtins.getFlake "/etc/nixos").inputs.nixpkgs { }',
-            },
-            options = {
-              nixos = {
-                expr = '(builtins.getFlake "/etc/nixos").nixosConfigurations.$HOSTNAME.options',
+      nixd = (function()
+        local hostname = vim.env.HOSTNAME or vim.fn.hostname()
+        local user = vim.env.USER or vim.fn.getenv("USER")
+        return {
+          mason = false,
+          settings = {
+            nixd = {
+              nixpkgs = {
+                expr = 'import (builtins.getFlake "/etc/nixos").inputs.nixpkgs { }',
               },
-              home_manager = {
-                expr = '(builtins.getFlake "/etc/nixos").homeConfigurations."$USER".options',
+              options = {
+                nixos = {
+                  expr = '(builtins.getFlake "/etc/nixos").nixosConfigurations.' .. hostname .. ".options",
+                },
+                home_manager = {
+                  expr = '(builtins.getFlake "/etc/nixos").homeConfigurations."' .. user .. '".options',
+                },
               },
             },
           },
-        },
-      },
+        }
+      end)(),
     }
 
     local function merge_unique(...)
@@ -100,7 +104,7 @@ return {
       return result
     end
 
-    -- Filter out servers which shouldn't be downloaded by Brave
+    -- Filter out servers which shouldn't be downloaded by mason
     local mason_servers = {}
     for name, config in pairs(servers) do
       if config.mason ~= false then
@@ -109,12 +113,7 @@ return {
     end
 
     local tools = require("config.tools")
-    local ensure_installed = merge_unique(
-      mason_servers,
-      tools.formatters,
-      tools.linters,
-      tools.dap_adapters
-    )
+    local ensure_installed = merge_unique(mason_servers, tools.formatters, tools.linters, tools.dap_adapters)
 
     -- Auto install all lsps, formatters, linters, and daps
     -- (mason-lspconfig auto enable disabled as lsps are enabled below)
@@ -138,9 +137,9 @@ return {
       callback = function(event)
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         local method = vim.lsp.protocol.Methods.textDocument_documentHighlight
-        local supports = vim.fn.has("nvim-0.11") == 1
-          and function() return client:supports_method(method, event.buf) end
-          or function() return client.supports_method(method, { bufnr = event.buf }) end
+        local supports = function()
+          return client:supports_method(method, event.buf)
+        end
 
         if client and supports() then
           local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })

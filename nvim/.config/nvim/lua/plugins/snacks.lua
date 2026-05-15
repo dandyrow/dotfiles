@@ -121,7 +121,7 @@ return {
       function()
         Snacks.scratch.select()
       end,
-      desc = "Select bcratch buffer",
+      desc = "Select scratch buffer",
     },
     {
       "<leader>gb",

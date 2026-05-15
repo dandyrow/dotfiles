@@ -83,4 +83,4 @@
     - name: Install Neovim
       ansible.builtin.include_tasks:
         file: ./neovim.yml
-      when: Install_nvim | default(true)
+      when: install_nvim | default(true)

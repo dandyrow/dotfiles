@@ -8,7 +8,6 @@ return {
       -- lua = { "luacheck" }, requires luarocks
       sh = { "shellcheck" },
       python = { "ruff" },
-      github = { "actionlint" },
       ["yaml.github"] = { "actionlint" },
       ["yaml.ansible"] = { "ansible_lint" },
       json = { "jsonlint" },

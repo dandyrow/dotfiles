@@ -15,8 +15,12 @@
 [commit]
   gpgSign = true
 
+[branch]
+  sort = -committerdate
+
 [tag]
   gpgSign = true
+  sort = -version:refname
 
 [includeIf "gitdir:~/Documents/projects/work/"]
   path = ~/Documents/projects/work/.gitconfig

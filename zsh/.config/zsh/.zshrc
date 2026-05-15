@@ -47,7 +47,7 @@ export PATH="$PATH:$HOME/.local/bin:$HOME/.local/bin/wdcli/bin:$GOPATH/bin"
 export KEYTIMEOUT=10
 
 # Use bat as the pager for man (this works with man-db but not mandoc)
-export MANPAGER="sh -c 'awk '\''{ gsub(/\x1B\[[0-9;]*m/, \"\", \$0); gsub(/.\x08/, \"\", \$0); print }'\'' | bat -p -lman'"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # Use Catppuccin for fzf
 export FZF_DEFAULT_OPTS=" \
@@ -81,19 +81,19 @@ function git-worktree-clone() {
   local repository_url=$1
   local target_directory=$2
 
-  if [ -z $repository_url ]; then
+  if [ -z "$repository_url" ]; then
     echo "Usage: git-worktree-clone <repository_url> [<target_directory>]"
     return 1
   fi
 
-  if [ -z $target_directory ]; then
+  if [ -z "$target_directory" ]; then
     target_directory=$(basename $repository_url .git)
   fi
 
   mkdir $target_directory
   git clone --bare --single-branch $repository_url $target_directory/.git
 
-  cd $target_directory || { echo "Failed to change directory to $target_directory. Please execute 'git checkout \$(git commit_-tree \$(git hash-object -t tree /dev/null) < /dev/null)' manually within cloned repository to prepare it for use with git worktrees."; return 2 }
+  cd $target_directory || { echo "Failed to change directory to $target_directory. Please execute 'git checkout \$(git commit-tree \$(git hash-object -t tree /dev/null) < /dev/null)' manually within cloned repository to prepare it for use with git worktrees."; return 2 }
 
   git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
   git fetch --quiet
@@ -106,12 +106,12 @@ function git-worktree-add() {
   local commit_ish=$1
   local target_directory=$2
 
-  if [ -z $commit_ish ]; then
+  if [ -z "$commit_ish" ]; then
     echo "Usage: git-worktree-add <commit_ish> [<target_directory>]"
     return 1
   fi
 
-  if [ -z $target_directory ]; then
+  if [ -z "$target_directory" ]; then
     target_directory=./$commit_ish
   fi
 
@@ -147,7 +147,7 @@ function git-worktree-branch() {
     shift
   done
 
-  if [ -z $new_branch ]; then
+  if [ -z "$new_branch" ]; then
     print_usage
     return 1
   fi
@@ -166,7 +166,7 @@ function git-worktree-branch() {
 function git-worktree-delete() {
   local worktree_name=$1
 
-  if [ -z $worktree_name ]; then
+  if [ -z "$worktree_name" ]; then
     echo "Usage: $0 <worktree_name>"
     return 1
   fi
@@ -241,7 +241,7 @@ bindkey '^?'    backward-delete-char
 
 # Normal mode keybinds
 bindkey -M vicmd '^p'    history-search-backward
-bindkey -M vicmd '^n'    history-search-backward
+bindkey -M vicmd '^n'    history-search-forward
 bindkey -M vicmd '^[l'   vi-end-of-line
 bindkey -M vicmd '^[L'   forward-word
 bindkey -M vicmd '^[h'   vi-beginning-of-line
