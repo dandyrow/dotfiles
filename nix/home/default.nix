@@ -104,6 +104,30 @@ in
     GNUPGHOME = "${config.xdg.dataHome}/gnupg";
   };
 
+  # Hide CLI tools from the GNOME app menu. These packages ship .desktop files
+  # so GNOME picks them up and shows them in the app launcher, but they are
+  # terminal applications and have no business appearing there. Overriding each
+  # entry with NoDisplay=true removes them from the menu while keeping the
+  # binaries fully available in the terminal.
+  xdg.desktopEntries = {
+    btop = {
+      name = "btop++";
+      noDisplay = true;
+    };
+    nvim = {
+      name = "Neovim";
+      noDisplay = true;
+    };
+    yazi = {
+      name = "Yazi";
+      noDisplay = true;
+    };
+    system-config-printer = {
+      name = "Manage Printing";
+      noDisplay = true;
+    };
+  };
+
   # Move ~/.nix-defexpr and ~/.nix-profile to XDG state directory.
   # use-xdg-base-directories is enabled system-wide in common/default.nix.
   nix.assumeXdg = true;
