@@ -13,7 +13,8 @@ return {
     graph_style = "unicode",
     process_spinner = true,
     kind = "floating",
-    commit_editor = { staged_diff_split_kind = "vsplit" },
+    commit_editor = { kind = "tab", staged_diff_split_kind = "vsplit" },
+    rebase_editor = { kind = "tab" },
   },
   keys = {
     {
