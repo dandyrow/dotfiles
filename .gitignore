@@ -8,3 +8,8 @@ secrets/
 gnupg/.local/share/gnupg/
 !gnupg/.local/share/gnupg/gpg-agent.conf
 !gnupg/.local/share/gnupg/gpg.conf
+
+# Nix build outputs
+result
+result-*
+*.wsl
