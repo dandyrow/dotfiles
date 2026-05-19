@@ -18,7 +18,7 @@ The flake at the repo root controls everything — NixOS hosts, home configurati
 Boot the target into a NixOS live ISO, then from this repo run:
 
 ```bash
-HOST=<host> TARGET_IP=<target-ip> ./install.sh $HOST $TARGET_IP ./secrets
+./install.sh <host> <target-ip> ./secrets
 ```
 
 Available hosts: `DansSpectre`, `New-H0Ryzen`
@@ -48,11 +48,13 @@ doas nixos-rebuild switch --flake github:dandyrow/dotfiles#$HOST
 #### 1. Prepare the secrets directory
 
 The user password is injected into the tarball at build time, the same way as
-bare-metal installs. Create the secrets directory structure:
+bare-metal installs. Create the secrets directory structure with restrictive
+permissions:
 
 ```bash
-mkdir -p ./secrets/etc/secrets
+mkdir -p -m 700 ./secrets/etc/secrets
 mkpasswd -m bcrypt > ./secrets/etc/secrets/dandyrow-password
+chmod 600 ./secrets/etc/secrets/dandyrow-password
 ```
 
 This directory is `.gitignore`d and must never be committed.

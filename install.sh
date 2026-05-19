@@ -31,12 +31,16 @@ fi
 HOST="$1"
 TARGET_IP="$2"
 SECRETS_DIR="$3"
+PASSWORD_FILE="${SECRETS_DIR}/etc/secrets/dandyrow-password"
 
-if [[ ! -f "${SECRETS_DIR}/etc/secrets/dandyrow-password" ]]; then
-  echo "Error: ${SECRETS_DIR}/etc/secrets/dandyrow-password not found." >&2
-  echo "Generate with: mkpasswd -m bcrypt" >&2
+if [[ ! -f "${PASSWORD_FILE}" ]]; then
+  echo "Error: password file not found at ${PASSWORD_FILE}." >&2
+  echo "Generate with: mkpasswd -m bcrypt > ${PASSWORD_FILE}" >&2
   exit 1
 fi
+
+chmod 700 "$(dirname "${PASSWORD_FILE}")"
+chmod 600 "${PASSWORD_FILE}"
 
 echo "Installing NixOS (${HOST}) on ${TARGET_IP}..."
 
