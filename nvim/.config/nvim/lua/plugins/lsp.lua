@@ -1,10 +1,7 @@
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
-    { "mason-org/mason.nvim", opts = {
-      -- Redirect npm cache to XDG cache dir to avoid creating ~/.npm
-      npm = { install_args = { "--cache", vim.fn.expand("$XDG_CACHE_HOME") .. "/npm" } },
-    } },
+    { "mason-org/mason.nvim", opts = {} },
     "mason-org/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     "saghen/blink.cmp",
