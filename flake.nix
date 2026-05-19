@@ -18,6 +18,11 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -63,11 +68,11 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {
-                wsl = false;
-              };
               home-manager.users.dandyrow = import ./nix/home;
             }
+          ]
+          ++ lib.optionals (host == "WSL") [
+            inputs.nixos-wsl.nixosModules.default
           ];
 
           specialArgs = {
@@ -93,6 +98,9 @@
     in
     {
       nixosConfigurations = lib.mapAttrs (host: _: mkSystem host) hostDirs;
+
+      packages.${system}.wsl-tarball =
+        inputs.self.nixosConfigurations.WSL.config.system.build.tarballBuilder;
 
       homeConfigurations = {
         "dandyrow@x86_64-linux" = mkHome { hostSystem = "x86_64-linux"; };

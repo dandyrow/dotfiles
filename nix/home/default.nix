@@ -4,8 +4,6 @@
   pkgs,
   # osConfig is populated when running as a NixOS module; null in standalone HM.
   osConfig ? null,
-  # wsl = true omits packages that don't work in a WSL environment.
-  wsl ? false,
   ...
 }:
 let
@@ -31,7 +29,8 @@ in
         tmux
         yazi
       ]
-      ++ lib.optionals (!wsl) [
+      # Only install kitty on systems with Gnome desktop environment
+      ++ lib.optionals (osConfig != null && (osConfig.gnome.enable or false)) [
         kitty
       ]
       ++ [
