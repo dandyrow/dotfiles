@@ -61,14 +61,12 @@ This produces `nixos.wsl` — a compressed archive ready to import into WSL.
 From PowerShell or Command Prompt on Windows:
 
 ```powershell
-wsl --import NixOS C:\Users\<you>\NixOS \\wsl$\<distro>\path\to\nixos.wsl
+wsl --import NixOS C:\Users\<you>\WSL\NixOS \\wsl$\<distro>\path\to\nixos.wsl
 ```
 
-Or copy `nixos.wsl` to Windows first and import from there:
-
-```powershell
-wsl --import NixOS C:\Users\<you>\NixOS nixos.wsl
-```
+The 2nd argument is the installation directory for the WSL distro (e.g. `C:\Users\dandyrow\WSL\NixOS`).
+This is where the virtual hard disk will be stored. The directory above NixOS needs to exist (e.g. 
+`C:\Users\dandyrow\WSL`).
 
 #### 3. Start NixOS
 
