@@ -1,21 +1,27 @@
-{ lib, config, ... }:
+{ config, lib, ... }:
 {
   options = {
-    zsh = {
-      enable = lib.mkEnableOption "Enables ZSH";
-      defaultShell = lib.mkEnableOption "Sets ZSH as default shell for all users";
+    zsh.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
     };
   };
 
   config = lib.mkIf config.zsh.enable {
     programs.zsh = {
       enable = true;
-      enableBashCompletion = true;
       enableCompletion = true;
+      enableBashCompletion = true;
       enableLsColors = true;
+
       histFile = "$HOME/.cache/zsh/history";
+      histSize = 5000;
+
       autosuggestions.enable = true;
       syntaxHighlighting.enable = true;
+
+      # hist_ignore_space: remove command lines from history when first character is a space
+      # dups options: prevent duplicates from being stored in the history
       setOptions = [
         "appendhistory"
         "sharehistory"

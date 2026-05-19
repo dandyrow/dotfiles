@@ -1,16 +1,16 @@
-{ lib, config, ... }: {
+{ lib, config, ... }:
+{
   options = {
     systemd-boot = {
-      enable = lib.mkEnableOption "enable systemd-boot";
-      timeout = lib.mkOption {
-        type = lib.types.int;
-        description = "Number of seconds to wait before booting to the first option in the bootloader";
-        default = 0;
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
       };
+
       logo = lib.mkEnableOption "enable boot logo";
       theme = lib.mkOption {
         type = lib.types.str;
-        description = "Boot logo (plymouth) theme";
+        description = "Boot logo (plymouth) theme. Logo must be enabled for setting to take affect";
         default = "bgrt";
       };
     };
@@ -19,7 +19,7 @@
   config = lib.mkIf config.systemd-boot.enable {
     boot = {
       loader = {
-        timeout = config.systemd-boot.timeout;
+        timeout = lib.mkDefault 0;
 
         systemd-boot = {
           enable = true;

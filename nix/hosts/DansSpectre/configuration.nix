@@ -1,47 +1,6 @@
-{ lib, config, ... }:
+{ lib, ... }:
 {
-# Kernel modules specific to DansSpectre
-  boot = {
-    initrd = {
-      availableKernelModules = [
-        "xhci_pci"
-        "ahci"
-        "nvme"
-        "usb_storage"
-        "sd_mod"
-      ];
-      kernelModules = [ ];
-    };
-
-    kernelModules = [ "kvm-intel" ];
-    extraModulePackages = [ ];
-  };
-
-  hardware = {
-    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    enableRedistributableFirmware = true;
-  };
-
-  systemd-boot.enable = true;
-
-  gnome = {
-    enable = true;
-    enable-gnome-software = true;
-  };
-
-  zsh = {
-    enable = true;
-    defaultShell = true;
-  };
-
-  networking.hostName = "DansSpectre";
-
-  services = {
-    openssh.enable = true;
-  };
-
   documentation.nixos.enable = false;
-  gnupg.enable = true;
 
   programs = {
     command-not-found.enable = true;
@@ -67,19 +26,11 @@
       ];
     };
 
-    dandyrow = {
-      isNormalUser = true;
-      extraGroups = [
-        "wheel"
-        "networkmanager"
-        "print"
-      ];
-    };
+    dandyrow.extraGroups = [
+      "networkmanager"
+      "print"
+    ];
   };
 
   system.stateVersion = "24.05";
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
 }

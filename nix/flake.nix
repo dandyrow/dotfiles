@@ -1,8 +1,8 @@
 {
-  description = "dandyrow's NixOS Configs";
+  description = "dandyrow's Flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
 
     disko = {
       url = "github:nix-community/disko";
@@ -16,43 +16,29 @@
   };
 
   outputs =
-    {
-      nixpkgs,
-      nix-flatpak,
-      disko,
-      home-manager,
-      ...
-    }@inputs:
-    {
-      nixosConfigurations = {
+    inputs@{ ... }:
+    let
+      system = "x86_64-linux";
 
-        New-H0Ryzen = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+      lib = inputs.nixpkgs.lib;
+
+      mkSystem =
+        host:
+        lib.nixosSystem {
+          inherit system;
           modules = [
-            disko.nixosModules.disko
-            { nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ]; }
-            ./hosts/New-H0Ryzen/configuration.nix
-            ./hosts/New-H0Ryzen/disk-config.nix
-            ./nixosModules
+            { networking.hostName = host; }
+            ./hosts/${host}
           ];
+
+          specialArgs = {
+            disko = inputs.disko;
+          };
         };
 
-        DansSpectre = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            disko.nixosModules.disko
-            { nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ]; }
-            ./hosts/DansSpectre/configuration.nix
-            ./hosts/DansSpectre/disk-config.nix
-            ./nixosModules
-          ];
-        };
-      };
-
-      homeConfigurations.dandyrow = home-manager.lib.homeManagerConfiguration {
-        modules = [
-          ./home
-        ];
-      };
+      hostDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./hosts);
+    in
+    {
+      nixosConfigurations = lib.mapAttrs (host: _: mkSystem host) hostDirs;
     };
 }

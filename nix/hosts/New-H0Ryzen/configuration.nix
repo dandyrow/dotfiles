@@ -1,6 +1,5 @@
 { ... }:
 {
-  systemd-boot.enable = true;
   # Needs these kernel modules to boot
   boot.initrd.availableKernelModules = [
     "uhci_hcd"
@@ -11,22 +10,7 @@
     "virtio_blk"
   ];
 
-  gnome = {
-    enable = true;
-    enable-gnome-software = true;
-  };
-
-  zsh = {
-    enable = true;
-    defaultShell = true;
-  };
-
-  networking.hostName = "New-H0Ryzen";
-
-  services = {
-    qemuGuest.enable = true;
-    openssh.enable = true;
-  };
+  services.qemuGuest.enable = true;
 
   documentation.nixos.enable = false;
 
@@ -45,19 +29,11 @@
       ];
     };
 
-    dandyrow = {
-      isNormalUser = true;
-      extraGroups = [
-        "wheel"
-        "networkmanager"
-        "print"
-      ];
-    };
+    dandyrow.extraGroups = [
+      "networkmanager"
+      "print"
+    ];
   };
 
   system.stateVersion = "24.05";
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
 }
