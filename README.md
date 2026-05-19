@@ -45,18 +45,41 @@ doas nixos-rebuild switch --flake github:dandyrow/dotfiles#<host>
 - Windows 11 or WSL version ≥ 0.67.6 (required for systemd support)
 - WSL installed and enabled on the Windows host
 
-#### 1. Build the NixOS-WSL tarball
+#### 1. Prepare the secrets directory
 
-From a clone of this repo on any x86_64 Linux machine with Nix:
+The user password is injected into the tarball at build time, the same way as
+bare-metal installs. Create the secrets directory structure:
+
+```bash
+mkdir -p ./secrets/etc/secrets
+mkpasswd -m bcrypt > ./secrets/etc/secrets/dandyrow-password
+```
+
+This directory is `.gitignore`d and must never be committed.
+
+#### 2. Build the NixOS-WSL tarball
+
+**From a local clone** of this repo on any x86_64 Linux machine with Nix:
 
 ```bash
 nix build .#wsl-tarball
-./result/bin/nixos-wsl-tarball-builder nixos.wsl
+sudo ./result/bin/nixos-wsl-tarball-builder --extra-files ./secrets nixos.wsl
 ```
 
-This produces `nixos.wsl` — a compressed archive ready to import into WSL.
+**Without cloning the repo** (requires changes to be pushed first):
 
-#### 2. Import the tarball into WSL
+```bash
+nix build github:dandyrow/dotfiles#wsl-tarball
+sudo ./result/bin/nixos-wsl-tarball-builder --extra-files ./secrets nixos.wsl
+```
+
+> **Note:** The `secrets/` directory must always be prepared locally (step 1)
+> regardless of whether the repo is cloned — it is never committed.
+
+This produces `nixos.wsl` — a compressed archive ready to import into WSL,
+with the hashed password baked in at `/etc/secrets/dandyrow-password`.
+
+#### 3. Import the tarball into WSL
 
 From PowerShell or Command Prompt on Windows:
 
@@ -68,7 +91,7 @@ The 2nd argument is the installation directory for the WSL distro (e.g. `C:\User
 This is where the virtual hard disk will be stored. The directory above NixOS needs to exist (e.g. 
 `C:\Users\dandyrow\WSL`).
 
-#### 3. Start NixOS
+#### 4. Start NixOS
 
 ```powershell
 wsl -d NixOS
