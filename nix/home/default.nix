@@ -60,19 +60,24 @@ in
     # Dotfiles are symlinked from ~/.dotfiles — a clone of the dotfiles repo.
     # On NixOS the clone is created during system activation (see modules/common/dotfiles.nix).
     # On non-NixOS the clone is created by the cloneDotfiles activation script below.
-    file = lib.mkMerge [
-      (mkConfigLink "bat")
-      (mkConfigLink "btop")
-      (mkConfigLink "eza")
-      (mkConfigLink "fastfetch")
-      (mkConfigLink "git")
-      (mkConfigLink "kitty")
-      (mkConfigLink "nvim")
-      (mkConfigLink "starship")
-      (mkConfigLink "tmux")
-      (mkConfigLink "yazi")
-      (mkConfigLink "zsh")
-      (mkConfigLink "npm")
+    file =
+      let
+        hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
+      in
+      lib.mkMerge [
+        (mkConfigLink "bat")
+        (mkConfigLink "btop")
+        (mkConfigLink "eza")
+        (mkConfigLink "fastfetch")
+        (mkConfigLink "git")
+        (mkConfigLink "npm")
+        (mkConfigLink "nvim")
+        (mkConfigLink "opencode")
+        (mkConfigLink "starship")
+        (mkConfigLink "tmux")
+        (mkConfigLink "yazi")
+        (mkConfigLink "zsh")
+        (lib.optionalAttrs hasDesktop (mkConfigLink "kitty"))
 
       # gnupg: manage individual files rather than the whole directory — gpg requires
       # strict 700 permissions on the directory itself, and the directory contains
