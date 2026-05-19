@@ -102,7 +102,7 @@ system activation.
 
 > **Note:** The WSL host uses `doas` (not `sudo`) after the first boot.
 
-To apply config changes run the same command as for basre-metal NixOS systems
+To apply config changes run the same command as for bare-metal NixOS systems
 mentioned above.
 
 #### Differences from bare-metal hosts
