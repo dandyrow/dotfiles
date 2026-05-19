@@ -16,10 +16,10 @@
     security.polkit = {
       enable = true;
 
-      # Passwordless print queue management for users.
+      # Passwordless print queue management for admin users.
       extraConfig = ''
         polkit.addRule(function(action, subject) {
-          if (action.id.indexOf("com.redhat.cups") == 0 && subject.isInGroup("users")) {
+          if (action.id.indexOf("com.redhat.cups") == 0 && subject.isInGroup("wheel")) {
             return polkit.Result.YES;
           }
         });
