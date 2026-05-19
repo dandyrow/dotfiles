@@ -18,7 +18,7 @@ The flake at the repo root controls everything — NixOS hosts, home configurati
 Boot the target into a NixOS live ISO, then from this repo run:
 
 ```bash
-./install.sh <host> <target-ip> ./secrets
+HOST=<host> TARGET_IP=<target-ip> ./install.sh $HOST $TARGET_IP ./secrets
 ```
 
 Available hosts: `DansSpectre`, `New-H0Ryzen`
@@ -27,12 +27,12 @@ Available hosts: `DansSpectre`, `New-H0Ryzen`
 
 From a local clone:
 ```bash
-doas nixos-rebuild switch --flake /path/to/repo#<host>
+doas nixos-rebuild switch --flake /path/to/repo#$HOST
 ```
 
 Or directly from GitHub (requires changes to be pushed first):
 ```bash
-doas nixos-rebuild switch --flake github:dandyrow/dotfiles#<host>
+doas nixos-rebuild switch --flake github:dandyrow/dotfiles#$HOST
 ```
 
 > **Note:** Dotfile edits made in `~/.dotfiles` take effect immediately — no rebuild needed.
@@ -84,12 +84,12 @@ with the hashed password baked in at `/etc/secrets/dandyrow-password`.
 From PowerShell or Command Prompt on Windows:
 
 ```powershell
-wsl --import NixOS C:\Users\<you>\WSL\NixOS \\wsl$\<distro>\path\to\nixos.wsl
+wsl --import NixOS C:\Users\$env:USERNAME\WSL\NixOS \\wsl$\<distro>\path\to\nixos.wsl
 ```
 
-The 2nd argument is the installation directory for the WSL distro (e.g. `C:\Users\dandyrow\WSL\NixOS`).
+The 2nd argument is the installation directory for the WSL distro (e.g. `C:\Users\$env:USERNAME\WSL\NixOS`).
 This is where the virtual hard disk will be stored. The directory above NixOS needs to exist (e.g. 
-`C:\Users\dandyrow\WSL`).
+`C:\Users\$env:USERNAME\WSL`).
 
 #### 4. Start NixOS
 
