@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 {
   wsl = {
     enable = true;
@@ -17,6 +17,15 @@
   documentation.nixos.enable = false;
 
   programs.git.enable = true;
+
+  # Include the corporate CA certificate if present at /etc/nixos/corp.pem.
+  # This file must be placed there manually and is never committed to git.
+  # Requires --impure flag when running nixos-rebuild.
+  # The builtins.pathExists guard means this evaluates safely to [] when the
+  # file is absent (e.g. on non-WSL machines without the cert).
+  security.pki.certificateFiles = lib.optionals (builtins.pathExists /etc/nixos/corp.pem) [
+    /etc/nixos/corp.pem
+  ];
 
   system.stateVersion = "25.11";
 }

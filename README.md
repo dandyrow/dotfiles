@@ -59,19 +59,29 @@ chmod 600 ./secrets/etc/secrets/dandyrow-password
 
 This directory is `.gitignore`d and must never be committed.
 
-#### 2. Build the NixOS-WSL tarball
+#### 2. Place the corporate certificate
+
+If building on a machine behind the corporate proxy, copy the corporate CA
+certificate to the repo root before building (it is gitignored and never
+committed):
+
+```bash
+cp /path/to/corp.pem ./corp.pem
+```
+
+If the certificate is not present, the build will succeed but the resulting
+NixOS system will not trust the corporate proxy's TLS certificates.
+
+#### 3. Build the NixOS-WSL tarball
+
+The WSL configuration reads `corp.pem` from outside the Nix store, so
+`--impure` is required. This flag is only needed for the WSL build — other
+hosts do not require it.
 
 **From a local clone** of this repo on any x86_64 Linux machine with Nix:
 
 ```bash
-nix build .#wsl-tarball
-sudo ./result/bin/nixos-wsl-tarball-builder --extra-files ./secrets nixos.wsl
-```
-
-**Without cloning the repo** (requires changes to be pushed first):
-
-```bash
-nix build github:dandyrow/dotfiles#wsl-tarball
+nix build --impure .#wsl-tarball
 sudo ./result/bin/nixos-wsl-tarball-builder --extra-files ./secrets nixos.wsl
 ```
 
@@ -104,8 +114,19 @@ system activation.
 
 > **Note:** The WSL host uses `doas` (not `sudo`) after the first boot.
 
-To apply config changes run the same command as for bare-metal NixOS systems
-mentioned above.
+To apply config changes on the WSL host, `--impure` is required because the
+corporate certificate at `/etc/nixos/corp.pem` is read from outside the Nix
+store. This flag is **not** needed for other hosts.
+
+```bash
+doas nixos-rebuild switch --flake /path/to/repo#WSL --impure
+```
+
+Make sure `/etc/nixos/corp.pem` is present before rebuilding:
+
+```bash
+doas cp /path/to/corp.pem /etc/nixos/corp.pem
+```
 
 #### Differences from bare-metal hosts
 
