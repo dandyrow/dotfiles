@@ -104,8 +104,14 @@ in
 
   # GNUPGHOME must be in the systemd user environment so gpg-agent (launched
   # as a systemd user service at login) uses the XDG path rather than ~/.gnupg.
-  systemd.user.sessionVariables = {
-    GNUPGHOME = "${config.xdg.dataHome}/gnupg";
+  systemd.user = {
+    sessionVariables = {
+      GNUPGHOME = "${config.xdg.dataHome}/gnupg";
+    };
+    # gpg requires strict 700 permissions on its home directory.
+    tmpfiles.rules = [
+      "d %h/.local/share/gnupg 0700 - - -"
+    ];
   };
 
   # Hide CLI tools from the GNOME app menu. These packages ship .desktop files
