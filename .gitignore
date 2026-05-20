@@ -13,3 +13,6 @@ gnupg/.local/share/gnupg/
 result
 result-*
 *.wsl
+
+# Superpowers design/plan files — local use only, not for version control
+docs/superpowers/
