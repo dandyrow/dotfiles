@@ -1,9 +1,21 @@
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
-    { "mason-org/mason.nvim", opts = {} },
-    "mason-org/mason-lspconfig.nvim",
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    {
+      "mason-org/mason.nvim",
+      opts = {},
+      -- Mason binaries are broken on Nix due to non-FHS dynamic linker paths.
+      -- Disable on Nix systems; tools should be provided via Nix packages instead.
+      enabled = not require("config.system").is_nix(),
+    },
+    {
+      "mason-org/mason-lspconfig.nvim",
+      enabled = not require("config.system").is_nix(),
+    },
+    {
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+      enabled = not require("config.system").is_nix(),
+    },
     "saghen/blink.cmp",
   },
   config = function()
@@ -49,6 +61,8 @@ return {
       },
       gh_actions_ls = {
         filetypes = { "yaml.github" },
+        -- Note: gh_actions_ls (github-actions-language-server) is not yet in nixpkgs.
+        -- On Nix systems this server will be unavailable unless installed manually.
       },
       jsonls = {},
       gopls = {
@@ -113,15 +127,23 @@ return {
     end
 
     local tools = require("config.tools")
-    local ensure_installed = merge_unique(mason_servers, tools.formatters, tools.linters, tools.dap_adapters)
+    local system = require("config.system")
 
-    -- Auto install all lsps, formatters, linters, and daps
-    -- (mason-lspconfig auto enable disabled as lsps are enabled below)
-    require("mason-lspconfig").setup({ automatic_enable = false })
-    require("mason-tool-installer").setup({
-      ensure_installed = ensure_installed,
-      auto_update = true,
-    })
+    -- On Nix systems Mason is disabled; all tools are provided by Nix packages.
+    -- On non-Nix systems, auto-install LSPs, formatters, linters, and DAPs via Mason.
+    if not system.is_nix() then
+      local ensure_installed = merge_unique(mason_servers, tools.formatters, tools.linters, tools.dap_adapters)
+
+      -- Auto install all lsps, formatters, linters, and daps
+      -- (mason-lspconfig auto enable disabled as lsps are enabled below)
+      require("mason-lspconfig").setup({ automatic_enable = false })
+      require("mason-tool-installer").setup({
+        ensure_installed = ensure_installed,
+        auto_update = false,
+        run_on_start = true,
+        debounce_hours = 24,
+      })
+    end
 
     -- Add capabilities, merge lsp configs & enable
     local capabilities = require("blink.cmp").get_lsp_capabilities()
