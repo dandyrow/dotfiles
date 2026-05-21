@@ -52,6 +52,46 @@ in
         wl-clipboard
         yamllint
         nodejs
+
+        # Neovim LSP / formatter / linter / DAP tools
+        # On Nix, Mason is disabled (Mason binaries are broken in the non-FHS environment).
+        # All tools that Mason would otherwise install must be provided here instead.
+        # Keep this list in sync with nvim/.config/nvim/lua/config/tools.lua and
+        # the servers table in nvim/.config/nvim/lua/plugins/lsp.lua.
+
+        # LSP servers
+        lua-language-server
+        rust-analyzer
+        bash-language-server
+        basedpyright
+        # gh_actions_ls (github-actions-language-server) is not yet in nixpkgs;
+        # it will fall back to Mason on non-Nix systems or be unavailable on Nix.
+        vscode-langservers-extracted # provides jsonls
+        gopls
+        ansible-language-server
+        typescript-language-server
+        nixd
+
+        # Formatters
+        beautysh
+        ruff
+        ansible-lint
+        yamlfmt
+        gofumpt
+        gotools # provides goimports
+        eslint_d
+
+        # Linters
+        shellcheck
+        actionlint
+        nodePackages.jsonlint
+        golangci-lint
+
+        # DAP adapters
+        delve
+        python3Packages.debugpy
+        bash-debug-adapter
+        vscode-extensions.vadimcn.vscode-lldb # codelldb
       ]
       # gnupg is provided system-wide on NixOS via the gnupg common module;
       # only add it here for standalone Home Manager (non-NixOS).
