@@ -17,3 +17,6 @@ result-*
 
 # Superpowers design/plan files — local use only, not for version control
 docs/superpowers/
+
+# Git worktrees
+.worktrees/
