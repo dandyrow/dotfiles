@@ -35,6 +35,7 @@ M.linters = {
 
 M.dap_adapters = {
   "codelldb",
+  -- bash-debug-adapter is not in nixpkgs; Mason installs it on non-Nix systems.
   "bash-debug-adapter",
   "debugpy",
   "delve",

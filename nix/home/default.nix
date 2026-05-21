@@ -89,7 +89,6 @@ in
         # DAP adapters
         delve
         python3Packages.debugpy
-        bash-debug-adapter
         vscode-extensions.vadimcn.vscode-lldb # codelldb
       ]
       # gnupg is provided system-wide on NixOS via the gnupg common module;
