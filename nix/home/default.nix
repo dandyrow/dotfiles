@@ -81,6 +81,7 @@ in
         # goimports is not available as a standalone package in nixpkgs; gotools
         # conflicts with gopls. goimports functionality is covered by gopls on Nix.
         eslint_d
+        nixfmt-rfc-style
 
         # Linters
         shellcheck
