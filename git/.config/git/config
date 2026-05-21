@@ -27,3 +27,6 @@
 
 [rerere]
 	enabled = true
+
+[safe]
+	directory = /home/dandyrow/.dotfiles
