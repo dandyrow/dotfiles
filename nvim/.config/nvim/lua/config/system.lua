@@ -18,7 +18,7 @@ local M = {}
 ---
 ---@return boolean
 function M.is_nix()
-  return vim.fn.exepath("nvim"):find("^/nix/store/") ~= nil
+  return vim.fn.resolve(vim.fn.exepath("nvim")):find("^/nix/store/") ~= nil
 end
 
 return M
