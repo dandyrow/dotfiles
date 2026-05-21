@@ -55,13 +55,11 @@ Examples:
 
 ## AI Co-Author Attribution (MUST)
 
-Every agent-created commit must include a `Co-authored-by:` trailer that identifies the specific AI agent:
+Every agent-created commit must include a `Co-authored-by:` trailer identifying the AI agent. **The commit-msg hook installed by `agent-start.sh` appends this automatically — you do not need to write it manually.**
 
-```
-Co-authored-by: <Agent Name> <agent-email@example.com>
-```
+Default identity (when no env vars are set): `Co-authored-by: Copilot <copilot@github.com>`
 
-Use the identity appropriate for the agent doing the work. The `agent-start.sh` script installs a commit-msg hook that appends this automatically. Override the identity by setting env vars before calling the script:
+To use a different identity, set env vars before calling the script:
 
 ```bash
 AI_COAUTHOR_NAME="My Agent" AI_COAUTHOR_EMAIL="agent@example.com" \
