@@ -19,4 +19,10 @@
     # Move ~/.nix-defexpr and ~/.nix-profile to XDG state directories.
     use-xdg-base-directories = true;
   };
+
+  # Disable legacy channel support — the system is fully flake-based.
+  # This prevents the 'nix-channel' tooling and associated NIX_PATH entry
+  # (/nix/var/nix/profiles/per-user/root/channels) from being set up,
+  # eliminating the warning about that path not existing during nixos-rebuild.
+  nix.channel.enable = false;
 }
