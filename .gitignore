@@ -20,3 +20,9 @@ docs/superpowers/
 
 # Git worktrees
 .worktrees/
+
+# Files created by agent-start.sh inside worktrees — local only, not for VCS
+.ai-coauthor.txt
+.AI_WORKFLOW.md
+.githooks/
+scripts/ai-commit
