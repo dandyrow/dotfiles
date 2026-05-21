@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   wsl = {
     enable = true;
@@ -17,6 +17,10 @@
   documentation.nixos.enable = false;
 
   programs.git.enable = true;
+
+  # wslu provides wslview, which forwards URLs to the Windows host browser.
+  # Required for tools like gh auth login that attempt to open a web browser.
+  environment.systemPackages = [ pkgs.wslu ];
 
   # Include the corporate CA certificate if present at /etc/nixos/corp.pem.
   # This file must be placed there manually and is never committed to git.
