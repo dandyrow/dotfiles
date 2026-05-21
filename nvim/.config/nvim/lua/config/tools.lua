@@ -26,6 +26,8 @@ M.linters = {
   "ruff",
   "actionlint",
   "ansible-lint",
+  -- jsonlint is not in nixpkgs; on Nix systems JSON linting is handled by
+  -- jsonls (vscode-langservers-extracted) instead. Mason installs it on non-Nix.
   "jsonlint",
   "golangci-lint",
   "eslint_d",

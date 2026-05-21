@@ -84,7 +84,6 @@ in
         # Linters
         shellcheck
         actionlint
-        nodePackages.jsonlint
         golangci-lint
 
         # DAP adapters
