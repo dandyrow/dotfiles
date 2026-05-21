@@ -16,6 +16,9 @@ M.formatters = {
   "ruff",
   "ansible-lint",
   "yamlfmt",
+  -- goimports is not available as a standalone package in nixpkgs (gotools conflicts
+  -- with gopls). On Nix, goimports functionality is covered by gopls instead.
+  -- Mason installs it on non-Nix systems.
   "goimports",
   "gofumpt",
   "eslint_d",

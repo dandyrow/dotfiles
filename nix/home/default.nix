@@ -78,7 +78,8 @@ in
         ansible-lint
         yamlfmt
         gofumpt
-        gotools # provides goimports
+        # goimports is not available as a standalone package in nixpkgs; gotools
+        # conflicts with gopls. goimports functionality is covered by gopls on Nix.
         eslint_d
 
         # Linters
