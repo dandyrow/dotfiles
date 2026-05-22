@@ -60,8 +60,24 @@ stdenv.mkDerivation {
       install -m644 "$src/apparmor-profile" "$out/libexec/apparmor-profile"
     fi
 
-    patchelf --set-rpath "${sharedLibs}" "$out/libexec/mkfs.erofs"
-    patchelf --set-rpath "${sharedLibs}" "$out/libexec/containerd-shim-nerdbox-v1"
+    # Both executables were built for a generic Linux environment and carry
+    # /lib64/ld-linux-x86-64.so.2 as their ELF interpreter.  On NixOS that
+    # path is a stub that prints "cannot run dynamically linked executable",
+    # so we must patch the interpreter to the Nix-store glibc loader as well
+    # as the rpath for shared-library resolution.
+    local interp
+    interp="$(cat "${stdenv.cc}/nix-support/dynamic-linker")"
+
+    patchelf \
+      --set-interpreter "$interp" \
+      --set-rpath "${sharedLibs}" \
+      "$out/libexec/mkfs.erofs"
+    patchelf \
+      --set-interpreter "$interp" \
+      --set-rpath "${sharedLibs}" \
+      "$out/libexec/containerd-shim-nerdbox-v1"
+    # libsailor.so is a shared library (no interpreter needed); extend its
+    # rpath so it can resolve its own bundled dependencies.
     patchelf --set-rpath "${sharedLibs}:$out/libexec/lib" "$out/libexec/lib/libsailor.so"
 
     # $out/libexec must be on PATH so sandboxd can find mkfs.erofs and
