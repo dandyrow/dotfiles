@@ -45,7 +45,7 @@
     wantedBy = [ "multi-user.target" ];
     after = [ "network.target" ];
     serviceConfig = {
-      Type = "forking";
+      Type = "simple";
       User = "dandyrow";
       ExecStart = "${pkgs.docker-sbx}/bin/sbx daemon start";
       ExecStop = "${pkgs.docker-sbx}/bin/sbx daemon stop";
