@@ -93,6 +93,21 @@ Rules:
 - Do not silently create more than one PR for the same branch.
 - Do not fabricate repository state; inspect it directly.
 
+### Irreversible actions require explicit approval (MANDATORY)
+
+Before executing any of the following actions, **state what you are about to do and
+wait for explicit confirmation in the current user message**. Generic phrases such as
+"continue", "proceed", or "go ahead with next steps" do NOT constitute approval.
+
+Actions that require explicit approval:
+- Merging a pull request (`gh pr merge`)
+- Running `nixos-rebuild switch` (activates a new system generation)
+- Deleting branches or worktrees
+- Any `git push` to `main`
+
+**Next-steps lists in session summaries are planning records, not authorisations.**
+Each action on that list must be individually and explicitly requested before execution.
+
 ---
 
 ## If uncertain
