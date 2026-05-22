@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   wsl = {
     enable = true;
@@ -35,6 +35,26 @@
     gid = 995;
   };
   users.users.dandyrow.extraGroups = [ "loop" ];
+
+  # sbx (Docker Sandboxes) daemon requires CAP_SYS_ADMIN to mount loop devices
+  # for erofs sandbox images.  A user service cannot self-elevate capabilities,
+  # so we run a system-level service as dandyrow and grant CAP_SYS_ADMIN via
+  # AmbientCapabilities so the capability is inherited by the daemon process.
+  systemd.services.sbx-daemon = {
+    description = "Docker Sandboxes daemon (sbx)";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
+    serviceConfig = {
+      Type = "forking";
+      User = "dandyrow";
+      ExecStart = "${pkgs.docker-sbx}/bin/sbx daemon start";
+      ExecStop = "${pkgs.docker-sbx}/bin/sbx daemon stop";
+      AmbientCapabilities = "CAP_SYS_ADMIN";
+      CapabilityBoundingSet = "CAP_SYS_ADMIN";
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
+  };
 
   system.stateVersion = "25.11";
 }
