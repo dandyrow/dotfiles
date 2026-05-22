@@ -32,6 +32,15 @@
 
       lib = inputs.nixpkgs.lib;
 
+      # lib.getName returns the pname of a derivation. Strings here must match pname
+      # exactly — a rename in nix/pkgs/docker-sbx.nix will silently break unfree access.
+      allowUnfreePredicate =
+        pkg:
+        builtins.elem (lib.getName pkg) [
+          "github-copilot-cli"
+          "docker-sbx" # pname in nix/pkgs/docker-sbx.nix
+        ];
+
       overlays = [
         (final: prev: {
           xdg-user-dirs = prev.xdg-user-dirs.overrideAttrs (old: rec {
@@ -50,6 +59,8 @@
                 --replace-fail "X-systemd-skip=true" "X-systemd-skip=false"
             '';
           });
+
+          docker-sbx = final.callPackage ./nix/pkgs/docker-sbx.nix { };
         })
       ];
 
@@ -61,6 +72,7 @@
             {
               networking.hostName = host;
               nixpkgs.overlays = overlays;
+              nixpkgs.config.allowUnfreePredicate = allowUnfreePredicate;
             }
             ./nix/hosts/${host}
             inputs.home-manager.nixosModules.home-manager
@@ -89,6 +101,10 @@
           pkgs = import inputs.nixpkgs {
             system = hostSystem;
             inherit overlays;
+            # config here applies only to standalone homeConfigurations.
+            # For NixOS-managed users, useGlobalPkgs = true means NixOS pkgs are used,
+            # and the unfree predicate is applied via nixpkgs.config in mkSystem instead.
+            config = { inherit allowUnfreePredicate; };
           };
           modules = [ ./nix/home ];
           extraSpecialArgs = { inherit wsl; };
