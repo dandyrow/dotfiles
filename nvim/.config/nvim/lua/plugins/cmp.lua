@@ -30,6 +30,7 @@ return {
     },
     "moyiz/blink-emoji.nvim",
     "fang2hou/blink-copilot",
+    "disrupted/blink-cmp-conventional-commits",
   },
   version = "1.*",
   opts = {
@@ -93,6 +94,7 @@ return {
         "path",
         "buffer",
         "emoji",
+        "conventional_commits",
         "snippets",
         "copilot",
       },
@@ -108,6 +110,13 @@ return {
           name = "Emoji",
           score_offset = 15, -- Tune by preference
           opts = { insert = true }, -- Insert emoji (default) or complete its name
+        },
+        conventional_commits = {
+          name = "Conventional Commits",
+          module = "blink-cmp-conventional-commits",
+          enabled = function()
+            return vim.bo.filetype == "gitcommit"
+          end,
         },
         copilot = {
           name = "Copilot",
