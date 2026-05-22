@@ -44,6 +44,7 @@ in
         fd
         gcc
         gh
+        github-copilot-cli
         gnumake
         python3
         ripgrep
@@ -93,6 +94,10 @@ in
         delve
         python3Packages.debugpy
         vscode-extensions.vadimcn.vscode-lldb # codelldb
+      ]
+      ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
+        # docker-sbx is only published for x86_64-linux; no aarch64 release.
+        pkgs.docker-sbx
       ]
       # gnupg is provided system-wide on NixOS via the gnupg common module;
       # only add it here for standalone Home Manager (non-NixOS).
