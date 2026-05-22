@@ -64,9 +64,12 @@ stdenv.mkDerivation {
     patchelf --set-rpath "${sharedLibs}" "$out/libexec/containerd-shim-nerdbox-v1"
     patchelf --set-rpath "${sharedLibs}:$out/libexec/lib" "$out/libexec/lib/libsailor.so"
 
+    # $out/libexec must be on PATH so sandboxd can find mkfs.erofs and
+    # containerd-shim-nerdbox-v1 at runtime; without it the erofs differ
+    # plugin fails with exit status 127 and the entire daemon fails to start.
     wrapProgram "$out/bin/sbx" \
       --set LIBKRUN_PATH "$out/libexec" \
-      --prefix PATH : "${lib.makeBinPath [ e2fsprogs ]}"
+      --prefix PATH : "$out/libexec:${lib.makeBinPath [ e2fsprogs ]}"
 
     runHook postInstall
   '';
