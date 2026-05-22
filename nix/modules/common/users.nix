@@ -2,7 +2,10 @@
 {
   users.users.dandyrow = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [
+      "wheel"
+      "kvm"
+    ];
     shell = pkgs.zsh;
     # Hash is injected at install time via nixos-anywhere --extra-files.
     # Never committed in plaintext — see README for the install procedure.
