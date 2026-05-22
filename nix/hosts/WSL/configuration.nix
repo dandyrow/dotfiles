@@ -27,5 +27,14 @@
     /etc/nixos/corp.pem
   ];
 
+  # In WSL, loop devices (/dev/loop-control, /dev/loop*) are initialised by
+  # the WSL kernel with GID 995, which has no named entry in /etc/group by
+  # default.  Define a named group for that GID and add dandyrow to it so sbx
+  # (docker-sbx) can open loop devices when mounting erofs sandbox images.
+  users.groups.loop = {
+    gid = 995;
+  };
+  users.users.dandyrow.extraGroups = [ "loop" ];
+
   system.stateVersion = "25.11";
 }
