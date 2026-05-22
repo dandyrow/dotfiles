@@ -1,6 +1,7 @@
 -- More dap configurations can be found at:
 -- https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
 local dap = require("dap")
+local system = require("config.system")
 
 dap.configurations.rust = {
   {
@@ -43,8 +44,13 @@ dap.configurations.sh = {
     request = "launch",
     name = "Launch file",
     showDebugOutput = true,
-    pathBashdb = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
-    pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir",
+    -- On Nix, bashdb is expected on $PATH; on non-Nix it lives under the Mason package.
+    pathBashdb = system.is_nix()
+      and (vim.fn.exepath("bashdb") ~= "" and vim.fn.exepath("bashdb") or "bashdb")
+      or vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
+    pathBashdbLib = system.is_nix()
+      and (vim.fn.exepath("bashdb") ~= "" and vim.fn.fnamemodify(vim.fn.exepath("bashdb"), ":h") or "")
+      or vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir",
     trace = true,
     file = "${file}",
     program = "${file}",

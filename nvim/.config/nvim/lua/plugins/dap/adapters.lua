@@ -1,17 +1,29 @@
 -- More dap adapters can be found at:
 -- https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
 local dap = require("dap")
+local system = require("config.system")
 
 dap.adapters.codelldb = {
   type = "executable",
   command = "codelldb",
 }
 
-dap.adapters.bashdb = {
-  type = "executable",
-  command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter",
-  name = "bashdb",
-}
+-- On Nix systems Mason is disabled; expect bash-debug-adapter on $PATH
+-- (e.g. installed via a Nix devShell or home-manager package).
+-- On non-Nix systems Mason provides the adapter under its data directory.
+if system.is_nix() then
+  dap.adapters.bashdb = {
+    type = "executable",
+    command = vim.fn.exepath("bash-debug-adapter"),
+    name = "bashdb",
+  }
+else
+  dap.adapters.bashdb = {
+    type = "executable",
+    command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter",
+    name = "bashdb",
+  }
+end
 
 dap.adapters.python = function(cb, config)
   if config.request == "attach" then
