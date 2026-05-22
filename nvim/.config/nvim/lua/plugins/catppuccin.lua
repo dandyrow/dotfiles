@@ -23,7 +23,6 @@ return {
       blink_cmp = { style = "bordered" },
       dap = true,
       dap_ui = true,
-      diffview = true,
       gitsigns = true,
       native_lsp = {
         enabled = true,

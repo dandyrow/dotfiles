@@ -5,6 +5,22 @@ return {
     {
       "esmuellert/codediff.nvim",
       cmd = "CodeDiff",
+      init = function()
+        -- Track the tabpage opened by CodeDiff so the keybind can toggle it.
+        -- These autocmds are registered immediately (init runs before lazy-load).
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "CodeDiffOpen",
+          callback = function(ev)
+            vim.g.codediff_open_tabpage = ev.data and ev.data.tabpage
+          end,
+        })
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "CodeDiffClose",
+          callback = function()
+            vim.g.codediff_open_tabpage = nil
+          end,
+        })
+      end,
     },
     "folke/snacks.nvim",
   },
@@ -29,15 +45,16 @@ return {
     {
       "<leader>gd",
       function()
-        if require("diffview.lib").get_current_view() then
-          -- Current tabpage is a Diffview; close it
-          vim.cmd.DiffviewClose()
+        local tabpage = vim.g.codediff_open_tabpage
+        if tabpage and vim.api.nvim_tabpage_is_valid(tabpage) then
+          -- CodeDiff is open; close that tab
+          vim.cmd("tabclose " .. vim.api.nvim_tabpage_get_number(tabpage))
         else
-          -- No open Diffview exists: open a new one
-          vim.cmd.DiffviewOpen()
+          -- No open CodeDiff view: open one
+          vim.cmd.CodeDiff()
         end
       end,
-      desc = "Git Diff",
+      desc = "Git Diff (toggle)",
     },
   },
 }

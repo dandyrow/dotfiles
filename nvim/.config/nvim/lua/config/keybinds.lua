@@ -11,8 +11,8 @@ vim.keymap.set("n", "<c-d>", "<c-d>zz", { desc = "Half page down (centered) " })
 vim.keymap.set("n", "<c-u>", "<c-u>zz", { desc = "Half page up (centered)" })
 
 -- Splitting & Resizing
-vim.keymap.set("n", "<leader>sv", "<cmd>vsplit<cr>", { desc = "Split window vertically", silent = true })
-vim.keymap.set("n", "<leader>sh", "<cmd>split<cr>", { desc = "Split window horizontally", silent = true })
+vim.keymap.set("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "Split window vertically", silent = true })
+vim.keymap.set("n", "<leader>-", "<cmd>split<cr>", { desc = "Split window horizontally", silent = true })
 vim.keymap.set("n", "<c-up>", "<cmd>resize +2<cr>", { desc = "Increase window height", silent = true })
 vim.keymap.set("n", "<c-down>", "<cmd>resize -2<cr>", { desc = "Decrease window height", silent = true })
 vim.keymap.set("n", "<c-left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width", silent = true })
