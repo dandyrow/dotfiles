@@ -28,6 +28,7 @@ in
         neovim
         tmux
         yazi
+        opencode
       ]
       # Only install kitty on systems with Gnome desktop environment
       ++ lib.optionals (osConfig != null && (osConfig.gnome.enable or false)) [
@@ -119,14 +120,14 @@ in
         (mkConfigLink "zsh")
         (lib.optionalAttrs hasDesktop (mkConfigLink "kitty"))
 
-      # gnupg: manage individual files rather than the whole directory — gpg requires
-      # strict 700 permissions on the directory itself, and the directory contains
-      # runtime files (sockets, keyrings) that should not be managed by Nix.
-      {
-        ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
-        ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
-      }
-    ];
+        # gnupg: manage individual files rather than the whole directory — gpg requires
+        # strict 700 permissions on the directory itself, and the directory contains
+        # runtime files (sockets, keyrings) that should not be managed by Nix.
+        {
+          ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
+          ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
+        }
+      ];
 
     # On non-NixOS: clone the dotfiles repo if not already present before
     # symlinks are created. On NixOS this is handled by the system activation
