@@ -27,17 +27,16 @@
     /etc/nixos/corp.pem
   ];
 
-  # In WSL, loop devices (/dev/loop-control, /dev/loop*) are initialised by
-  # the WSL kernel with GID 995, which has no named entry in /etc/group by
-  # default.  Define a named group for that GID and add dandyrow to it so sbx
-  # (docker-sbx) can open loop devices when mounting erofs sandbox images.
-  users.groups.loop = {
-    gid = 995;
-  };
-  users.users.dandyrow.extraGroups = [ "loop" ];
+  # In WSL, /dev/loop-control and /dev/loop* are created by the WSL kernel
+  # owned by root:disk with mode 0660.  sbx (docker-sbx) needs to open
+  # /dev/loop-control to allocate a loop device when mounting the erofs
+  # sandbox rwlayer.img; opening that node is a normal DAC check that
+  # CAP_SYS_ADMIN does not bypass.  Adding dandyrow to the disk group is the
+  # simplest fix and matches how loop-device access is granted on most distros.
+  users.users.dandyrow.extraGroups = [ "disk" ];
 
-  # sbx (Docker Sandboxes) daemon requires CAP_SYS_ADMIN to mount loop devices
-  # for erofs sandbox images.  A user service cannot self-elevate capabilities,
+  # sbx (Docker Sandboxes) daemon requires CAP_SYS_ADMIN to call mount() for
+  # erofs sandbox images.  A user service cannot self-elevate capabilities,
   # so we run a system-level service as dandyrow and grant CAP_SYS_ADMIN via
   # AmbientCapabilities so the capability is inherited by the daemon process.
   systemd.services.sbx-daemon = {
