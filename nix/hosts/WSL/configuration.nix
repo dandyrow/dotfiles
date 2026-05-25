@@ -27,12 +27,9 @@
     /etc/nixos/corp.pem
   ];
 
-  # In WSL, /dev/loop-control and /dev/loop* are created by the WSL kernel
-  # owned by root:disk with mode 0660.  sbx (docker-sbx) needs to open
-  # /dev/loop-control to allocate a loop device when mounting the erofs
-  # sandbox rwlayer.img; opening that node is a normal DAC check that
-  # CAP_SYS_ADMIN does not bypass.  Adding dandyrow to the disk group is the
-  # simplest fix and matches how loop-device access is granted on most distros.
+  # WSL creates /dev/loop-control and /dev/loop* as root:disk 0660.  sbx needs
+  # to open /dev/loop-control to mount its erofs sandbox image, and that DAC
+  # check is not bypassed by CAP_SYS_ADMIN, so dandyrow must be in disk.
   users.users.dandyrow.extraGroups = [ "disk" ];
 
   # sbx (Docker Sandboxes) daemon requires CAP_SYS_ADMIN to call mount() for
