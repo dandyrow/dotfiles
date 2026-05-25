@@ -43,23 +43,6 @@
 
       overlays = [
         (final: prev: {
-          xdg-user-dirs = prev.xdg-user-dirs.overrideAttrs (old: rec {
-            version = "0.20";
-            src = prev.fetchurl {
-              url = "https://user-dirs.freedesktop.org/releases/xdg-user-dirs-${version}.tar.xz";
-              hash = "sha256-uONChiePT+8+G/6WhcOVzMDrUMFNOi+0lT3QD7/Trzk=";
-            };
-            preFixup = ''
-              # fallback values need to be last
-              wrapProgram "$out/bin/xdg-user-dirs-update" \
-                --suffix XDG_CONFIG_DIRS : "$out/etc/xdg"
-
-              # Autostart, because the installed service is never explicitly enabled in NixOS
-              substituteInPlace "$out/etc/xdg/autostart/xdg-user-dirs.desktop" \
-                --replace-fail "X-systemd-skip=true" "X-systemd-skip=false"
-            '';
-          });
-
           docker-sbx = final.callPackage ./nix/pkgs/docker-sbx.nix { };
         })
       ];
