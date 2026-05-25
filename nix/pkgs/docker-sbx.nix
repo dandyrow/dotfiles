@@ -6,12 +6,15 @@
   e2fsprogs,
 }:
 
+let
+  version = "0.30.0";
+in
 stdenv.mkDerivation {
   pname = "docker-sbx";
-  version = "0.30.0";
+  inherit version;
 
   src = fetchzip {
-    url = "https://github.com/docker/sbx-releases/releases/download/v0.30.0/DockerSandboxes-linux.tar.gz";
+    url = "https://github.com/docker/sbx-releases/releases/download/v${version}/DockerSandboxes-linux.tar.gz";
     hash = "sha256-uO4HM+iCm4OHe727y0PVzzhV77LP7UG4MuCX6Tn9hBU=";
     stripRoot = true;
   };
@@ -21,13 +24,8 @@ stdenv.mkDerivation {
   # Prebuilt Go binaries: stripping can invalidate embedded build info.
   dontStrip = true;
 
-  # Do not let stdenv patchelf the upstream binaries.  The shim is a Go
-  # binary that uses cgo to dlopen libsailor.so, and patchelf'ing it (in
-  # particular --set-interpreter to a long /nix/store/... path) corrupts
-  # Go's PT_LOAD layout, producing a SIGSEGV at the binary entry point.
-  # Instead the host enables programs.nix-ld so the upstream-baked
-  # /lib64/ld-linux-x86-64.so.2 resolves to a working glibc loader with
-  # the right libraries on its search path.
+  # patchelf'ing the Go cgo shim corrupts its PT_LOAD layout and segfaults
+  # at entry; rely on programs.nix-ld on the host instead.
   dontPatchELF = true;
 
   installPhase = ''
