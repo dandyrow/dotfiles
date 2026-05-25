@@ -13,6 +13,10 @@
 
 let
   version = "0.30.0";
+
+  # Libraries dlopened/linked by the upstream binaries (mainly erofs
+  # compression deps). Added defensively so an upstream bump can't silently
+  # break runtime resolution.
   sharedLibs = lib.makeLibraryPath [
     stdenv.cc.cc.lib
     lz4
@@ -36,19 +40,27 @@ stdenv.mkDerivation {
     patchelf
   ];
 
+  # Prebuilt Go binaries: stripping can invalidate embedded build info.
   dontStrip = true;
+
+  # Disable stdenv's `patchelf --shrink-rpath` fixup. It drops rpath entries
+  # whose dir holds no DT_NEEDED library; libsailor.so is dlopened (cgo), so
+  # the shrink would remove the very entries we add below.
+  dontPatchELF = true;
 
   installPhase = ''
     runHook preInstall
 
     mkdir -p "$out/bin" "$out/libexec/lib" "$out/share/doc/docker-sbx"
 
-    install -m755 "$src/sbx"                             "$out/bin/sbx"
-    install -m755 "$src/containerd-shim-nerdbox-v1"      "$out/libexec/containerd-shim-nerdbox-v1"
-    install -m755 "$src/mkfs.erofs"                      "$out/libexec/mkfs.erofs"
-    install -m755 "$src/libsailor.so"                    "$out/libexec/lib/libsailor.so"
-    install -m644 "$src"/nerdbox-kernel-*                "$out/libexec/"
-    install -m644 "$src"/nerdbox-initrd-*                "$out/libexec/"
+    # Layout mirrors upstream install.sh:
+    #   bin/sbx, libexec/{shim,mkfs.erofs,nerdbox-*}, libexec/lib/libsailor.so
+    install -m755 "$src/sbx"                        "$out/bin/sbx"
+    install -m755 "$src/containerd-shim-nerdbox-v1" "$out/libexec/containerd-shim-nerdbox-v1"
+    install -m755 "$src/mkfs.erofs"                 "$out/libexec/mkfs.erofs"
+    install -m755 "$src/libsailor.so"               "$out/libexec/lib/libsailor.so"
+    install -m644 "$src"/nerdbox-kernel-*           "$out/libexec/"
+    install -m644 "$src"/nerdbox-initrd-*           "$out/libexec/"
 
     if [ -f "$src/LICENSE" ]; then
       install -m644 "$src/LICENSE" "$out/share/doc/docker-sbx/LICENSE"
@@ -60,31 +72,33 @@ stdenv.mkDerivation {
       install -m644 "$src/apparmor-profile" "$out/libexec/apparmor-profile"
     fi
 
-    # Both executables were built for a generic Linux environment and carry
-    # /lib64/ld-linux-x86-64.so.2 as their ELF interpreter.  On NixOS that
-    # path is a stub that prints "cannot run dynamically linked executable",
-    # so we must patch the interpreter to the Nix-store glibc loader as well
-    # as the rpath for shared-library resolution.
-    local interp
-    interp="$(cat "${stdenv.cc}/nix-support/dynamic-linker")"
+    # mkfs.erofs and containerd-shim-nerdbox-v1 hardcode the glibc loader at
+    # /lib64/ld-linux-x86-64.so.2, which is a NixOS stub that exits 127. The
+    # daemon then skips the erofs differ, cascading into transfer-plugin
+    # registration failure. Patch interpreter + rpath together so they stay
+    # in sync on every version bump.
+    interp=${stdenv.cc.bintools.dynamicLinker}
 
     patchelf \
       --set-interpreter "$interp" \
       --set-rpath "${sharedLibs}" \
       "$out/libexec/mkfs.erofs"
+
+    # Shim dlopens libsailor.so via cgo (sailor_config_*, sailor_vm_*); add
+    # libexec/lib to its rpath so resolution doesn't need LD_LIBRARY_PATH.
     patchelf \
       --set-interpreter "$interp" \
-      --set-rpath "${sharedLibs}" \
+      --set-rpath "${sharedLibs}:$out/libexec/lib" \
       "$out/libexec/containerd-shim-nerdbox-v1"
-    # libsailor.so is a shared library (no interpreter needed); extend its
-    # rpath so it can resolve its own bundled dependencies.
-    patchelf --set-rpath "${sharedLibs}:$out/libexec/lib" "$out/libexec/lib/libsailor.so"
 
-    # $out/libexec must be on PATH so sandboxd can find mkfs.erofs and
-    # containerd-shim-nerdbox-v1 at runtime; without it the erofs differ
-    # plugin fails with exit status 127 and the entire daemon fails to start.
+    # libsailor.so: shared lib, no interpreter. Extend rpath for neighbours.
+    patchelf \
+      --set-rpath "${sharedLibs}:$out/libexec/lib" \
+      "$out/libexec/lib/libsailor.so"
+
+    # sbx shells out to mkfs.erofs (bundled) and mkfs.ext4 (e2fsprogs); neither
+    # is on the default NixOS PATH, so prepend both.
     wrapProgram "$out/bin/sbx" \
-      --set LIBKRUN_PATH "$out/libexec" \
       --prefix PATH : "$out/libexec:${lib.makeBinPath [ e2fsprogs ]}"
 
     runHook postInstall
