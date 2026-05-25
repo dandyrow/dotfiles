@@ -27,15 +27,28 @@
     /etc/nixos/corp.pem
   ];
 
-  # WSL creates /dev/loop-control and /dev/loop* as root:disk 0660.  sbx needs
-  # to open /dev/loop-control to mount its erofs sandbox image, and that DAC
-  # check is not bypassed by CAP_SYS_ADMIN, so dandyrow must be in disk.
-  users.users.dandyrow.extraGroups = [ "disk" ];
+  # Enable nix-ld so the docker-sbx containerd shim (a Go cgo binary) and
+  # mkfs.erofs can resolve /lib64/ld-linux-x86-64.so.2 at runtime.  This
+  # replaces a previous attempt to patchelf --set-interpreter on the shim,
+  # which corrupts Go binaries: extending PT_INTERP shifts PT_LOAD offsets
+  # and Go's runtime hard-codes layout assumptions, causing SIGSEGV at the
+  # entry point.  nix-ld is the canonical NixOS way to run unmodified
+  # foreign Linux binaries.
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc.lib
+      lz4
+      xxhash
+      zlib
+      zstd
+    ];
+  };
 
-  # sbx (Docker Sandboxes) daemon requires CAP_SYS_ADMIN to call mount() for
-  # erofs sandbox images.  A user service cannot self-elevate capabilities,
-  # so we run a system-level service as dandyrow and grant CAP_SYS_ADMIN via
-  # AmbientCapabilities so the capability is inherited by the daemon process.
+  # sbx daemon as a user-scoped system service.  No CAP_SYS_ADMIN and no
+  # disk group: verified against a working Ubuntu/WSL2 install (sbx 0.30.0)
+  # where the daemon runs with CapEff=0 and is not in the disk group, so
+  # the mount/loop operations needed by sbx do not require either.
   systemd.services.sbx-daemon = {
     description = "Docker Sandboxes daemon (sbx)";
     wantedBy = [ "multi-user.target" ];
@@ -45,8 +58,6 @@
       User = "dandyrow";
       ExecStart = "${pkgs.docker-sbx}/bin/sbx daemon start";
       ExecStop = "${pkgs.docker-sbx}/bin/sbx daemon stop";
-      AmbientCapabilities = "CAP_SYS_ADMIN";
-      CapabilityBoundingSet = "CAP_SYS_ADMIN";
       Restart = "on-failure";
       RestartSec = "5s";
     };
