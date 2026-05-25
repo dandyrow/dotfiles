@@ -27,16 +27,19 @@ This file is the source of truth for how coding agents must operate in this repo
 # Create worktree + install hooks
 ./scripts/agent-start.sh <branch>
 
-# Work inside the worktree
-cd .worktrees/<branch>
+# Work inside the worktree (slashes in the branch name are flattened to dashes)
+# e.g. branch "fix/foo-bar" → .worktrees/fix-foo-bar
+cd .worktrees/<flattened-branch>
 
 # Push and open PR
 git push -u origin <branch>
 # then open a PR into main via gh or GitHub UI
 
-# Cleanup (from repo root)
-git worktree remove .worktrees/<branch> && git worktree prune
+# Cleanup (from the main checkout, after the PR is merged and origin/<branch> is deleted)
+./scripts/agent-cleanup.sh <branch>
 ```
+
+After a PR is merged, propose running `scripts/agent-cleanup.sh <branch>` from the main checkout. It removes the worktree, prunes worktree metadata, and deletes the local branch in one step. Worktree/branch deletion still requires explicit user approval per the irreversible-actions rule.
 
 ---
 
@@ -112,3 +115,62 @@ Each action on that list must be individually and explicitly requested before ex
 
 ## If uncertain
 Ask a short clarifying question rather than guessing. Follow existing patterns in this repo.
+
+---
+
+## Repo map
+
+| Path | Purpose |
+| --- | --- |
+| `flake.nix` / `flake.lock` | Flake entry. `nixosConfigurations`: `WSL`, `DansSpectre`, `New-H0Ryzen`. |
+| `nix/hosts/<host>/` | Per-host NixOS configuration (entrypoint: `configuration.nix`). |
+| `nix/home/` | Home-manager configuration shared across hosts. |
+| `nix/modules/{common,desktop,profiles}/` | Reusable NixOS modules composed by hosts. |
+| `nix/pkgs/` | Repo-local package derivations (e.g. `docker-sbx.nix`), exposed via `pkgs` overlay. |
+| `scripts/agent-start.sh` | Creates the per-branch worktree and installs the co-author hook. |
+| `scripts/agent-cleanup.sh` | Removes a merged branch's worktree and local branch in one step. |
+| `scripts/ai-commit` | Optional wrapper around `git commit` for agent commits. |
+| `.worktrees/<flattened-branch>/` | Active agent worktrees (`fix/foo` → `fix-foo`). Removed after merge (requires approval). |
+
+Non-Nix dotfiles (shell, editor, tool configs) live at the repo root and under conventional `XDG_CONFIG_HOME` paths.
+
+---
+
+## Environment facts
+
+- **Hosts:** the flake provides three NixOS configurations — `WSL` (NixOS-WSL2), `DansSpectre`, `New-H0Ryzen`. Detect the current host before assuming behaviour: `cat /etc/hostname` or `hostnamectl`.
+- **WSL-only specifics:** on `WSL` the kernel comes from the Windows side, not Nix; `/etc/nixos/corp.pem` may be present for the corporate CA (referenced via `builtins.pathExists`), which means rebuilds need `nixos-rebuild switch --flake .#WSL --impure`. These do not apply to `DansSpectre` or `New-H0Ryzen`.
+- **Working baselines for cross-distro debugging:** on `WSL` an Ubuntu/WSL2 install on the same Windows host is available as a side-by-side reference. On other hosts, compare against a previous working generation (`nix profile history`, `/run/current-system` vs the proposed build) instead.
+- **GPG signing fails non-interactively** (`gpg: cannot open '/dev/tty'`) in agent sessions. Use `git commit --no-gpg-sign` unless the user provides another path.
+- **GitHub:** `gh` is authenticated. Inspect PRs/issues/checks directly rather than guessing.
+
+---
+
+## Verification expectations
+
+Before claiming a Nix change is correct:
+
+- `nix eval .#nixosConfigurations.<host>.config.system.build.toplevel.drvPath` must succeed.
+- For changed packages: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel --no-link` (or build the specific derivation) must succeed.
+- Behavioural changes that only manifest after `nixos-rebuild switch` (services, kernel modules, runtime binaries) **cannot be agent-verified end-to-end**. State this explicitly in the PR and propose the post-switch commands the user should run.
+
+Never claim "this fixes X" on the strength of a successful eval alone when X is a runtime symptom.
+
+---
+
+## Debugging discipline
+
+For non-trivial runtime failures (services crashing, packages misbehaving, mounts/perms issues), invoke the `systematic-debugging` skill before proposing a fix.
+
+- Treat the **first** ERROR in a log as the root cause candidate, not the most visible one. Downstream errors are often misleading (e.g. an `EACCES` mount error that's actually downstream of a segfaulting helper).
+- When a working baseline exists (other host running the same package, a parallel non-NixOS install, a previous generation), diff against it before hypothesising.
+- If the user reports a previous fix did not work, ask for the new failure mode before proposing the next change. Do not chain hypotheses without evidence.
+- Falsified hypotheses get recorded in the PR description / commit message so we don't re-run them next time.
+
+---
+
+## Style notes
+
+- **Comments in Nix files: concise (1–3 lines).** Explain the non-obvious *why*; do not restate what the code does.
+- Root-cause analyses, falsified hypotheses, and link-outs to upstream issues belong in commit messages and PR bodies, not in source comments.
+- Prefer hoisting repeated literals (versions, hashes, URLs) into `let` bindings or attributes so they update in one place.

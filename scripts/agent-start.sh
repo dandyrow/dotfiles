@@ -36,7 +36,10 @@ git fetch origin main --quiet || {
 }
 
 WORKTREES_DIR="$ROOT/.worktrees"
-TARGET_DIR="$WORKTREES_DIR/$BRANCH"
+# Flatten branch names like "chore/foo" into "chore-foo" so worktrees live
+# directly under .worktrees/ rather than in type-prefixed subdirectories.
+WORKTREE_NAME="${BRANCH//\//-}"
+TARGET_DIR="$WORKTREES_DIR/$WORKTREE_NAME"
 
 mkdir -p "$WORKTREES_DIR"
 
