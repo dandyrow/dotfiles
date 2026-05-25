@@ -205,7 +205,7 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 
 ### Steps to install
 
-1. Install requirements
+1. Install requirements.
 2. Run `stow fastfetch` from within repo root.
 
 ## Tmux
@@ -216,7 +216,7 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 
 ### Steps to install
 
-1. Install requirements
+1. Install requirements.
 2. Run `stow tmux` from within repo root.
 
 ## Zellij
@@ -229,7 +229,7 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 
 ### Steps to install
 
-1. Install requirements
+1. Install requirements.
 2. Run `stow zellij` from within repo root.
 
 ## Git
@@ -240,7 +240,7 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 
 ### Steps to install
 
-1. Install requirements
+1. Install requirements.
 2. Run `stow git` from within repo root.
 
 ## Neovim
@@ -275,5 +275,5 @@ with the file ending in .crt. Then run `update-ca-certificates` as root.
 
 ### Steps to install
 
-1. Install requirements
+1. Install requirements.
 2. Run `stow nvim` from within repo root.
