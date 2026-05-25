@@ -125,6 +125,22 @@ in
         (mkConfigLink "zsh")
         (lib.optionalAttrs hasDesktop (mkConfigLink "kitty"))
 
+        # Work-specific git config included via includeIf in the main git config.
+        # Sets work email and disables GPG signing for all repos under ~/Projects/work/.
+        {
+          "Projects/work/.gitconfig".text = ''
+            [user]
+              name = Daniel Lowry
+              email = daniel.lowry@kainos.com
+
+            [commit]
+              gpgSign = false
+
+            [tag]
+              gpgSign = false
+          '';
+        }
+
         # gnupg: manage individual files rather than the whole directory — gpg requires
         # strict 700 permissions on the directory itself, and the directory contains
         # runtime files (sockets, keyrings) that should not be managed by Nix.

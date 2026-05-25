@@ -22,8 +22,8 @@
   gpgSign = true
   sort = -version:refname
 
-[includeIf "gitdir:~/Documents/projects/work/"]
-  path = ~/Documents/projects/work/.gitconfig
+[includeIf "gitdir:~/Projects/work/"]
+  path = ~/Projects/work/.gitconfig
 
 [rerere]
 	enabled = true
