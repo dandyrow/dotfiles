@@ -17,6 +17,7 @@
   programs = {
     firefox.enable = true;
     git.enable = true;
+    steam.enable = true;
   };
 
   users.users = {
