@@ -32,13 +32,15 @@
 
       lib = inputs.nixpkgs.lib;
 
-      # lib.getName returns the pname of a derivation. Strings here must match pname
-      # exactly — a rename in nix/pkgs/docker-sbx.nix will silently break unfree access.
       allowUnfreePredicate =
         pkg:
         builtins.elem (lib.getName pkg) [
           "github-copilot-cli"
-          "docker-sbx" # pname in nix/pkgs/docker-sbx.nix
+          "docker-sbx"
+          "steam"
+          "steam-original"
+          "steam-run"
+          "steam-unwrapped"
         ];
 
       overlays = [

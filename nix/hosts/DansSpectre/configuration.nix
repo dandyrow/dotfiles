@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ ... }:
 {
   documentation.nixos.enable = false;
 
@@ -7,15 +7,6 @@
     git.enable = true;
     steam.enable = true;
   };
-
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.getName pkg) [
-      "steam"
-      "steam-original"
-      "steam-run"
-      "steam-unwrapped"
-    ];
 
   users.users = {
     root = {
