@@ -18,7 +18,6 @@
 
     networking.networkmanager.enable = true;
 
-    # Dark mode default + green accent; user can still override in GNOME Settings.
     programs.dconf.profiles.user.databases = [
       {
         settings."org/gnome/desktop/interface" = {
@@ -28,7 +27,6 @@
       }
     ];
 
-    # Qt apps use adwaita-dark to match GNOME's dark theme.
     qt = {
       enable = true;
       platformTheme = "gnome";
