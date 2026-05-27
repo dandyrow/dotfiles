@@ -66,9 +66,20 @@ alias eza="eza --icons --long --git --all --group-directories-first"
 alias vim="nvim"
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 
-# Use bat to colourise help text (use \-h to escape flag when not used as help)
-alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
-alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+# Colourised help pager (use \-h to escape flag when not used as help).
+# Buffer through a temp file: some CLIs (e.g. opencode) start in their own
+# process group, so writes to the tty from inside a pipeline trigger SIGTTOU
+# and stop the pipeline — visible as `j` echoing instead of scrolling in the
+# pager. Draining to a file first means less only ever sees a regular file.
+_help_pager() {
+  local tmp
+  tmp=$(mktemp -t help.XXXXXX) || return
+  cat >"$tmp"
+  bat --language=help --style=plain --color=always --paging=never -- "$tmp" | less -R
+  rm -f -- "$tmp"
+}
+alias -g -- -h='-h 2>&1 | _help_pager'
+alias -g -- --help='--help 2>&1 | _help_pager'
 
 ##########################
 # Git Worktree Functions #
