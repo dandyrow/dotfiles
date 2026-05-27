@@ -10,6 +10,7 @@ let
   dotfilesDir = "${config.home.homeDirectory}/.dotfiles";
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
+  hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
 in
 {
   home = {
@@ -106,49 +107,45 @@ in
     # Dotfiles are symlinked from ~/.dotfiles — a clone of the dotfiles repo.
     # On NixOS the clone is created during system activation (see modules/common/dotfiles.nix).
     # On non-NixOS the clone is created by the cloneDotfiles activation script below.
-    file =
-      let
-        hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
-      in
-      lib.mkMerge [
-        (mkConfigLink "bat")
-        (mkConfigLink "btop")
-        (mkConfigLink "eza")
-        (mkConfigLink "fastfetch")
-        (mkConfigLink "git")
-        (mkConfigLink "npm")
-        (mkConfigLink "nvim")
-        (mkConfigLink "opencode")
-        (mkConfigLink "starship")
-        (mkConfigLink "tmux")
-        (mkConfigLink "yazi")
-        (mkConfigLink "zsh")
-        (lib.optionalAttrs hasDesktop (mkConfigLink "kitty"))
+    file = lib.mkMerge [
+      (mkConfigLink "bat")
+      (mkConfigLink "btop")
+      (mkConfigLink "eza")
+      (mkConfigLink "fastfetch")
+      (mkConfigLink "git")
+      (mkConfigLink "npm")
+      (mkConfigLink "nvim")
+      (mkConfigLink "opencode")
+      (mkConfigLink "starship")
+      (mkConfigLink "tmux")
+      (mkConfigLink "yazi")
+      (mkConfigLink "zsh")
+      (lib.optionalAttrs hasDesktop (mkConfigLink "kitty"))
 
-        # Work-specific git config included via includeIf in the main git config.
-        # Sets work email and disables GPG signing for all repos under ~/Projects/work/.
-        {
-          "Projects/work/.gitconfig".text = ''
-            [user]
-              name = Daniel Lowry
-              email = daniel.lowry@kainos.com
+      # Work-specific git config included via includeIf in the main git config.
+      # Sets work email and disables GPG signing for all repos under ~/Projects/work/.
+      {
+        "Projects/work/.gitconfig".text = ''
+          [user]
+            name = Daniel Lowry
+            email = daniel.lowry@kainos.com
 
-            [commit]
-              gpgSign = false
+          [commit]
+            gpgSign = false
 
-            [tag]
-              gpgSign = false
-          '';
-        }
+          [tag]
+            gpgSign = false
+        '';
+      }
 
-        # gnupg: manage individual files rather than the whole directory — gpg requires
-        # strict 700 permissions on the directory itself, and the directory contains
-        # runtime files (sockets, keyrings) that should not be managed by Nix.
-        {
-          ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
-          ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
-        }
-      ];
+      # gnupg: manage individual files rather than the whole directory — gpg requires
+      # strict 700 permissions on the directory itself, and the directory contains
+      # runtime files (sockets, keyrings) that should not be managed by Nix.
+      {
+        ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
+        ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
+      }
+    ];
 
     # On non-NixOS: clone the dotfiles repo if not already present before
     # symlinks are created. On NixOS this is handled by the system activation
@@ -174,6 +171,17 @@ in
     tmpfiles.rules = [
       "d %h/.local/share/gnupg 0700 - - -"
     ];
+  };
+
+  # Wire Firefox up as the default browser so xdg-open (used by kitty and
+  # other tools) can resolve http/https URLs to a handler.
+  xdg.mimeApps = lib.mkIf hasDesktop {
+    enable = true;
+    defaultApplications = {
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "text/html" = "firefox.desktop";
+    };
   };
 
   # Hide CLI tools from the GNOME app menu. These packages ship .desktop files
