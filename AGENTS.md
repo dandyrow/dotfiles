@@ -105,11 +105,7 @@ wait for explicit confirmation in the current user message**. Generic phrases su
 Actions that require explicit approval:
 - Merging a pull request (`gh pr merge`)
 - Running `nixos-rebuild switch` (activates a new system generation)
-- Deleting branches or worktrees
 - Any `git push` to `main`
-
-**Next-steps lists in session summaries are planning records, not authorisations.**
-Each action on that list must be individually and explicitly requested before execution.
 
 Actions that do **not** require explicit approval (do them and report — asking permission for these wastes a turn):
 - `git push` to a feature branch (anything except `main`)
@@ -119,6 +115,9 @@ Actions that do **not** require explicit approval (do them and report — asking
 - `git commit` on a feature branch
 - `nix eval` / `nix build --no-link` / `nix flake check` / `nix-prefetch-url`
 - Running tests, linters, formatters, or any read-only inspection command
+- `./scripts/agent-cleanup.sh <branch>` — when the user states that a PR has been merged
+  (e.g. "that PR is merged", "the PRs are merged"), that statement is implicit approval
+  to immediately run cleanup for the relevant branch(es) without asking again.
 
 ---
 
@@ -141,7 +140,7 @@ When a task touches files described in this map, read those files directly. Do *
 | `scripts/agent-start.sh` | Creates the per-branch worktree and installs the co-author hook. |
 | `scripts/agent-cleanup.sh` | Removes a merged branch's worktree and local branch in one step. |
 | `scripts/ai-commit` | Optional wrapper around `git commit` for agent commits. |
-| `.worktrees/<branch>/` | Active agent worktrees (slashes in the branch name are preserved as nested directories — `fix/foo` lives at `.worktrees/fix/foo`). Removed after merge (requires approval). |
+| `.worktrees/<branch>/` | Active agent worktrees (slashes in the branch name are preserved as nested directories — `fix/foo` lives at `.worktrees/fix/foo`). Removed by `agent-cleanup.sh` after the user confirms the PR is merged. |
 
 Non-Nix dotfiles (shell, editor, tool configs) live at the repo root and under conventional `XDG_CONFIG_HOME` paths.
 
