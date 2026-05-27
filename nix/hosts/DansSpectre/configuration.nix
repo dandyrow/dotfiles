@@ -9,16 +9,16 @@
   };
 
   users.users = {
-    root = {
+    dandyrow = {
+      extraGroups = [
+        "networkmanager"
+        "print"
+      ];
+
       openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIForH9TNaNvQGNBzWXyPdtRGO5xiR2BYQeIKf8mzN2u9 dandyrow@Desktop"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINsxeHA5DWcz/L4A1BpozhL/BTNepsGXfrINkfeZSmvJ dandyrow@WSL" # Work Nix WSL
       ];
     };
-
-    dandyrow.extraGroups = [
-      "networkmanager"
-      "print"
-    ];
   };
 
   system.stateVersion = "25.11";
