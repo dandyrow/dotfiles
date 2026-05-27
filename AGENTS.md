@@ -81,6 +81,7 @@ Rules:
 - Keep Nix-related edits within `nix/` where possible.
 - If you change flake outputs, ensure they remain consistent and valid.
 - If you change flake inputs, update the flake lockfile.
+- **Bumping a vendored package** (anything under `nix/pkgs/`): follow the recipe in [`.github/instructions/nix-version-bumps.instructions.md`](.github/instructions/nix-version-bumps.instructions.md). It covers prefetch → vendor → stage → eval → build → version-check → commit → push + PR, plus common `autoPatchelfHook` failure modes. Copilot CLI loads this file automatically when editing `nix/pkgs/**` or `flake.nix`; other agents should read it explicitly.
 
 ### Dotfiles changes
 - Keep changes scoped and minimal; avoid large refactors unless requested.
