@@ -15,7 +15,6 @@
   documentation.nixos.enable = false;
 
   programs = {
-    firefox.enable = true;
     git.enable = true;
     steam.enable = true;
   };

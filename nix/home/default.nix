@@ -13,6 +13,8 @@ let
   hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
 in
 {
+  imports = [ ./firefox.nix ];
+
   home = {
     username = "dandyrow";
     homeDirectory = "/home/dandyrow";
