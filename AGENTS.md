@@ -18,6 +18,7 @@ This file is the source of truth for how coding agents must operate in this repo
 4. **Attribution rule:** agent-created commits MUST include a `Co-authored-by:` trailer identifying the AI agent (see [AI Co-Author Attribution](#ai-co-author-attribution-must)).
 5. Keep PRs small and reviewable. Prefer multiple atomic commits.
 6. Inspect git and GitHub state directly. Do not rely on pre-expanded shell snippets.
+7. **Never act on an unanswered question.** If you asked the user whether to proceed with something and no explicit answer was received — including across a context compaction boundary — re-ask before acting. A compaction summary does not constitute user consent.
 
 ---
 
