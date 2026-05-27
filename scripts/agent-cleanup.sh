@@ -81,15 +81,21 @@ if [[ -n "$TARGET_DIR" ]]; then
   git worktree remove "$TARGET_DIR"
   echo "✅ Removed worktree: $TARGET_DIR"
 
-  # Clean up newly-empty parent directories under .worktrees/. rmdir is
-  # safe here — it only succeeds on empty dirs, so non-empty siblings
-  # are left untouched. Walk upward until we hit .worktrees/ itself or
-  # a non-empty directory.
-  parent="$(dirname "$TARGET_DIR")"
-  while [[ "$parent" != "$ROOT/.worktrees" && "$parent" != "$ROOT" && "$parent" != "/" ]]; do
-    rmdir "$parent" 2>/dev/null || break
-    parent="$(dirname "$parent")"
-  done
+  # Clean up newly-empty parent directories — but only when the worktree
+  # lived strictly inside $ROOT/.worktrees/. Worktrees in other locations
+  # (created with a custom path) are left alone; rmdir'ing arbitrary
+  # parents outside .worktrees/ is not this script's job.
+  #
+  # The trailing slash in the prefix is load-bearing: it means
+  # $ROOT/.worktrees itself never matches, so the loop terminates
+  # naturally at the .worktrees/ boundary without needing extra checks.
+  if [[ "$TARGET_DIR" == "$ROOT/.worktrees/"* ]]; then
+    parent="$(dirname "$TARGET_DIR")"
+    while [[ "$parent" == "$ROOT/.worktrees/"* ]]; do
+      rmdir "$parent" 2>/dev/null || break
+      parent="$(dirname "$parent")"
+    done
+  fi
 else
   echo "ℹ️  No worktree associated with branch '$BRANCH' (already gone or never existed)."
 fi
