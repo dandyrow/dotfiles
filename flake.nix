@@ -69,6 +69,8 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.dandyrow = import ./nix/home;
+              # Prevent activation failures when HM wants to overwrite pre-existing files.
+              home-manager.backupFileExtension = "bak";
             }
           ]
           ++ lib.optionals (host == "WSL") [
