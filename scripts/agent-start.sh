@@ -41,9 +41,6 @@ git fetch origin main --quiet || {
 }
 
 WORKTREES_DIR="$ROOT/.worktrees"
-# Preserve slashes in branch names as nested directories. git worktree add
-# handles the mkdir -p, and agent-cleanup.sh finds worktrees via
-# `git worktree list --porcelain` rather than reconstructing the path.
 TARGET_DIR="$WORKTREES_DIR/$BRANCH"
 
 mkdir -p "$WORKTREES_DIR"
