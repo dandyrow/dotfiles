@@ -27,9 +27,9 @@ This file is the source of truth for how coding agents must operate in this repo
 # Create worktree + install hooks
 ./scripts/agent-start.sh <branch>
 
-# Work inside the worktree (slashes in the branch name are flattened to dashes)
-# e.g. branch "fix/foo-bar" → .worktrees/fix-foo-bar
-cd .worktrees/<flattened-branch>
+# Work inside the worktree (slashes in the branch name are preserved as
+# nested directories, e.g. branch "fix/foo-bar" → .worktrees/fix/foo-bar)
+cd .worktrees/<branch>
 
 # Push and open PR
 git push -u origin <branch>
@@ -141,7 +141,7 @@ When a task touches files described in this map, read those files directly. Do *
 | `scripts/agent-start.sh` | Creates the per-branch worktree and installs the co-author hook. |
 | `scripts/agent-cleanup.sh` | Removes a merged branch's worktree and local branch in one step. |
 | `scripts/ai-commit` | Optional wrapper around `git commit` for agent commits. |
-| `.worktrees/<flattened-branch>/` | Active agent worktrees (`fix/foo` → `fix-foo`). Removed after merge (requires approval). |
+| `.worktrees/<branch>/` | Active agent worktrees (slashes in the branch name are preserved as nested directories — `fix/foo` lives at `.worktrees/fix/foo`). Removed after merge (requires approval). |
 
 Non-Nix dotfiles (shell, editor, tool configs) live at the repo root and under conventional `XDG_CONFIG_HOME` paths.
 

@@ -3,10 +3,15 @@ set -euo pipefail
 
 # scripts/agent-cleanup <branch>
 #
-# Tears down a merged feature branch: removes the worktree under
-# .worktrees/<flattened-branch>, prunes worktree metadata, and deletes
-# the local branch. Must be run from the main worktree (not from inside
-# the worktree being removed).
+# Tears down a merged feature branch: removes the worktree (if one is
+# associated with the branch), prunes worktree metadata, deletes the
+# local branch, and removes any newly-empty parent directories under
+# .worktrees/. Must be run from the main worktree (not from inside the
+# worktree being removed).
+#
+# Worktree lookup uses `git worktree list --porcelain` keyed on branch
+# name, so the on-disk path layout is not assumed. This works for the
+# current slash-preserving convention and is robust to future changes.
 #
 # Safety:
 # - Refuses to run from inside .worktrees/.
@@ -46,8 +51,18 @@ esac
 
 cd "$ROOT"
 
-WORKTREE_NAME="${BRANCH//\//-}"
-TARGET_DIR="$ROOT/.worktrees/$WORKTREE_NAME"
+# Find the worktree path for this branch via porcelain output, which
+# parses as paired `worktree <path>` / `branch refs/heads/<name>` lines.
+# Returns empty if no worktree is associated with the branch.
+find_worktree_path() {
+  local branch="$1"
+  git worktree list --porcelain | awk -v branch="refs/heads/$branch" '
+    /^worktree / { path = substr($0, 10) }
+    /^branch /   { if ($2 == branch) { print path; exit } }
+  '
+}
+
+TARGET_DIR="$(find_worktree_path "$BRANCH")"
 
 # Update remote tracking so the merged-remote check below is accurate.
 git fetch --prune origin --quiet || true
@@ -61,12 +76,22 @@ if [[ "$FORCE" -ne 1 ]]; then
   fi
 fi
 
-# Remove the worktree if present.
-if [[ -d "$TARGET_DIR" ]]; then
+# Remove the worktree if one is registered for this branch.
+if [[ -n "$TARGET_DIR" ]]; then
   git worktree remove "$TARGET_DIR"
   echo "✅ Removed worktree: $TARGET_DIR"
+
+  # Clean up newly-empty parent directories under .worktrees/. rmdir is
+  # safe here — it only succeeds on empty dirs, so non-empty siblings
+  # are left untouched. Walk upward until we hit .worktrees/ itself or
+  # a non-empty directory.
+  parent="$(dirname "$TARGET_DIR")"
+  while [[ "$parent" != "$ROOT/.worktrees" && "$parent" != "$ROOT" && "$parent" != "/" ]]; do
+    rmdir "$parent" 2>/dev/null || break
+    parent="$(dirname "$parent")"
+  done
 else
-  echo "ℹ️  No worktree at $TARGET_DIR (already gone)."
+  echo "ℹ️  No worktree associated with branch '$BRANCH' (already gone or never existed)."
 fi
 
 git worktree prune

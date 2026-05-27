@@ -5,6 +5,11 @@ set -euo pipefail
 #
 # Creates a worktree at .worktrees/<branch> based on origin/main and
 # configures worktree-local hooks/helpers to ensure AI co-author attribution.
+#
+# Branch names containing slashes (e.g. "feat/foo") are preserved as nested
+# directories under .worktrees/ (e.g. .worktrees/feat/foo). Companion script
+# agent-cleanup.sh uses `git worktree list --porcelain` to locate worktrees
+# by branch name, so the on-disk path layout is not assumed.
 
 BRANCH="${1:-}"
 
@@ -36,10 +41,10 @@ git fetch origin main --quiet || {
 }
 
 WORKTREES_DIR="$ROOT/.worktrees"
-# Flatten branch names like "chore/foo" into "chore-foo" so worktrees live
-# directly under .worktrees/ rather than in type-prefixed subdirectories.
-WORKTREE_NAME="${BRANCH//\//-}"
-TARGET_DIR="$WORKTREES_DIR/$WORKTREE_NAME"
+# Preserve slashes in branch names as nested directories. git worktree add
+# handles the mkdir -p, and agent-cleanup.sh finds worktrees via
+# `git worktree list --porcelain` rather than reconstructing the path.
+TARGET_DIR="$WORKTREES_DIR/$BRANCH"
 
 mkdir -p "$WORKTREES_DIR"
 
