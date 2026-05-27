@@ -33,13 +33,12 @@ cd .worktrees/<flattened-branch>
 
 # Push and open PR
 git push -u origin <branch>
-# then open a PR into main via gh or GitHub UI
-
-# Cleanup (from the main checkout, after the PR is merged and origin/<branch> is deleted)
-./scripts/agent-cleanup.sh <branch>
+gh pr create --fill --base main
 ```
 
-After a PR is merged, propose running `scripts/agent-cleanup.sh <branch>` from the main checkout. It removes the worktree, prunes worktree metadata, and deletes the local branch in one step. Worktree/branch deletion still requires explicit user approval per the irreversible-actions rule.
+After a clean commit on a feature branch in a worktree, **push to `origin` and open the PR in the same turn**. Pushing a feature branch and opening a PR are not destructive and do not require explicit user approval. Wait for approval only for the actions listed under [Irreversible actions](#irreversible-actions-require-explicit-approval-mandatory) (notably: merging the PR, `nixos-rebuild switch`, deleting branches/worktrees, and any push to `main`).
+
+After a PR is merged, `./scripts/agent-cleanup.sh <branch>` removes the worktree, prunes worktree metadata, and deletes the local branch in one step. **Running this is the agent's responsibility once the PR is confirmed merged**, but because it deletes a branch and a worktree it requires explicit user approval per the irreversible-actions rule — propose it and wait.
 
 ---
 
@@ -111,6 +110,15 @@ Actions that require explicit approval:
 **Next-steps lists in session summaries are planning records, not authorisations.**
 Each action on that list must be individually and explicitly requested before execution.
 
+Actions that do **not** require explicit approval (do them and report — asking permission for these wastes a turn):
+- `git push` to a feature branch (anything except `main`)
+- `gh pr create` / `gh pr view` / `gh pr checks` / `gh pr diff`
+- Creating, reading, editing, or staging files inside a worktree
+- `git add <path>` (explicit paths only — never `-A` or `.`)
+- `git commit` on a feature branch
+- `nix eval` / `nix build --no-link` / `nix flake check` / `nix-prefetch-url`
+- Running tests, linters, formatters, or any read-only inspection command
+
 ---
 
 ## If uncertain
@@ -119,6 +127,8 @@ Ask a short clarifying question rather than guessing. Follow existing patterns i
 ---
 
 ## Repo map
+
+When a task touches files described in this map, read those files directly. Do **not** re-explore the tree with `ls`/`find`/`glob`/`grep` to confirm what the map already states — that wastes tool calls and tokens. Only fall back to exploration if the task involves paths not covered here, or if you have specific reason to believe the map is out of date.
 
 | Path | Purpose |
 | --- | --- |
@@ -138,7 +148,7 @@ Non-Nix dotfiles (shell, editor, tool configs) live at the repo root and under c
 
 ## Environment facts
 
-- **Hosts:** the flake provides three NixOS configurations — `WSL` (NixOS-WSL2), `DansSpectre`, `New-H0Ryzen`. Detect the current host before assuming behaviour: `cat /etc/hostname` or `hostnamectl`.
+- **Hosts:** the flake provides three NixOS configurations — `WSL` (NixOS-WSL2), `DansSpectre`, `New-H0Ryzen`. Detect the current host before assuming behaviour. The `$HOST` shell variable is the default way to read the hostname and can be used inline in commands (e.g. `nix build .#nixosConfigurations.$HOST...`). Fall back to `cat /etc/hostname` only if `$HOST` is unset.
 - **WSL-only specifics:** on `WSL` the kernel comes from the Windows side, not Nix; `/etc/nixos/corp.pem` may be present for the corporate CA (referenced via `builtins.pathExists`), which means rebuilds need `nixos-rebuild switch --flake .#WSL --impure`. These do not apply to `DansSpectre` or `New-H0Ryzen`.
 - **Working baselines for cross-distro debugging:** on `WSL` an Ubuntu/WSL2 install on the same Windows host is available as a side-by-side reference. On other hosts, compare against a previous working generation (`nix profile history`, `/run/current-system` vs the proposed build) instead.
 - **GPG signing fails non-interactively** (`gpg: cannot open '/dev/tty'`) in agent sessions. Use `git commit --no-gpg-sign` unless the user provides another path.
@@ -147,6 +157,8 @@ Non-Nix dotfiles (shell, editor, tool configs) live at the repo root and under c
 ---
 
 ## Verification expectations
+
+The flake uses the **git tree** as its source of truth. `nix eval`, `nix build`, and `nix flake check` cannot see untracked files — a newly written `.nix` file will produce a "path does not exist" error until it is staged. Stage new files with `git add <path>` (explicit paths only) immediately after writing them, before any `nix` evaluation or build.
 
 Before claiming a Nix change is correct:
 
