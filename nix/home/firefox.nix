@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   osConfig ? null,
@@ -12,8 +13,7 @@ in
 lib.mkIf hasDesktop {
   programs.firefox = {
     enable = true;
-    # Keep legacy profile path; remove once stateVersion is bumped to 26.05+.
-    configPath = ".mozilla/firefox";
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
 
     policies = {
       DisableTelemetry = true;
