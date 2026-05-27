@@ -18,6 +18,8 @@
 
     networking.networkmanager.enable = true;
 
+    services.gnome.gnome-browser-connector.enable = true;
+
     programs.dconf.profiles.user.databases = [
       {
         settings."org/gnome/desktop/interface" = {

@@ -14,7 +14,9 @@ lib.mkIf hasDesktop {
   programs.firefox = {
     enable = true;
     configPath = "${config.xdg.configHome}/mozilla/firefox";
-    nativeMessagingHosts = [ pkgs.gnome-browser-connector ];
+    package = pkgs.firefox.override {
+      nativeMessagingHosts = [ pkgs.gnome-browser-connector ];
+    };
 
     policies = {
       DisableTelemetry = true;
