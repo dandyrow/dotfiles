@@ -18,6 +18,21 @@
 
     networking.networkmanager.enable = true;
 
+    programs.dconf.profiles.user.databases = [
+      {
+        settings."org/gnome/desktop/interface" = {
+          color-scheme = "prefer-dark";
+          accent-color = "green";
+        };
+      }
+    ];
+
+    qt = {
+      enable = true;
+      platformTheme = "gnome";
+      style = "adwaita-dark";
+    };
+
     # Remove unwanted GNOME default applications entirely.
     environment.gnome.excludePackages = with pkgs; [
       decibels # Audio player
