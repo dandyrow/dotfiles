@@ -32,6 +32,7 @@ in
         tmux
         yazi
         opencode
+        pi-coding-agent
       ]
       # Only install kitty on systems with Gnome desktop environment
       ++ lib.optionals (osConfig != null && (osConfig.gnome.enable or false)) [
