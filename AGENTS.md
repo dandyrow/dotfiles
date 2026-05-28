@@ -184,6 +184,7 @@ For non-trivial runtime failures (services crashing, packages misbehaving, mount
 
 ## Style notes
 
-- **Comments in Nix files: concise (1–3 lines).** Explain the non-obvious *why*; do not restate what the code does.
+- **Default: no comment.** Only add a comment when the code cannot convey the *why* on its own. If you are unsure whether a comment is needed, omit it.
+- When a comment is warranted, keep it to one line. Do not restate what the code does; explain only the non-obvious reason it does it.
 - Root-cause analyses, falsified hypotheses, and link-outs to upstream issues belong in commit messages and PR bodies, not in source comments.
 - Prefer hoisting repeated literals (versions, hashes, URLs) into `let` bindings or attributes so they update in one place.
