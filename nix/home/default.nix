@@ -146,6 +146,7 @@ in
       {
         ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
         ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
+        ".config/copilot/mcp-config.json".source = mkLink "copilot/.config/copilot/mcp-config.json";
       }
     ];
 
