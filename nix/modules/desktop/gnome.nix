@@ -27,7 +27,6 @@
             color-scheme = "prefer-dark";
             accent-color = "green";
           };
-          # Always show logout in the system menu regardless of user count.
           "org/gnome/shell".always-show-log-out = true;
         };
       }
