@@ -22,9 +22,13 @@
 
     programs.dconf.profiles.user.databases = [
       {
-        settings."org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
-          accent-color = "green";
+        settings = {
+          "org/gnome/desktop/interface" = {
+            color-scheme = "prefer-dark";
+            accent-color = "green";
+          };
+          # Always show logout in the system menu regardless of user count.
+          "org/gnome/shell".always-show-log-out = true;
         };
       }
     ];
