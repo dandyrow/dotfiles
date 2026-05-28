@@ -22,9 +22,12 @@
 
     programs.dconf.profiles.user.databases = [
       {
-        settings."org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
-          accent-color = "green";
+        settings = {
+          "org/gnome/desktop/interface" = {
+            color-scheme = "prefer-dark";
+            accent-color = "green";
+          };
+          "org/gnome/shell".always-show-log-out = true;
         };
       }
     ];
