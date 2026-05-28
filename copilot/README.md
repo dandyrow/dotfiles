@@ -33,10 +33,14 @@ plain `stow copilot` works.
 
 ## MCP servers
 
-| Name      | Transport | URL                                |
-| --------- | --------- | ---------------------------------- |
-| context7  | http      | <https://mcp.context7.com/mcp>     |
-| atlassian | sse       | <https://mcp.atlassian.com/v1/sse> |
+| Name      | Transport | URL                                            |
+| --------- | --------- | ---------------------------------------------- |
+| context7  | http      | <https://mcp.context7.com/mcp>                 |
+| atlassian | http      | <https://mcp.atlassian.com/v1/mcp/authv2>      |
+
+The legacy Atlassian SSE endpoint (`/v1/sse`) is deprecated and stops
+working on 30 June 2026. The streamable-HTTP `/v1/mcp/authv2` endpoint
+is the replacement.
 
 If Copilot CLI's native remote-OAuth flow fails for either server, the
 fallback is to run them as local stdio via `npx mcp-remote@latest <url>`
