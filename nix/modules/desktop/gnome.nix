@@ -38,6 +38,9 @@
       style = "adwaita-dark";
     };
 
+    # qgnomeplatform forces Qt5 apps to XCB/XWayland even in a Wayland session; this overrides it.
+    environment.sessionVariables.QT_QPA_PLATFORM = "wayland;xcb";
+
     # Remove unwanted GNOME default applications entirely.
     environment.gnome.excludePackages = with pkgs; [
       decibels # Audio player

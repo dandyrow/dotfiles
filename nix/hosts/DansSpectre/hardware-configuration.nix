@@ -41,6 +41,9 @@
       # Power on the adapter at boot so it is ready without manual intervention.
       powerOnBoot = true;
     };
+
+    # intel-media-driver provides iHD_drv_video.so for VA-API on the Intel HD 630 iGPU (Gen9.5).
+    graphics.extraPackages = with pkgs; [ intel-media-driver ];
   };
 
   # Kaby Lake G has two GPUs in the same package:
