@@ -37,9 +37,9 @@ git push -u origin <branch>
 gh pr create --fill --base main
 ```
 
-After a clean commit on a feature branch in a worktree, **push to `origin` and open the PR in the same turn**. Pushing a feature branch and opening a PR are not destructive and do not require explicit user approval. Wait for approval only for the actions listed under [Irreversible actions](#irreversible-actions-require-explicit-approval-mandatory) (notably: merging the PR, `nixos-rebuild switch`, deleting branches/worktrees, and any push to `main`).
+After a clean commit on a feature branch in a worktree, **push to `origin` and open the PR in the same turn**. Pushing a feature branch and opening a PR are not destructive and do not require explicit user approval. Wait for approval only for the actions listed under [Irreversible actions](#irreversible-actions-require-explicit-approval-mandatory).
 
-After a PR is merged, `./scripts/agent-cleanup.sh <branch>` removes the worktree, prunes worktree metadata, and deletes the local branch in one step. **Running this is the agent's responsibility once the PR is confirmed merged**, but because it deletes a branch and a worktree it requires explicit user approval per the irreversible-actions rule — propose it and wait.
+After a PR is merged, `./scripts/agent-cleanup.sh <branch>` removes the worktree, prunes worktree metadata, and deletes the local branch in one step. **Running this is the agent's responsibility once the PR is confirmed merged**, but requires user confirmation per the irreversible-actions rule.
 
 ---
 
@@ -82,11 +82,14 @@ Rules:
 - Keep Nix-related edits within `nix/` where possible.
 - If you change flake outputs, ensure they remain consistent and valid.
 - If you change flake inputs, update the flake lockfile.
-- **Bumping a vendored package** (anything under `nix/pkgs/`): follow the recipe in [`.github/instructions/nix-version-bumps.instructions.md`](.github/instructions/nix-version-bumps.instructions.md). It covers prefetch → vendor → stage → eval → build → version-check → commit → push + PR, plus common `autoPatchelfHook` failure modes. Copilot CLI loads this file automatically when editing `nix/pkgs/**` or `flake.nix`; other agents should read it explicitly.
+- **Bumping a vendored package** (anything under `nix/pkgs/`): follow the recipe in [`.github/instructions/nix-version-bumps.instructions.md`](.github/instructions/nix-version-bumps.instructions.md). Read it before making changes.
 
 ### Dotfiles changes
 - Keep changes scoped and minimal; avoid large refactors unless requested.
 - Do not introduce secrets (tokens, private keys, machine-specific secrets).
+
+### XDG Base Directory compliance
+Respect the XDG Base Directory specification for all tool configuration, data, and cache paths. Override non-compliant defaults where necessary.
 
 ### Never do
 - Never commit secrets, tokens, private keys, or `.env` files with secrets.
@@ -129,7 +132,7 @@ Ask a short clarifying question rather than guessing. Follow existing patterns i
 
 ## Repo map
 
-When a task touches files described in this map, read those files directly. Do **not** re-explore the tree with `ls`/`find`/`glob`/`grep` to confirm what the map already states — that wastes tool calls and tokens. Only fall back to exploration if the task involves paths not covered here, or if you have specific reason to believe the map is out of date.
+When a task touches files described in this map, read those files directly. Do **not** re-explore the tree with `ls`/`find`/`glob`/`grep` to confirm what the map already states. Only fall back to exploration if the task involves paths not covered here, or if you have specific reason to believe the map is out of date.
 
 | Path | Purpose |
 | --- | --- |
