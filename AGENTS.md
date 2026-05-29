@@ -88,6 +88,14 @@ Rules:
 - Keep changes scoped and minimal; avoid large refactors unless requested.
 - Do not introduce secrets (tokens, private keys, machine-specific secrets).
 
+### XDG Base Directory compliance
+All tool configuration and data paths must follow the XDG Base Directory specification:
+- Config: `~/.config/<tool>/`
+- Data: `~/.local/share/<tool>/`
+- Cache: `~/.cache/<tool>/`
+
+When configuring a tool or plugin that writes to a custom path (e.g. a save directory, cache location, or data store), verify it uses the appropriate XDG directory rather than a legacy dotfile path (e.g. `~/.tool/`). Override the default if necessary.
+
 ### Never do
 - Never commit secrets, tokens, private keys, or `.env` files with secrets.
 - Never rewrite history on `main`.
