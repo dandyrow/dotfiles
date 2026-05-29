@@ -89,12 +89,7 @@ Rules:
 - Do not introduce secrets (tokens, private keys, machine-specific secrets).
 
 ### XDG Base Directory compliance
-All tool configuration and data paths must follow the XDG Base Directory specification:
-- Config: `~/.config/<tool>/`
-- Data: `~/.local/share/<tool>/`
-- Cache: `~/.cache/<tool>/`
-
-When configuring a tool or plugin that writes to a custom path (e.g. a save directory, cache location, or data store), verify it uses the appropriate XDG directory rather than a legacy dotfile path (e.g. `~/.tool/`). Override the default if necessary.
+Respect the XDG Base Directory specification for all tool configuration, data, and cache paths. Override non-compliant defaults where necessary.
 
 ### Never do
 - Never commit secrets, tokens, private keys, or `.env` files with secrets.
