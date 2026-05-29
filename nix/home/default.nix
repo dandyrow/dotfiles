@@ -187,14 +187,17 @@ in
     };
   };
 
-  # Hide CLI tools from the GNOME app menu. These packages ship .desktop files
-  # so GNOME picks them up and shows them in the app launcher, but they are
-  # terminal applications and have no business appearing there. Overriding each
-  # entry with NoDisplay=true removes them from the menu while keeping the
-  # binaries fully available in the terminal.
+  # Hide packages from the GNOME app menu that have no place in the launcher.
+  # These ship .desktop files that GNOME picks up automatically; overriding
+  # each entry with NoDisplay=true suppresses the menu entry while keeping the
+  # package fully functional.
   xdg.desktopEntries = {
     btop = {
       name = "btop++";
+      noDisplay = true;
+    };
+    cups = {
+      name = "Manage Printing";
       noDisplay = true;
     };
     nvim = {
