@@ -7,7 +7,7 @@
 }:
 
 let
-  version = "0.31.2";
+  version = "0.30.0";
 in
 stdenv.mkDerivation {
   pname = "docker-sbx";
@@ -15,7 +15,7 @@ stdenv.mkDerivation {
 
   src = fetchzip {
     url = "https://github.com/docker/sbx-releases/releases/download/v${version}/DockerSandboxes-linux.tar.gz";
-    hash = "sha256-cKMsXIj8NXlTGvL2mB3BxtCnUgfhVER38FT+3K/r7oo=";
+    hash = "sha256-uO4HM+iCm4OHe727y0PVzzhV77LP7UG4MuCX6Tn9hBU=";
     stripRoot = true;
   };
 
