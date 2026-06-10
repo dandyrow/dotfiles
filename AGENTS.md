@@ -39,7 +39,7 @@ gh pr create --fill --base main
 
 After a clean commit on a feature branch in a worktree, **push to `origin` and open the PR in the same turn**. Pushing a feature branch and opening a PR are not destructive and do not require explicit user approval. Wait for approval only for the actions listed under [Irreversible actions](#irreversible-actions-require-explicit-approval-mandatory).
 
-After a PR is merged, `./scripts/agent-cleanup.sh <branch>` removes the worktree, prunes worktree metadata, and deletes the local branch in one step. **Running this is the agent's responsibility once the PR is confirmed merged**, but requires user confirmation per the irreversible-actions rule.
+After a PR is merged, `./scripts/agent-cleanup.sh <branch>` removes the worktree, prunes worktree metadata, and deletes the local branch in one step. Then pull `main` to bring the local branch up to date. **Both steps are the agent's responsibility once the PR is confirmed merged**, but require user confirmation per the irreversible-actions rule.
 
 ---
 
@@ -119,9 +119,10 @@ Actions that do **not** require explicit approval (do them and report — asking
 - `git commit` on a feature branch
 - `nix eval` / `nix build --no-link` / `nix flake check` / `nix-prefetch-url`
 - Running tests, linters, formatters, or any read-only inspection command
-- `./scripts/agent-cleanup.sh <branch>` — when the user states that a PR has been merged
-  (e.g. "that PR is merged", "the PRs are merged"), that statement is implicit approval
-  to immediately run cleanup for the relevant branch(es) without asking again.
+- `./scripts/agent-cleanup.sh <branch>` followed by `git pull` on `main` — when the user
+  states that a PR has been merged (e.g. "that PR is merged", "the PRs are merged"), that
+  statement is implicit approval to immediately run cleanup and pull main for the relevant
+  branch(es) without asking again.
 
 ---
 
