@@ -37,6 +37,14 @@ in
       ++ lib.optionals (osConfig != null && (osConfig.gnome.enable or false)) [
         kitty
       ]
+      ++ lib.optionals hasDesktop (
+        with pkgs.gnomeExtensions;
+        [
+          appindicator
+          dash-to-dock
+          status-area-horizontal-spacing
+        ]
+      )
       ++ [
         # Zsh dependencies (see zsh dotfile README)
         fzf
@@ -227,4 +235,35 @@ in
   # Move ~/.nix-defexpr and ~/.nix-profile to XDG state directory.
   # use-xdg-base-directories is enabled system-wide in common/default.nix.
   nix.assumeXdg = true;
+
+  catppuccin = {
+    enable = true;
+    autoEnable = false;
+    flavor = "mocha";
+    accent = "green";
+    firefox = lib.mkIf hasDesktop {
+      enable = true;
+      force = true;
+    };
+  };
+
+  gtk = lib.mkIf hasDesktop {
+    enable = true;
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.catppuccin-papirus-folders.override {
+        flavor = "mocha";
+        accent = "green";
+      };
+    };
+  };
+
+  dconf.settings = lib.mkIf hasDesktop {
+    "org/gnome/desktop/interface".icon-theme = lib.mkDefault "Papirus-Dark";
+    "org/gnome/shell".enabled-extensions = [
+      "appindicatorsupport@rgcjonas.gmail.com"
+      "dash-to-dock@micxgx.gmail.com"
+      "status-area-horizontal-spacing@mathematical.coffee.gmail.com"
+    ];
+  };
 }
