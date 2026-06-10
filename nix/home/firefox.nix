@@ -43,10 +43,6 @@ lib.mkIf hasDesktop {
           installation_mode = "force_installed";
           default_area = "navbar";
         };
-        "{f4363cd3-9ba9-453d-b2b2-66e6e1bafe73}" = {
-          install_url = amo "catppuccin-mocha-green-git";
-          installation_mode = "force_installed";
-        };
       };
 
       # Remove distracting sections from the new tab page and lock the settings
@@ -64,11 +60,6 @@ lib.mkIf hasDesktop {
 
     profiles.default = {
       isDefault = true;
-
-      settings = {
-        # force_installed themes are not auto-activated; this pref selects the active one.
-        "extensions.activeThemeID" = "{f4363cd3-9ba9-453d-b2b2-66e6e1bafe73}";
-      };
 
       search = {
         # Prevents Firefox resetting the search config on updates.

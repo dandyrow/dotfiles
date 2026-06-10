@@ -23,6 +23,8 @@
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs =
@@ -68,7 +70,12 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.dandyrow = import ./nix/home;
+              home-manager.users.dandyrow = {
+                imports = [
+                  ./nix/home
+                  inputs.catppuccin.homeModules.catppuccin
+                ];
+              };
               # Prevent activation failures when HM wants to overwrite pre-existing files.
               home-manager.backupFileExtension = "bak";
             }
@@ -96,7 +103,10 @@
             # and the unfree predicate is applied via nixpkgs.config in mkSystem instead.
             config = { inherit allowUnfreePredicate; };
           };
-          modules = [ ./nix/home ];
+          modules = [
+            ./nix/home
+            inputs.catppuccin.homeModules.catppuccin
+          ];
           extraSpecialArgs = { inherit wsl; };
         };
 
