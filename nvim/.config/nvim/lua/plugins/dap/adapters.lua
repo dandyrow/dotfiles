@@ -54,12 +54,15 @@ end
 -- vscode-js-debug adapter for JavaScript / TypeScript / React debugging.
 -- On Nix: provided by pkgs.vscode-js-debug (js-debug-dap binary on PATH).
 -- On non-Nix: Mason installs js-debug-adapter; binary at the Mason data path.
-local js_debug_cmd = system.is_nix()
-  and vim.fn.exepath("js-debug-dap")
-  or vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter/js-debug-dap"
+local js_debug_cmd
+if system.is_nix() then
+  js_debug_cmd = vim.fn.exepath("js-debug-dap")
+else
+  js_debug_cmd = vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter/js-debug-dap"
+end
 
-for _, type in ipairs({ "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }) do
-  dap.adapters[type] = {
+for _, adapter_type in ipairs({ "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }) do
+  dap.adapters[adapter_type] = {
     type = "server",
     host = "localhost",
     port = "${port}",
