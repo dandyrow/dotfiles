@@ -12,8 +12,10 @@ return {
       ["yaml.ansible"] = { "ansible-lint" },
       yaml = { "yamlfmt" },
       go = { "goimports", "gofumpt" },
-      javascript = { "eslint_d" },
-      typescript = { "eslint_d" },
+      javascript = { "prettier", "eslint_d" },
+      typescript = { "prettier", "eslint_d" },
+      typescriptreact = { "prettier", "eslint_d" },
+      javascriptreact = { "prettier", "eslint_d" },
       nix = { "nixfmt-rfc-style" },
     },
     formatters = {
