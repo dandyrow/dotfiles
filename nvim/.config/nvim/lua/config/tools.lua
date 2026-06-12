@@ -34,7 +34,6 @@ M.linters = {
   -- jsonls (vscode-langservers-extracted) instead. Mason installs it on non-Nix.
   "jsonlint",
   "golangci-lint",
-  -- eslint_d removed: the eslint LSP provides real-time JS/TS diagnostics instead.
 }
 
 M.dap_adapters = {
