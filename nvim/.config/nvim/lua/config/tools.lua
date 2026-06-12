@@ -22,6 +22,7 @@ M.formatters = {
   "goimports",
   "gofumpt",
   "eslint_d",
+  "prettier",
 }
 
 M.linters = {
@@ -33,7 +34,7 @@ M.linters = {
   -- jsonls (vscode-langservers-extracted) instead. Mason installs it on non-Nix.
   "jsonlint",
   "golangci-lint",
-  "eslint_d",
+  -- eslint_d removed: the eslint LSP provides real-time JS/TS diagnostics instead.
 }
 
 M.dap_adapters = {
@@ -42,6 +43,7 @@ M.dap_adapters = {
   "bash-debug-adapter",
   "debugpy",
   "delve",
+  "js-debug-adapter",
 }
 
 return M
