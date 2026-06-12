@@ -12,8 +12,6 @@ return {
       ["yaml.ansible"] = { "ansible_lint" },
       json = { "jsonlint" },
       go = { "golangcilint" },
-      javascript = { "eslint_d" },
-      typescript = { "eslint_d" },
       nix = { "nix" },
     }
 

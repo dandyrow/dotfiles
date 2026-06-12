@@ -79,11 +79,13 @@ in
         basedpyright
         # gh_actions_ls (github-actions-language-server) is not yet in nixpkgs;
         # it will fall back to Mason on non-Nix systems or be unavailable on Nix.
-        vscode-langservers-extracted # provides jsonls
+        vscode-langservers-extracted # provides jsonls, cssls, eslint, html LSPs
         gopls
         ansible-language-server
         typescript-language-server
         nixd
+        tailwindcss-language-server
+        emmet-language-server
 
         # Formatters
         beautysh
@@ -95,6 +97,7 @@ in
         # conflicts with gopls. goimports functionality is covered by gopls on Nix.
         eslint_d
         nixfmt # nixfmt-rfc-style is now an alias for nixfmt
+        prettier
 
         # Linters
         shellcheck
@@ -105,6 +108,7 @@ in
         delve
         python3Packages.debugpy
         vscode-extensions.vadimcn.vscode-lldb # codelldb
+        vscode-js-debug
       ]
       ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
         # docker-sbx is only published for x86_64-linux; no aarch64 release.

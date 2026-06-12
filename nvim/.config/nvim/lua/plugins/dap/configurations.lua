@@ -91,3 +91,29 @@ dap.configurations.python = {
     end,
   },
 }
+
+local js_configs = {
+  {
+    type = "pwa-node",
+    request = "launch",
+    name = "Node: Launch current file",
+    program = "${file}",
+    cwd = "${workspaceFolder}",
+    sourceMaps = true,
+  },
+  {
+    type = "pwa-chrome",
+    request = "launch",
+    name = "Chrome: Launch and attach to dev server",
+    url = function()
+      local url = vim.fn.input("Dev server URL (default: http://localhost:3000): ")
+      return url ~= "" and url or "http://localhost:3000"
+    end,
+    webRoot = "${workspaceFolder}",
+    sourceMaps = true,
+  },
+}
+
+for _, ft in ipairs({ "javascript", "typescript", "typescriptreact", "javascriptreact" }) do
+  dap.configurations[ft] = js_configs
+end
