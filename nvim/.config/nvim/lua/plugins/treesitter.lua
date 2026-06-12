@@ -17,6 +17,7 @@ return {
       "json",
       "javascript",
       "typescript",
+      "tsx",
       "nix",
     })
   end,
