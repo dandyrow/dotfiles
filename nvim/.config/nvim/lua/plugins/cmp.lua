@@ -31,6 +31,7 @@ return {
     "moyiz/blink-emoji.nvim",
     "fang2hou/blink-copilot",
     "disrupted/blink-cmp-conventional-commits",
+    "brenoprata10/nvim-highlight-colors",
   },
   version = "1.*",
   opts = {
@@ -60,8 +61,23 @@ return {
 
           components = {
             kind_icon = {
-              -- (optional) use highlights from mini.icons
+              text = function(ctx)
+                local icon = ctx.kind_icon
+                if ctx.item.source_name == "LSP" then
+                  local color_item = require("nvim-highlight-colors").format(ctx.item.documentation, { kind = ctx.kind })
+                  if color_item and color_item.abbr ~= "" then
+                    icon = color_item.abbr
+                  end
+                end
+                return icon .. ctx.icon_gap
+              end,
               highlight = function(ctx)
+                if ctx.item.source_name == "LSP" then
+                  local color_item = require("nvim-highlight-colors").format(ctx.item.documentation, { kind = ctx.kind })
+                  if color_item and color_item.abbr_hl_group then
+                    return color_item.abbr_hl_group
+                  end
+                end
                 local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
                 return hl
               end,
