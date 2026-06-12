@@ -1,3 +1,5 @@
+local js_formatters = { "prettier", "eslint_d" }
+
 return {
   "stevearc/conform.nvim",
   event = { "BufWritePre" },
@@ -12,10 +14,10 @@ return {
       ["yaml.ansible"] = { "ansible-lint" },
       yaml = { "yamlfmt" },
       go = { "goimports", "gofumpt" },
-      javascript = { "prettier", "eslint_d" },
-      typescript = { "prettier", "eslint_d" },
-      typescriptreact = { "prettier", "eslint_d" },
-      javascriptreact = { "prettier", "eslint_d" },
+      javascript = js_formatters,
+      typescript = js_formatters,
+      typescriptreact = js_formatters,
+      javascriptreact = js_formatters,
       nix = { "nixfmt-rfc-style" },
     },
     formatters = {
