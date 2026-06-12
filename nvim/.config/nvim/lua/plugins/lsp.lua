@@ -100,6 +100,14 @@ return {
           },
         }
       end)(),
+      tailwindcss = {
+        filetypes = { "html", "css", "typescriptreact", "javascriptreact" },
+      },
+      cssls = {},
+      eslint = {},
+      emmet_language_server = {
+        filetypes = { "html", "typescriptreact", "javascriptreact", "css", "scss" },
+      },
     }
 
     local function merge_unique(...)
@@ -187,6 +195,10 @@ return {
               vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
             end,
           })
+        end
+
+        if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+          vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
         end
       end,
     })
