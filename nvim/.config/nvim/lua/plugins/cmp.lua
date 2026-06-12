@@ -83,7 +83,6 @@ return {
               end,
             },
             kind = {
-              -- (optional) use highlights from mini.icons
               highlight = function(ctx)
                 local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
                 return hl
