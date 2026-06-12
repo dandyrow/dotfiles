@@ -4,5 +4,6 @@ return {
   opts = {
     render = "virtual",
     enable_tailwind = true,
+    exclude_filetypes = { "lazy", "gitcommit" },
   },
 }
