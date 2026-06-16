@@ -166,6 +166,9 @@ return {
       group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
       callback = function(event)
         local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+        -- Neovim 0.12 removed gd from the default LSP keymaps; re-add it.
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = event.buf, desc = "LSP: go to definition" })
         local method = vim.lsp.protocol.Methods.textDocument_documentHighlight
         local supports = function()
           return client:supports_method(method, event.buf)
