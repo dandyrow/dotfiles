@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   documentation.nixos.enable = false;
 
@@ -6,6 +6,10 @@
     git.enable = true;
     steam.enable = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    bottles
+  ];
 
   users.users = {
     dandyrow = {
