@@ -13,6 +13,7 @@ return {
   end,
 
   opts = {
+    flavour = "mocha",
     dim_inactive = {
       enabled = true,
       shade = "dark",

@@ -14,6 +14,7 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 -- Visual
+vim.opt.background = "dark"
 vim.opt.winborder = "rounded"
 vim.opt.number = true
 vim.opt.relativenumber = true
