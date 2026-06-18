@@ -18,6 +18,7 @@ return {
       typescript = js_formatters,
       typescriptreact = js_formatters,
       javascriptreact = js_formatters,
+      vue = js_formatters,
       nix = { "nixfmt-rfc-style" },
     },
     formatters = {
