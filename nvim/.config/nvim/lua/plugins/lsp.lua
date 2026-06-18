@@ -111,7 +111,7 @@ return {
           "vue",
         },
       },
-      volar = {},
+      vue_ls = {},
       nixd = (function()
         local hostname = vim.env.HOSTNAME or vim.fn.hostname()
         local user = vim.env.USER or vim.fn.getenv("USER")
