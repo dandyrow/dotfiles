@@ -134,9 +134,7 @@ return {
           },
         }
       end)(),
-      tailwindcss = {
-        filetypes = { "html", "css", "typescriptreact", "javascriptreact" },
-      },
+      tailwindcss = {},
       cssls = {},
       eslint = {},
       emmet_language_server = {
