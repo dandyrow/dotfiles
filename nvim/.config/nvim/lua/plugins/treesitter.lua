@@ -19,6 +19,7 @@ return {
       "typescript",
       "tsx",
       "nix",
+      "vue",
     })
   end,
 }
