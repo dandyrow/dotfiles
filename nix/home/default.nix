@@ -83,6 +83,7 @@ in
         gopls
         ansible-language-server
         typescript-language-server
+        vue-language-server
         nixd
         tailwindcss-language-server
         emmet-language-server
