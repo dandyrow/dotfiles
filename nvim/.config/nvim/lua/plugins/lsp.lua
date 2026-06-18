@@ -42,18 +42,18 @@ return {
       },
     })
 
-    -- makeWrapper at $out/bin/; plugin lives two levels up at lib/language-tools/packages/typescript-plugin/
-    local function get_vue_ts_plugin_path()
+    -- makeWrapper at $out/bin/; @vue/language-server lives two levels up at lib/language-tools/packages/language-server/
+    local function get_vue_language_server_path()
       local vue_bin = vim.fn.resolve(vim.fn.exepath("vue-language-server"))
       if vue_bin ~= "" then
         local store_root = vim.fn.fnamemodify(vue_bin, ":h:h")
-        local nix_path = store_root .. "/lib/language-tools/packages/typescript-plugin"
+        local nix_path = store_root .. "/lib/language-tools/packages/language-server"
         if vim.fn.isdirectory(nix_path) == 1 then
           return nix_path
         end
       end
       return vim.fn.stdpath("data")
-        .. "/mason/packages/vue-language-server/node_modules/@vue/typescript-plugin"
+        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
     end
 
     -- Enter names of LSP servers to install below
@@ -91,23 +91,26 @@ return {
         },
       },
       ansiblels = {},
-      ts_ls = {
-        init_options = {
-          plugins = {
-            {
-              name = "@vue/typescript-plugin",
-              location = get_vue_ts_plugin_path(),
-              languages = { "vue" },
+      vtsls = {
+        settings = {
+          vtsls = {
+            tsserver = {
+              globalPlugins = {
+                {
+                  name = "@vue/typescript-plugin",
+                  location = get_vue_language_server_path(),
+                  languages = { "vue" },
+                  configNamespace = "typescript",
+                },
+              },
             },
           },
         },
         filetypes = {
           "javascript",
           "javascriptreact",
-          "javascript.jsx",
           "typescript",
           "typescriptreact",
-          "typescript.tsx",
           "vue",
         },
       },
