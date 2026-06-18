@@ -42,6 +42,20 @@ return {
       },
     })
 
+    -- makeWrapper at $out/bin/; plugin lives two levels up at lib/language-tools/packages/typescript-plugin/
+    local function get_vue_ts_plugin_path()
+      local vue_bin = vim.fn.resolve(vim.fn.exepath("vue-language-server"))
+      if vue_bin ~= "" then
+        local store_root = vim.fn.fnamemodify(vue_bin, ":h:h")
+        local nix_path = store_root .. "/lib/language-tools/packages/typescript-plugin"
+        if vim.fn.isdirectory(nix_path) == 1 then
+          return nix_path
+        end
+      end
+      return vim.fn.stdpath("data")
+        .. "/mason/packages/vue-language-server/node_modules/@vue/typescript-plugin"
+    end
+
     -- Enter names of LSP servers to install below
     -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
     local servers = {
@@ -77,7 +91,27 @@ return {
         },
       },
       ansiblels = {},
-      ts_ls = {},
+      ts_ls = {
+        init_options = {
+          plugins = {
+            {
+              name = "@vue/typescript-plugin",
+              location = get_vue_ts_plugin_path(),
+              languages = { "vue" },
+            },
+          },
+        },
+        filetypes = {
+          "javascript",
+          "javascriptreact",
+          "javascript.jsx",
+          "typescript",
+          "typescriptreact",
+          "typescript.tsx",
+          "vue",
+        },
+      },
+      volar = {},
       nixd = (function()
         local hostname = vim.env.HOSTNAME or vim.fn.hostname()
         local user = vim.env.USER or vim.fn.getenv("USER")
