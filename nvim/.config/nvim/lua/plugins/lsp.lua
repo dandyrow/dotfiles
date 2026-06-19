@@ -42,6 +42,20 @@ return {
       },
     })
 
+    -- makeWrapper at $out/bin/; @vue/language-server lives two levels up at lib/language-tools/packages/language-server/
+    local function get_vue_language_server_path()
+      local vue_bin = vim.fn.resolve(vim.fn.exepath("vue-language-server"))
+      if vue_bin ~= "" then
+        local store_root = vim.fn.fnamemodify(vue_bin, ":h:h")
+        local nix_path = store_root .. "/lib/language-tools/packages/language-server"
+        if vim.fn.isdirectory(nix_path) == 1 then
+          return nix_path
+        end
+      end
+      return vim.fn.stdpath("data")
+        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+    end
+
     -- Enter names of LSP servers to install below
     -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
     local servers = {
@@ -77,7 +91,30 @@ return {
         },
       },
       ansiblels = {},
-      ts_ls = {},
+      vtsls = {
+        settings = {
+          vtsls = {
+            tsserver = {
+              globalPlugins = {
+                {
+                  name = "@vue/typescript-plugin",
+                  location = get_vue_language_server_path(),
+                  languages = { "vue" },
+                  configNamespace = "typescript",
+                },
+              },
+            },
+          },
+        },
+        filetypes = {
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact",
+          "vue",
+        },
+      },
+      vue_ls = {},
       nixd = (function()
         local hostname = vim.env.HOSTNAME or vim.fn.hostname()
         local user = vim.env.USER or vim.fn.getenv("USER")
@@ -100,9 +137,7 @@ return {
           },
         }
       end)(),
-      tailwindcss = {
-        filetypes = { "html", "css", "typescriptreact", "javascriptreact" },
-      },
+      tailwindcss = {},
       cssls = {},
       eslint = {},
       emmet_language_server = {

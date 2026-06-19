@@ -82,7 +82,8 @@ in
         vscode-langservers-extracted # provides jsonls, cssls, eslint, html LSPs
         gopls
         ansible-language-server
-        typescript-language-server
+        vtsls
+        vue-language-server
         nixd
         tailwindcss-language-server
         emmet-language-server
