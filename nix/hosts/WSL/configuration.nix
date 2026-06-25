@@ -50,5 +50,8 @@
     };
   };
 
+  virtualisation.docker.enable = true;
+  users.users.dandyrow.extraGroups = [ "docker" ];
+
   system.stateVersion = "25.11";
 }
