@@ -136,6 +136,10 @@ in
       (mkConfigLink "zsh")
       (lib.optionalAttrs hasDesktop (mkConfigLink "kitty"))
 
+      # Disable the Windows Docker Desktop credential helper that Docker Desktop
+      # writes on WSL; setting credsStore to "" prevents the .exe lookup.
+      { ".docker/config.json".text = builtins.toJSON { credsStore = ""; }; }
+
       # Work-specific git config included via includeIf in the main git config.
       # Sets work email and disables GPG signing for all repos under ~/Projects/work/.
       {
