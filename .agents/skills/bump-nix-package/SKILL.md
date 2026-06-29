@@ -1,13 +1,9 @@
 ---
-applyTo: "nix/pkgs/**,flake.nix"
+name: bump-nix-package
+description: Use when bumping the version of a vendored package under nix/pkgs/ or vendoring a new package into the repo
 ---
 
 # Vendored Nix Package Version Bumps
-
-Fires when editing a repo-local package derivation under `nix/pkgs/` or the
-overlay in `flake.nix`. Use this for bumping the upstream version of a
-vendored package (e.g. tracking `github-copilot-cli` ahead of nixpkgs), or
-for vendoring a new package by copying its upstream `package.nix`.
 
 ## When this applies
 
@@ -64,14 +60,13 @@ updating `nixpkgs` in `flake.nix` and running `nix flake update`.
    confusing `error: path '...' does not exist` from an otherwise valid
    derivation.
 
-6. **Evaluate all three hosts in parallel.** Each must succeed:
+6. **Evaluate all hosts.** Read `flake.nix` to discover the current set of
+   `nixosConfigurations`. Evaluate each — WSL requires `--impure` because
+   its configuration references `/etc/nixos/corp.pem` via `builtins.pathExists`:
    ```bash
+   nix eval .#nixosConfigurations.<host>.config.system.build.toplevel.drvPath
    nix eval .#nixosConfigurations.WSL.config.system.build.toplevel.drvPath --impure
-   nix eval .#nixosConfigurations.DansSpectre.config.system.build.toplevel.drvPath
-   nix eval .#nixosConfigurations.New-H0Ryzen.config.system.build.toplevel.drvPath
    ```
-   (WSL needs `--impure` because `configuration.nix` references
-   `/etc/nixos/corp.pem` via `builtins.pathExists`.)
 
 7. **Build the package itself, not just the host system.**
    ```bash
@@ -88,24 +83,18 @@ updating `nixpkgs` in `flake.nix` and running `nix flake update`.
    /nix/store/...-<name>-<version>/bin/<mainProgram> --version
    ```
 
-9. **Commit.** Use Gitmoji + Conventional Commits per `AGENTS.md`. The
-   commit body should include:
-   - One sentence on why nixpkgs isn't sufficient (current version vs.
-     target version).
-   - Any non-version-non-hash changes (e.g. additions to
-     `autoPatchelfIgnoreMissingDeps`) with one-sentence justifications.
+9. **Commit.** Use gitmoji + conventional commits format. The commit body should include:
+   - One sentence on why nixpkgs isn't sufficient (current version vs target version).
+   - Any non-version-non-hash changes (e.g. additions to `autoPatchelfIgnoreMissingDeps`) with one-sentence justifications.
    - The verification checks that passed.
-   - A "delete this when nixpkgs catches up" line so future-you knows
-     the override is disposable.
+   - A "delete this when nixpkgs catches up" line so future-you knows the override is disposable.
 
-10. **Push + open PR in the same turn.**
+10. **Push + open PR in the same turn.** Pushing a feature branch and
+    opening a PR do not require explicit user approval:
     ```bash
     git push -u origin feat/<pkg>-<version>
     gh pr create --base main --fill
     ```
-    Pushing a feature branch and opening a PR are not destructive and
-    do not need explicit user approval (see `AGENTS.md`,
-    [Irreversible actions](../../AGENTS.md#irreversible-actions-require-explicit-approval-mandatory)).
 
 ## Common failure modes
 
@@ -147,9 +136,9 @@ which means the file is untracked entirely.
 
 ## When `nixos-rebuild switch` is needed
 
-Per `AGENTS.md`, runtime behaviour beyond `--version` cannot be
-agent-verified end-to-end. After the PR merges, propose this to the
-user but do not run it without explicit approval:
+Runtime behaviour beyond `--version` cannot be agent-verified end-to-end.
+After the PR merges, propose this to the user but do not run it without
+explicit approval:
 
 ```bash
 sudo nixos-rebuild switch --flake .#$HOST $( [[ "$HOST" == "WSL" ]] && echo --impure )
