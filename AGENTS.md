@@ -2,8 +2,6 @@
 
 Before starting any task, review available skills and invoke any that apply.
 
----
-
 ## Golden Rules (MANDATORY)
 
 1. **Never work directly on `main`.** All work must happen in a worktree under `.worktrees/<branch>`.
@@ -15,14 +13,10 @@ Before starting any task, review available skills and invoke any that apply.
 7. **Never act on an unanswered question.** If you asked the user whether to proceed with something and no explicit answer was received — including across a context compaction boundary — re-ask before acting. A compaction summary does not constitute user consent.
 8. After a clean commit on a feature branch, push to `origin` and open a PR in the same turn.
 9. After a PR is confirmed merged, run `./scripts/agent-cleanup.sh <branch>` then `git pull` on `main`.
-
----
-
-## XDG Base Directory compliance
-
-Respect the XDG Base Directory specification for all tool configuration, data, and cache paths. Override non-compliant defaults where necessary.
-
----
+10. Respect the XDG Base Directory specification for all tool configuration, data, and cache paths. Override non-compliant defaults where necessary.
+11. Use `git commit --no-gpg-sign` when committing.
+12. Only comment to explain the non-obvious *why* — one line maximum, no restating what the code does.
+13. Root-cause analyses, falsified hypotheses, and link-outs to upstream issues belong in commit messages and PR bodies, not source comments.
 
 ## Never do
 
@@ -33,8 +27,6 @@ Respect the XDG Base Directory specification for all tool configuration, data, a
 - Never run destructive commands without explicit instruction.
 - Do not silently create more than one PR for the same branch.
 - Do not fabricate repository state; inspect it directly.
-
----
 
 ## Irreversible actions require explicit approval (MANDATORY)
 
@@ -50,15 +42,3 @@ Respect the XDG Base Directory specification for all tool configuration, data, a
 - Any read-only command (tests, linters, file reads)
 - `agent-cleanup.sh <branch>` + `git pull main` when user confirms a PR is merged
 
----
-
-## Environment
-
-GPG signing fails non-interactively (`gpg: cannot open '/dev/tty'`). Use `git commit --no-gpg-sign`.
-
----
-
-## Style
-
-- Only comment to explain the non-obvious *why* — one line maximum, no restating what the code does.
-- Root-cause analyses, falsified hypotheses, and link-outs to upstream issues belong in commit messages and PR bodies, not source comments.
