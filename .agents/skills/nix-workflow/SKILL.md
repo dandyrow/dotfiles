@@ -1,17 +1,11 @@
 ---
 name: nix-workflow
-description: Use when editing any .nix files or making NixOS configuration changes in this repo
+description: Use when editing any .nix files in this repo, or when another skill needs nix verification steps
 ---
 
-# Nix Workflow
+## Visibility
 
-## Before making changes
-
-**Stage new `.nix` files immediately after writing them.** The flake uses the git tree as its source of truth — `nix eval`, `nix build`, and `nix flake check` cannot see untracked files. A new file produces `error: path '...' does not exist` until staged:
-
-```bash
-git add <path>  # explicit path only, never -A or .
-```
+The flake's **visibility** is the git index — only staged files are visible to `nix eval`, `nix build`, and `nix flake check`. Stage new `.nix` files immediately; untracked files produce `error: path '...' does not exist`.
 
 **If changing flake inputs, update the lockfile:**
 
@@ -21,7 +15,7 @@ nix flake update
 
 ## Verification
 
-Read `flake.nix` to discover the current set of `nixosConfigurations`. Evaluate each before claiming a change is correct.
+List `./nix/hosts/` to discover the current set of hosts. Evaluate each before claiming a change is correct.
 
 WSL requires `--impure` because its configuration references `/etc/nixos/corp.pem` via `builtins.pathExists`:
 
@@ -33,7 +27,7 @@ nix eval .#nixosConfigurations.WSL.config.system.build.toplevel.drvPath --impure
 For changed packages, also build the derivation directly to isolate failures:
 
 ```bash
-nix build --no-link .#nixosConfigurations.<host>.pkgs.<name>
+nix build --no-link --print-out-paths .#nixosConfigurations.<host>.pkgs.<name>
 ```
 
 ## Runtime behaviour

@@ -1,19 +1,11 @@
 ---
 name: bump-nix-package
-description: Use when bumping the version of a vendored package under nix/pkgs/ or vendoring a new package into the repo
+description: Use when bumping the version of a vendored package under nix/pkgs/, vendoring a new package into the repo, or removing a vendored override once nixpkgs has caught up
 ---
 
 # Vendored Nix Package Version Bumps
 
-## When this applies
-
-- Bumping the `version` of an existing file under `nix/pkgs/`
-- Updating its `hash` / `src.hash` after a version change
-- Adding a new vendored package and wiring it into the overlay in `flake.nix`
-- Removing a vendored override because nixpkgs has caught up
-
-It does **not** apply to nixpkgs-managed packages — those are bumped by
-updating `nixpkgs` in `flake.nix` and running `nix flake update`.
+**REQUIRED SUB-SKILL:** Use `nix-workflow` — it covers **visibility** (staging), host evaluation, and build verification.
 
 ## Recipe (run in order)
 
@@ -30,9 +22,7 @@ updating `nixpkgs` in `flake.nix` and running `nix flake update`.
 3. **Choose: vendor a fresh copy, or `overrideAttrs`?**
    - **Default — vendor a fresh copy.** Copy the current upstream
      `package.nix` into `nix/pkgs/<name>.nix` verbatim, then change
-     `version` and `hash`. Add a 1–2 line header comment marking the file
-     as a tracking override and naming the version at which nixpkgs can
-     reclaim it. Example:
+     `version` and `hash`. Add a 1–2 line tracking header comment. Example:
      ```nix
      # Local override of nixpkgs' <name> to track a newer upstream than
      # nixos-unstable currently ships. Delete this file (and the overlay
@@ -40,11 +30,10 @@ updating `nixpkgs` in `flake.nix` and running `nix flake update`.
      # newer.
      ```
    - **`overrideAttrs` only if** the change is purely `version` + `src` and
-     the upstream derivation is small and stable. Be aware that when
+     the upstream derivation is small and stable. Be aware of **binding**: when
      upstream uses `mkDerivation (finalAttrs: { ... src.url = "...v${finalAttrs.version}..."; })`,
-     overriding `version` alone does **not** change the URL because `src`
-     is already bound to the original `finalAttrs.version`. You must
-     override `src` with the full URL inlined, or use the vendor path.
+     `src` is bound to the original `finalAttrs.version` at definition time. Override `src` with
+     the full URL inlined, or use the vendor path.
 
 4. **Wire into the overlay.** In `flake.nix`, add a line to the existing
    overlay attribute:
@@ -54,21 +43,7 @@ updating `nixpkgs` in `flake.nix` and running `nix flake update`.
    For unfree packages, also ensure the package name is in
    `allowUnfreePredicate`.
 
-5. **Stage immediately.** `git add nix/pkgs/<name>.nix flake.nix`. The
-   flake uses the git tree as its source of truth — `nix eval` and
-   `nix build` cannot see untracked files. Skipping this step produces a
-   confusing `error: path '...' does not exist` from an otherwise valid
-   derivation.
-
-6. **Evaluate all hosts.** Read `flake.nix` to discover the current set of
-   `nixosConfigurations`. Evaluate each — WSL requires `--impure` because
-   its configuration references `/etc/nixos/corp.pem` via `builtins.pathExists`:
-   ```bash
-   nix eval .#nixosConfigurations.<host>.config.system.build.toplevel.drvPath
-   nix eval .#nixosConfigurations.WSL.config.system.build.toplevel.drvPath --impure
-   ```
-
-7. **Build the package itself, not just the host system.**
+5. **Build the package itself, not just the host system.**
    ```bash
    nix build --no-link --print-out-paths .#nixosConfigurations.$HOST.pkgs.<name>
    ```
@@ -77,24 +52,23 @@ updating `nixpkgs` in `flake.nix` and running `nix flake update`.
    library that `autoPatchelfHook` cannot find (see "Common failure
    modes" below), or a `versionCheckHook` mismatch.
 
-8. **Behavioural smoke test.** Run the built binary directly out of the
+6. **Behavioural smoke test.** Run the built binary directly out of the
    nix store and confirm it reports the new version. For most CLIs:
    ```bash
    /nix/store/...-<name>-<version>/bin/<mainProgram> --version
    ```
 
-9. **Commit.** Use gitmoji + conventional commits format. The commit body should include:
+7. **Commit.** The commit body should include:
    - One sentence on why nixpkgs isn't sufficient (current version vs target version).
    - Any non-version-non-hash changes (e.g. additions to `autoPatchelfIgnoreMissingDeps`) with one-sentence justifications.
    - The verification checks that passed.
    - A "delete this when nixpkgs catches up" line so future-you knows the override is disposable.
 
-10. **Push + open PR in the same turn.** Pushing a feature branch and
-    opening a PR do not require explicit user approval:
-    ```bash
-    git push -u origin feat/<pkg>-<version>
-    gh pr create --base main --fill
-    ```
+8. **Push + open PR in the same turn.**
+   ```bash
+   git push -u origin feat/<pkg>-<version>
+   gh pr create --base main --fill
+   ```
 
 ## Common failure modes
 
@@ -118,21 +92,16 @@ to `buildInputs` instead of ignoring it.
 If `nix build` succeeds the patchelf phase but fails at install-check
 with a version mismatch, double-check the new tarball is actually the
 one you intended (`nix-prefetch-url` of the URL embedded in the
-derivation should match the SRI hash). The `finalAttrs.version` /
-`src.url` trap from step 3 above is the usual culprit when using
-`overrideAttrs`.
-
-### "Path does not exist" on `nix eval`
-
-The new `.nix` file isn't staged. Run `git add <path>` (explicit path,
-never `-A` or `.`) and retry. See step 5.
+derivation should match the SRI hash). The **binding** trap from step 3
+is the usual culprit when using `overrideAttrs`.
 
 ### `warning: Git tree '...' is dirty`
 
 Harmless. The flake reads the worktree's git index; uncommitted
 modifications produce this warning but evaluation still uses the
-working-tree contents. Distinct from the "path does not exist" error,
-which means the file is untracked entirely.
+working-tree contents. Distinct from a **visibility** error (`error: path
+'...' does not exist`), which means the file is untracked entirely — see
+`nix-workflow`.
 
 ## When `nixos-rebuild switch` is needed
 
@@ -145,10 +114,10 @@ sudo nixos-rebuild switch --flake .#$HOST $( [[ "$HOST" == "WSL" ]] && echo --im
 <mainProgram> --version  # confirm it picks up the new version
 ```
 
-## When nixpkgs catches up
+## Branch: nixpkgs has caught up
 
-Delete the file under `nix/pkgs/<name>.nix` and the matching line from
-the overlay in `flake.nix`. Verify with the same eval + build checks
-that the nixpkgs-provided package is now at or above the version we
-were tracking, then commit and PR. The "delete this when nixpkgs
-catches up" line in the original commit message helps you find these.
+Delete `nix/pkgs/<name>.nix` and the matching line from the overlay in
+`flake.nix`. Verify with the eval + build checks from `nix-workflow` that
+the nixpkgs-provided package is now at or above the version being tracked,
+then commit and PR. The "delete this when nixpkgs catches up" line in the
+original commit message helps you find these.
