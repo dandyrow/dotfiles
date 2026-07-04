@@ -11,8 +11,5 @@
     "paths": ["~/.local/share/opencode/skills/mattpocock"]
   },
   "formatter": true,
-  "autoupdate": false,
-  "plugin": [
-    "superpowers@git+https://github.com/obra/superpowers.git#v5.1.0"
-  ]
+  "autoupdate": false
 }
