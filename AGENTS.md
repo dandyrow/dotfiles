@@ -42,3 +42,17 @@ Before starting any task, review available skills and invoke any that apply.
 - Any read-only command (tests, linters, file reads)
 - `agent-cleanup.sh <branch>` + `git pull main` when user confirms a PR is merged
 
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues (`dandyrow/dotfiles`). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout — `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
