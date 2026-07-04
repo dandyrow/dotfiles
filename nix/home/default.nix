@@ -205,9 +205,6 @@ in
     ];
   };
 
-  # Matt Pocock's skill collection pinned to a release tag; opencode discovers
-  # them via skills.paths in opencode.json rather than the default scan dirs,
-  # keeping ~/.config/opencode/skills/ free for project-local overrides only.
   xdg.dataFile."opencode/skills/mattpocock".source = "${mattPocockSkills}/skills";
 
   # Wire Firefox up as the default browser so xdg-open (used by kitty and
