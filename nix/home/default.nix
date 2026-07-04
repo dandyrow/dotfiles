@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mattPocockSkills,
   # osConfig is populated when running as a NixOS module; null in standalone HM.
   osConfig ? null,
   ...
@@ -11,13 +12,6 @@ let
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
   hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
-
-  mattPocockSkills = pkgs.fetchFromGitHub {
-    owner = "mattpocock";
-    repo = "skills";
-    rev = "v1.0.1";
-    hash = "sha256-nuHQ+SG5UerKs334Yk5nsxHOncGXQKF1yVdnwwVpLZ8=";
-  };
 in
 {
   imports = [ ./firefox.nix ];
