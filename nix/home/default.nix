@@ -66,6 +66,7 @@ in
         wl-clipboard
         yamllint
         nodejs
+        wget
 
         # Neovim LSP / formatter / linter / DAP tools
         # On Nix, Mason is disabled (Mason binaries are broken in the non-FHS environment).
