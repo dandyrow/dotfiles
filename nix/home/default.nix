@@ -11,6 +11,13 @@ let
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
   hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
+
+  mattPocockSkills = pkgs.fetchFromGitHub {
+    owner = "mattpocock";
+    repo = "skills";
+    rev = "v1.0.1";
+    hash = "sha256-nuHQ+SG5UerKs334Yk5nsxHOncGXQKF1yVdnwwVpLZ8=";
+  };
 in
 {
   imports = [ ./firefox.nix ];
@@ -203,6 +210,11 @@ in
       "d %h/.local/share/gnupg 0700 - - -"
     ];
   };
+
+  # Matt Pocock's skill collection pinned to a release tag; opencode discovers
+  # them via skills.paths in opencode.json rather than the default scan dirs,
+  # keeping ~/.config/opencode/skills/ free for project-local overrides only.
+  xdg.dataFile."opencode/skills/mattpocock".source = "${mattPocockSkills}/skills";
 
   # Wire Firefox up as the default browser so xdg-open (used by kitty and
   # other tools) can resolve http/https URLs to a handler.
