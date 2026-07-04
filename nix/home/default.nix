@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mattPocockSkills,
   # osConfig is populated when running as a NixOS module; null in standalone HM.
   osConfig ? null,
   ...
@@ -203,6 +204,8 @@ in
       "d %h/.local/share/gnupg 0700 - - -"
     ];
   };
+
+  xdg.dataFile."opencode/skills/mattpocock".source = "${mattPocockSkills}/skills";
 
   # Wire Firefox up as the default browser so xdg-open (used by kitty and
   # other tools) can resolve http/https URLs to a handler.

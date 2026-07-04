@@ -7,6 +7,9 @@
       "enabled": true
     }
   },
+  "skills": {
+    "paths": ["~/.local/share/opencode/skills/mattpocock"]
+  },
   "formatter": true,
   "autoupdate": false,
   "plugin": [

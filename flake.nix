@@ -25,6 +25,11 @@
     };
 
     catppuccin.url = "github:catppuccin/nix";
+
+    mattpocock-skills = {
+      url = "github:mattpocock/skills/v1.0.1";
+      flake = false;
+    };
   };
 
   outputs =
@@ -70,6 +75,9 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                mattPocockSkills = inputs.mattpocock-skills;
+              };
               home-manager.users.dandyrow = {
                 imports = [
                   ./nix/home
@@ -107,7 +115,10 @@
             ./nix/home
             inputs.catppuccin.homeModules.catppuccin
           ];
-          extraSpecialArgs = { inherit wsl; };
+          extraSpecialArgs = {
+            inherit wsl;
+            mattPocockSkills = inputs.mattpocock-skills;
+          };
         };
 
       hostDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./nix/hosts);
