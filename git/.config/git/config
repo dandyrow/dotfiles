@@ -10,7 +10,7 @@
   autosetupremote = true
 
 [pull]
-  rebase = false
+  rebase = true
 
 [commit]
   gpgSign = true
