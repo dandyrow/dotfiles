@@ -33,6 +33,10 @@ in
         tmux
         yazi
         opencode
+
+        # VS Code AI SBX tools
+        bubblewrap
+        socat
       ]
       # Only install kitty on systems with Gnome desktop environment
       ++ lib.optionals (osConfig != null && (osConfig.gnome.enable or false)) [
