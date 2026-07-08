@@ -210,7 +210,7 @@ in
     ];
   };
 
-  xdg.dataFile."opencode/skills/mattpocock".source = "${mattPocockSkills}/skills";
+  xdg.dataFile."agents/skills/mattpocock".source = "${mattPocockSkills}/skills";
 
   # Wire Firefox up as the default browser so xdg-open (used by kitty and
   # other tools) can resolve http/https URLs to a handler.
