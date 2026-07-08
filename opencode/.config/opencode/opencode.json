@@ -8,7 +8,7 @@
     }
   },
   "skills": {
-    "paths": ["~/.local/share/opencode/skills/mattpocock"]
+    "paths": ["~/.local/share/agents/skills"]
   },
   "formatter": true,
   "autoupdate": false
