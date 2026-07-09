@@ -14,7 +14,6 @@ let
   hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
 
   nvimToolsJson = builtins.fromJSON (builtins.readFile ../../nvim/.config/nvim/lua/config/tools.json);
-  # lib.unique deduplicates attrs shared across entries (e.g. jsonls/cssls/eslint → one vscode-langservers-extracted).
   nvimToolAttrs = lib.unique (
     map (t: if t ? nixpkgsAttr then t.nixpkgsAttr else t.name) (
       lib.filter (t: !(t.masonOnly or false)) nvimToolsJson
