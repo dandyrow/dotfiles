@@ -3,12 +3,27 @@
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp",
-      "tools": ["*"]
+      "tools": [
+        "*"
+      ]
     },
     "atlassian": {
       "type": "http",
       "url": "https://mcp.atlassian.com/v1/mcp/authv2",
-      "tools": ["*"]
+      "tools": [
+        "*"
+      ]
+    },
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "canvas-kit-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@workday/canvas-kit-mcp"
+      ]
     }
   }
 }
