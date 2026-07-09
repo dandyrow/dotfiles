@@ -23,7 +23,7 @@
         extraRules = [
           {
             groups = config.doas.adminGroups;
-            keepEnv = true;
+            # keepEnv omitted: root must own its HOME/XDG dirs so nix never writes cache files as root into the invoking user's cache.
             persist = true;
           }
         ];
