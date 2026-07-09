@@ -15,7 +15,7 @@ Before starting any task, review available skills and invoke any that apply.
 9. After a PR is confirmed merged, run `./scripts/agent-cleanup.sh <branch>` then `git pull` on `main`.
 10. Respect the XDG Base Directory specification for all tool configuration, data, and cache paths. Override non-compliant defaults where necessary.
 11. Use `git commit --no-gpg-sign` when committing.
-12. Only comment to explain the non-obvious *why* — one line maximum, no restating what the code does.
+12. Only comment to explain the non-obvious *why* — one line maximum, no restating what the code does. If a comment could be replaced by reading the next line, delete it. Describing what a variable holds, what a function's parameters mean, or what a block achieves are all forbidden.
 13. Root-cause analyses, falsified hypotheses, and link-outs to upstream issues belong in commit messages and PR bodies, not source comments.
 
 ## Never do
