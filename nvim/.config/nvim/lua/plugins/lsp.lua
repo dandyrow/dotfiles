@@ -56,10 +56,12 @@ return {
         .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
     end
 
-    -- Enter names of LSP servers to install below
-    -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
-    local servers = {
-      lua_ls = {},
+    -- JSON so Nix (nix/home/default.nix) can read it via builtins.fromJSON.
+    local tools_path = vim.fn.stdpath("config") .. "/lua/config/tools.json"
+    local tools = vim.json.decode(table.concat(vim.fn.readfile(tools_path), "\n"))
+
+    -- Keys are lspconfig server identifiers; https://github.com/neovim/nvim-lspconfig/tree/master/lsp
+    local serverConfigs = {
       rust_analyzer = {
         settings = {
           ["rust-analyzer"] = {
@@ -67,7 +69,6 @@ return {
           },
         },
       },
-      bashls = {},
       basedpyright = {
         settings = {
           basedpyright = { disableOrganizeImports = true },
@@ -75,10 +76,7 @@ return {
       },
       gh_actions_ls = {
         filetypes = { "yaml.github" },
-        -- Note: gh_actions_ls (github-actions-language-server) is not yet in nixpkgs.
-        -- On Nix systems this server will be unavailable unless installed manually.
       },
-      jsonls = {},
       gopls = {
         settings = {
           gopls = {
@@ -90,7 +88,6 @@ return {
           },
         },
       },
-      ansiblels = {},
       vtsls = {
         settings = {
           vtsls = {
@@ -114,12 +111,10 @@ return {
           "vue",
         },
       },
-      vue_ls = {},
       nixd = (function()
         local hostname = vim.env.HOSTNAME or vim.fn.hostname()
         local user = vim.env.USER or vim.fn.getenv("USER")
         return {
-          mason = false,
           settings = {
             nixd = {
               nixpkgs = {
@@ -137,47 +132,25 @@ return {
           },
         }
       end)(),
-      tailwindcss = {},
-      cssls = {},
-      eslint = {},
       emmet_language_server = {
         filetypes = { "html", "typescriptreact", "javascriptreact", "css", "scss" },
       },
     }
 
-    local function merge_unique(...)
-      local seen = {}
-      local result = {}
-
-      for _, list in ipairs({ ... }) do
-        for _, item in ipairs(list) do
-          if not seen[item] then
-            seen[item] = true
-            table.insert(result, item)
-          end
-        end
-      end
-
-      return result
-    end
-
-    -- Filter out servers which shouldn't be downloaded by mason
-    local mason_servers = {}
-    for name, config in pairs(servers) do
-      if config.mason ~= false then
-        table.insert(mason_servers, name)
-      end
-    end
-
-    local tools = require("config.tools")
     local system = require("config.system")
 
     -- On Nix systems Mason is disabled; all tools are provided by Nix packages.
-    -- On non-Nix systems, auto-install LSPs, formatters, linters, and DAPs via Mason.
+    -- On non-Nix systems, auto-install all tools via Mason.
     if not system.is_nix() then
-      local ensure_installed = merge_unique(mason_servers, tools.formatters, tools.linters, tools.dap_adapters)
+      local ensure_installed = {}
+      local seen = {}
+      for _, tool in ipairs(tools) do
+        if not tool.nixOnly and not seen[tool.name] then
+          seen[tool.name] = true
+          table.insert(ensure_installed, tool.name)
+        end
+      end
 
-      -- Auto install all lsps, formatters, linters, and daps
       -- (mason-lspconfig auto enable disabled as lsps are enabled below)
       require("mason-lspconfig").setup({ automatic_enable = false })
       require("mason-tool-installer").setup({
@@ -190,10 +163,13 @@ return {
 
     -- Add capabilities, merge lsp configs & enable
     local capabilities = require("blink.cmp").get_lsp_capabilities()
-    for server_name, server_config in pairs(servers) do
-      server_config.capabilities = vim.tbl_deep_extend("force", capabilities, server_config.capabilities or {})
-      vim.lsp.config[server_name] = server_config
-      vim.lsp.enable(server_name)
+    for _, tool in ipairs(tools) do
+      if tool.category == "lsp" then
+        local config = vim.deepcopy(serverConfigs[tool.name] or {})
+        config.capabilities = vim.tbl_deep_extend("force", capabilities, config.capabilities or {})
+        vim.lsp.config[tool.name] = config
+        vim.lsp.enable(tool.name)
+      end
     end
 
     -- Document highlight: highlight all references to the symbol under cursor

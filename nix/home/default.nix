@@ -12,6 +12,14 @@ let
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
   hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
+
+  nvimToolsJson = builtins.fromJSON (builtins.readFile ../../nvim/.config/nvim/lua/config/tools.json);
+  nvimToolAttrs = lib.unique (
+    map (t: if t ? nixpkgsAttr then t.nixpkgsAttr else t.name) (
+      lib.filter (t: !(t.masonOnly or false)) nvimToolsJson
+    )
+  );
+  nvimToolPackages = map (attr: lib.getAttrFromPath (lib.splitString "." attr) pkgs) nvimToolAttrs;
 in
 {
   imports = [ ./firefox.nix ];
@@ -71,52 +79,8 @@ in
         yamllint
         nodejs
         wget
-
-        # Neovim LSP / formatter / linter / DAP tools
-        # On Nix, Mason is disabled (Mason binaries are broken in the non-FHS environment).
-        # All tools that Mason would otherwise install must be provided here instead.
-        # Keep this list in sync with nvim/.config/nvim/lua/config/tools.lua and
-        # the servers table in nvim/.config/nvim/lua/plugins/lsp.lua.
-
-        # LSP servers
-        lua-language-server
-        rust-analyzer
-        bash-language-server
-        basedpyright
-        # gh_actions_ls (github-actions-language-server) is not yet in nixpkgs;
-        # it will fall back to Mason on non-Nix systems or be unavailable on Nix.
-        vscode-langservers-extracted # provides jsonls, cssls, eslint, html LSPs
-        gopls
-        ansible-language-server
-        vtsls
-        vue-language-server
-        nixd
-        tailwindcss-language-server
-        emmet-language-server
-
-        # Formatters
-        beautysh
-        ruff
-        ansible-lint
-        yamlfmt
-        gofumpt
-        # goimports is not available as a standalone package in nixpkgs; gotools
-        # conflicts with gopls. goimports functionality is covered by gopls on Nix.
-        eslint_d
-        nixfmt # nixfmt-rfc-style is now an alias for nixfmt
-        prettier
-
-        # Linters
-        shellcheck
-        actionlint
-        golangci-lint
-
-        # DAP adapters
-        delve
-        python3Packages.debugpy
-        vscode-extensions.vadimcn.vscode-lldb # codelldb
-        vscode-js-debug
       ]
+      ++ nvimToolPackages
       ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
         # docker-sbx is only published for x86_64-linux; no aarch64 release.
         pkgs.docker-sbx
