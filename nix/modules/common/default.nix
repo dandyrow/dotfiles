@@ -25,4 +25,9 @@
   # (/nix/var/nix/profiles/per-user/root/channels) from being set up,
   # eliminating the warning about that path not existing during nixos-rebuild.
   nix.channel.enable = false;
+
+  programs.git = {
+    enable = true;
+    config = [ { safe.directory = "/home/dandyrow/.dotfiles"; } ];
+  };
 }

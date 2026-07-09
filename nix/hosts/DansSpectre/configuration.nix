@@ -3,7 +3,6 @@
   documentation.nixos.enable = false;
 
   programs = {
-    git.enable = true;
     steam.enable = true;
   };
 
