@@ -13,10 +13,8 @@ let
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
   hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
 
-  # Resolve Nix packages from tools.json — the single source of truth shared with lsp.lua.
-  # Entries with masonOnly are Mason-only; skip them. nixpkgsAttr overrides the default
-  # pkgs.${name} lookup for tools whose nixpkgs attr differs from their Mason name.
   nvimToolsJson = builtins.fromJSON (builtins.readFile ../../nvim/.config/nvim/lua/config/tools.json);
+  # lib.unique deduplicates attrs shared across entries (e.g. jsonls/cssls/eslint → one vscode-langservers-extracted).
   nvimToolAttrs = lib.unique (
     map (t: if t ? nixpkgsAttr then t.nixpkgsAttr else t.name) (
       lib.filter (t: !(t.masonOnly or false)) nvimToolsJson

@@ -56,14 +56,11 @@ return {
         .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
     end
 
-    -- Single source of truth for all editor tools; also consumed by Nix (nix/home/default.nix).
-    -- https://github.com/dandyrow/dotfiles/blob/main/nvim/.config/nvim/lua/config/tools.json
+    -- JSON so Nix (nix/home/default.nix) can read it via builtins.fromJSON.
     local tools_path = vim.fn.stdpath("config") .. "/lua/config/tools.json"
     local tools = vim.json.decode(table.concat(vim.fn.readfile(tools_path), "\n"))
 
-    -- Per-server config for LSP servers that need more than defaults.
-    -- Names match the lspconfig server name (= the "name" field in tools.json).
-    -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
+    -- Keys are lspconfig server identifiers; https://github.com/neovim/nvim-lspconfig/tree/master/lsp
     local serverConfigs = {
       rust_analyzer = {
         settings = {
