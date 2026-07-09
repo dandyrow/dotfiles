@@ -13,8 +13,6 @@
 
   documentation.nixos.enable = false;
 
-  programs.git.enable = true;
-
   # Corporate CA cert, manually placed at /etc/nixos/corp.pem (never committed).
   # Requires --impure; evaluates to [] when absent.
   security.pki.certificateFiles = lib.optionals (builtins.pathExists /etc/nixos/corp.pem) [
