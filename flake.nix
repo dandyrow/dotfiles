@@ -56,6 +56,9 @@
           # Track a newer upstream than nixos-unstable currently ships; drop
           # this override when nixpkgs catches up.
           github-copilot-cli = final.callPackage ./nix/pkgs/github-copilot-cli.nix { };
+          # Track git master past 3.7b for DEC 2026 MODE_SYNC fixes (#4983, #5303).
+          # Drop when nixpkgs ships tmux 3.8 or a patched 3.7.x.
+          tmux = final.callPackage ./nix/pkgs/tmux.nix { };
         })
       ];
 
