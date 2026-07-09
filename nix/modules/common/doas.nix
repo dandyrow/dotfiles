@@ -23,7 +23,6 @@
         extraRules = [
           {
             groups = config.doas.adminGroups;
-            keepEnv = true;
             persist = true;
           }
         ];
