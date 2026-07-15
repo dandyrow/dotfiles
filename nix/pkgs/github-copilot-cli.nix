@@ -2,7 +2,6 @@
   lib,
   stdenv,
   autoPatchelfHook,
-  cacert,
   fetchurl,
   glib,
   libsecret,
@@ -73,7 +72,6 @@ stdenv.mkDerivation (finalAttrs: {
       --add-flag "$out"/lib/github-copilot-cli/index.js \
       --add-flag --no-auto-update \
       --set-default NODE_NO_WARNINGS 1 \
-      --set-default SSL_CERT_DIR ${cacert}/etc/ssl/certs \
       --prefix PATH : "${lib.makeBinPath [ bash ]}"
   '';
 
