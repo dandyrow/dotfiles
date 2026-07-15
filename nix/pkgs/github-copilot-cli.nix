@@ -68,8 +68,6 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   postInstall = ''
-    # No SSL_CERT_DIR/SSL_CERT_FILE pin: the bundled Rust (rustls) runtime falls
-    # back to the system trust store, so custom/corporate CAs are honoured.
     makeWrapper ${nodejs}/bin/node "$out"/bin/copilot \
       --add-flag "$out"/lib/github-copilot-cli/index.js \
       --add-flag --no-auto-update \
