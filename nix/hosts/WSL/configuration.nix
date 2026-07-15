@@ -19,9 +19,8 @@
     /etc/nixos/corp.pem
   ];
 
-  # NIX_SSL_CERT_FILE is the only cert var in fetchers' impureEnvVars allowlist,
-  # so it is the only way the corporate CA reaches FOD build sandboxes (e.g.
-  # fetchCargoVendor's crates.io fetch) behind the TLS-intercepting proxy.
+  # Required to allow build verification of other systems which aren't behind corp
+  # on this system
   systemd.services.nix-daemon.environment.NIX_SSL_CERT_FILE =
     lib.mkIf (builtins.pathExists /etc/nixos/corp.pem) "/etc/ssl/certs/ca-certificates.crt";
 
