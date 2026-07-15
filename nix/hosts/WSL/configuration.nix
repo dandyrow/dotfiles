@@ -19,6 +19,12 @@
     /etc/nixos/corp.pem
   ];
 
+  # NIX_SSL_CERT_FILE is the only cert var in fetchers' impureEnvVars allowlist,
+  # so it is the only way the corporate CA reaches FOD build sandboxes (e.g.
+  # fetchCargoVendor's crates.io fetch) behind the TLS-intercepting proxy.
+  systemd.services.nix-daemon.environment.NIX_SSL_CERT_FILE =
+    lib.mkIf (builtins.pathExists /etc/nixos/corp.pem) "/etc/ssl/certs/ca-certificates.crt";
+
   # Lets docker-sbx's Go cgo shim and mkfs.erofs resolve /lib64/ld-linux at
   # runtime, avoiding patchelf (which corrupts Go binaries' PT_LOAD layout).
   programs.nix-ld = {
