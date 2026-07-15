@@ -17,17 +17,40 @@
 # release than nixos-unstable currently ships. Delete this file (and the
 # overlay entry in flake.nix) once nixpkgs catches up to this version or
 # newer.
+let
+  # As of 1.0.70 upstream turned the previously self-contained "universal"
+  # tarball into a thin npm loader that resolves a per-platform package at
+  # runtime, so fetch the per-platform tarball (same index.js entrypoint and
+  # bundled prebuilds the universal package used to carry) directly instead.
+  sources = {
+    x86_64-linux = {
+      suffix = "linux-x64";
+      hash = "sha256-z70Rb+FZviiaut8sK/GKJairCe7KVKCR1AJeHLzaRwk=";
+    };
+    aarch64-linux = {
+      suffix = "linux-arm64";
+      hash = "sha256-saIHbLOlh+uivG9HjONeU/IKNNDWm0GAdDmzMC3191o=";
+    };
+    x86_64-darwin = {
+      suffix = "darwin-x64";
+      hash = "sha256-biISO2sXX+HWeGo+4vXRu3M9BN839sFBN0McAcPBWNI=";
+    };
+    aarch64-darwin = {
+      suffix = "darwin-arm64";
+      hash = "sha256-Tr+isxFUmWQgQX3ivglJ7x9ONa8JQ9ZVFUdNWuPCKxE=";
+    };
+  };
+  source =
+    sources.${stdenv.hostPlatform.system}
+      or (throw "github-copilot-cli: unsupported platform ${stdenv.hostPlatform.system}");
+in
 stdenv.mkDerivation (finalAttrs: {
   pname = "github-copilot-cli";
-  version = "1.0.60";
+  version = "1.0.70";
 
-  # GitHub provide platform-specific SEA binaries as well as a "universal"
-  # package.  Use the universal package as it gives us a bit more flexibility
-  # about how it's configured.  In particular, the SEA binary has fixed ideas
-  # about how paths should be set up which don't reliably hold when using Nix.
   src = fetchurl {
-    url = "https://github.com/github/copilot-cli/releases/download/v${finalAttrs.version}/github-copilot-${finalAttrs.version}.tgz";
-    hash = "sha256-wUEBstKx8Yb9m6ynIi137ZXR7dO39uepnv/yGFVE/qQ=";
+    url = "https://github.com/github/copilot-cli/releases/download/v${finalAttrs.version}/github-copilot-${finalAttrs.version}-${source.suffix}.tgz";
+    inherit (source) hash;
   };
 
   nativeBuildInputs = [
@@ -41,24 +64,6 @@ stdenv.mkDerivation (finalAttrs: {
   ];
   sourceRoot = "package";
   dontStrip = true;
-  # computer.node requires GUI/media libraries (X11, pipewire, libei, libjpeg,
-  # libpng) for screen-capture and input-simulation features that are not
-  # relevant for CLI use; ignore those missing deps rather than fail the build
-  # or pull in heavy dependencies.
-  #
-  # keytar ships musl-libc prebuilds (linuxmusl-{x64,arm64}) alongside the
-  # glibc ones; the glibc build is what actually loads on NixOS, so ignore
-  # libc.musl-x86_64.so.1 from the unused musl variants rather than try to
-  # provide musl on a glibc system.
-  autoPatchelfIgnoreMissingDeps = [
-    "libX11.so.6"
-    "libXtst.so.6"
-    "libjpeg.so.8"
-    "libpng16.so.16"
-    "libpipewire-0.3.so.0"
-    "libei.so.1"
-    "libc.musl-x86_64.so.1"
-  ];
 
   installPhase = ''
     runHook preInstall
