@@ -19,6 +19,11 @@
     /etc/nixos/corp.pem
   ];
 
+  # Required to allow build verification of other systems which aren't behind corp
+  # on this system
+  systemd.services.nix-daemon.environment.NIX_SSL_CERT_FILE =
+    lib.mkIf (builtins.pathExists /etc/nixos/corp.pem) "/etc/ssl/certs/ca-certificates.crt";
+
   # Lets docker-sbx's Go cgo shim and mkfs.erofs resolve /lib64/ld-linux at
   # runtime, avoiding patchelf (which corrupts Go binaries' PT_LOAD layout).
   programs.nix-ld = {
