@@ -37,3 +37,5 @@ Behavioural changes that only manifest after `nixos-rebuild switch` cannot be ag
 ## Style
 
 Prefer hoisting repeated literals (versions, hashes, URLs) into `let` bindings or attributes so they update in one place.
+
+Comments are one line, explaining a non-obvious *why* only. Put root-cause detail in the commit/PR, not the `.nix` file.
