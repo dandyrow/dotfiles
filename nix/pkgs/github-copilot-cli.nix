@@ -18,10 +18,6 @@
 # overlay entry in flake.nix) once nixpkgs catches up to this version or
 # newer.
 let
-  # As of 1.0.70 upstream turned the previously self-contained "universal"
-  # tarball into a thin npm loader that resolves a per-platform package at
-  # runtime, so fetch the per-platform tarball (same index.js entrypoint and
-  # bundled prebuilds the universal package used to carry) directly instead.
   sources = {
     x86_64-linux = {
       suffix = "linux-x64";
