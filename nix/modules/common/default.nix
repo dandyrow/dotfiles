@@ -9,6 +9,7 @@
     ./doas.nix
     ./gnupg.nix
     ./zsh.nix
+    ./agents.nix
   ];
 
   nix.settings = {
