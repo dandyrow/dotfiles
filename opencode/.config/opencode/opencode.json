@@ -10,6 +10,7 @@
   "skills": {
     "paths": ["~/.local/share/agents/skills"]
   },
+  "instructions": ["{env:HOME}/.config/agents/nix-native-deps.md"],
   "formatter": true,
   "autoupdate": false
 }
