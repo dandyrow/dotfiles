@@ -93,6 +93,7 @@ in
     # On NixOS the clone is created during system activation (see modules/common/dotfiles.nix).
     # On non-NixOS the clone is created by the cloneDotfiles activation script below.
     file = lib.mkMerge [
+      (mkConfigLink "agents")
       (mkConfigLink "bat")
       (mkConfigLink "btop")
       (mkConfigLink "eza")
