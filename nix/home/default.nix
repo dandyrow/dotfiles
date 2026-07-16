@@ -130,6 +130,10 @@ in
         ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
         ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
         ".config/copilot/mcp-config.json".source = mkLink "copilot/.config/copilot/mcp-config.json";
+
+        # Copilot only reads instructions from $COPILOT_HOME/copilot-instructions.md — no home-level AGENTS.md.
+        ".config/copilot/copilot-instructions.md".source =
+          config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/agents/nix-native-deps.md";
       }
 
       # Per-file symlinks are used here instead of mkConfigLink so that home-manager
