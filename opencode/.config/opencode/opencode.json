@@ -11,6 +11,33 @@
     "paths": ["~/.local/share/agents/skills"]
   },
   "instructions": ["{env:HOME}/.config/agents/nix-native-deps.md"],
+  "permission": {
+    "bash": {
+      "npm i -g*": "deny",
+      "npm install -g*": "deny",
+      "npm i --global*": "deny",
+      "npm install --global*": "deny",
+      "npm i * -g*": "deny",
+      "npm install * -g*": "deny",
+      "npm i * --global*": "deny",
+      "npm install * --global*": "deny",
+      "pip install*": "deny",
+      "pip3 install*": "deny",
+      "python -m pip install*": "deny",
+      "python3 -m pip install*": "deny",
+      "pipx install*": "deny",
+      "cargo install*": "deny",
+      "go install*": "deny",
+      "curl * | sh*": "deny",
+      "curl * | bash*": "deny",
+      "wget * | sh*": "deny",
+      "wget * | bash*": "deny",
+      "pip install -r*": "allow",
+      "pip3 install -r*": "allow",
+      "python -m pip install -r*": "allow",
+      "python3 -m pip install -r*": "allow"
+    }
+  },
   "formatter": true,
   "autoupdate": false
 }
