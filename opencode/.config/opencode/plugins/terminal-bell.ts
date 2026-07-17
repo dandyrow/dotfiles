@@ -1,13 +1,13 @@
-import type { Plugin } from "@opencode-ai/plugin"
+import type { Plugin } from "@opencode-ai/plugin";
 
-const BELL = "\x07"
+const BELL = "\x07";
 
 export const TerminalBellPlugin: Plugin = async () => {
   return {
     event: async ({ event }) => {
       if (event.type === "session.idle" || event.type === "permission.asked") {
-        process.stdout.write(BELL)
+        process.stdout.write(BELL);
       }
     },
-  }
-}
+  };
+};
