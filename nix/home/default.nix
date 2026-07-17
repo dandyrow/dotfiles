@@ -12,6 +12,13 @@ let
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
   hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
+  isWSL = osConfig != null && (osConfig.wsl.enable or false);
+
+  # WSL ships no xdg-open — alias it to wsl-open so xdg-open callers reach the Windows browser.
+  wslXdgOpen = pkgs.runCommand "xdg-open-wsl" { } ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.wsl-open}/bin/wsl-open $out/bin/xdg-open
+  '';
 
   nvimToolsJson = builtins.fromJSON (builtins.readFile ../../nvim/.config/nvim/lua/config/tools.json);
   nvimToolAttrs = lib.unique (
@@ -28,6 +35,10 @@ in
     username = "dandyrow";
     homeDirectory = "/home/dandyrow";
     stateVersion = "25.11";
+
+    sessionVariables = lib.optionalAttrs isWSL {
+      BROWSER = "wsl-open";
+    };
 
     packages =
       with pkgs;
@@ -58,6 +69,10 @@ in
           status-area-horizontal-spacing
         ]
       )
+      ++ lib.optionals isWSL [
+        pkgs.wsl-open
+        wslXdgOpen
+      ]
       ++ [
         # Zsh dependencies (see zsh dotfile README)
         fzf
