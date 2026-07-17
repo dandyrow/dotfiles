@@ -56,6 +56,12 @@ describe("block-list", () => {
     blocked("cd /tmp && cargo install ripgrep");
     blocked("mkdir foo && npm install -g pnpm");
   });
+
+  it("blocks bare pip install even when an unrelated -r and a venv co-occur", () => {
+    blocked(". venv/bin/activate && pip install malware && echo -r");
+    blocked("source .venv/bin/activate && grep -r pat . && pip install evil");
+    blocked("ls -r && source venv/bin/activate && pip install anything");
+  });
 });
 
 describe("allow-list", () => {
@@ -69,6 +75,11 @@ describe("allow-list", () => {
     allowed("npm install lodash");
     allowed("npm install --save-dev vitest");
     allowed("npm i lodash");
+  });
+
+  it("allows --global-style (a local layout flag, not a global install)", () => {
+    allowed("npm install lodash --global-style");
+    allowed("npm install --global-style lodash");
   });
 
   it("allows venv-form pip install -r via explicit venv path", () => {

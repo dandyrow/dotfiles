@@ -31,7 +31,7 @@ const BLOCKERS: { rule: RuleId; test: (cmd: string) => boolean }[] = [
   {
     rule: "global-npm-install",
     test: (cmd) =>
-      /\bnpm\s+(?:i|in|install|add)\b[^&|;\n]*?\s(?:-g|--global)\b/.test(cmd),
+      /\bnpm\s+(?:i|in|install|add)\b[^&|;\n]*?\s(?:-g|--global)(?=\s|$)/.test(cmd),
   },
   { rule: "pipx-install", test: (cmd) => /\bpipx\s+install\b/.test(cmd) },
   { rule: "cargo-install", test: (cmd) => /\bcargo\s+install\b/.test(cmd) },
@@ -41,8 +41,14 @@ const BLOCKERS: { rule: RuleId; test: (cmd: string) => boolean }[] = [
     test: (cmd) => {
       if (!PIP_INSTALL.test(cmd)) return false;
       // Only a command-string-visible venv exempts pip; process env-var venv state is unreliable here.
-      const venvForm = VENV_PATH_PIP.test(cmd) || VENV_ACTIVATE.test(cmd);
-      return !(venvForm && PIP_REQUIREMENT.test(cmd));
+      const venvActive = VENV_ACTIVATE.test(cmd);
+      // The -r must belong to the pip call itself, so evaluate each pip segment on its own.
+      for (const segment of cmd.split(/[;&|\n]+/)) {
+        if (!PIP_INSTALL.test(segment)) continue;
+        const venvForm = venvActive || VENV_PATH_PIP.test(segment);
+        if (!(venvForm && PIP_REQUIREMENT.test(segment))) return true;
+      }
+      return false;
     },
   },
 ];
