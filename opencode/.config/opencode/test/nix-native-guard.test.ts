@@ -16,6 +16,21 @@ const allowed = (cmd: string) =>
     `expected ALLOW: ${cmd}`,
   );
 
+const NPM_INSTALL_ALIASES = [
+  "i",
+  "in",
+  "ins",
+  "inst",
+  "insta",
+  "instal",
+  "install",
+  "isnt",
+  "isnta",
+  "isntal",
+  "isntall",
+  "add",
+];
+
 describe("block-list", () => {
   it("blocks global npm installs", () => {
     blocked("npm i -g typescript");
@@ -24,6 +39,13 @@ describe("block-list", () => {
     blocked("npm i --global typescript");
     blocked("npm install typescript -g");
     blocked("npm install typescript --global");
+  });
+
+  it("blocks global installs for every npm install alias", () => {
+    for (const alias of NPM_INSTALL_ALIASES) {
+      blocked(`npm ${alias} -g typescript`);
+      blocked(`npm ${alias} typescript --global`);
+    }
   });
 
   it("blocks bare pip install", () => {
@@ -75,6 +97,12 @@ describe("allow-list", () => {
     allowed("npm install lodash");
     allowed("npm install --save-dev vitest");
     allowed("npm i lodash");
+  });
+
+  it("allows local installs for every npm install alias", () => {
+    for (const alias of NPM_INSTALL_ALIASES) {
+      allowed(`npm ${alias} typescript`);
+    }
   });
 
   it("allows --global-style (a local layout flag, not a global install)", () => {

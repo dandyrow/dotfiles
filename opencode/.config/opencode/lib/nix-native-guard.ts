@@ -31,7 +31,7 @@ const BLOCKERS: { rule: RuleId; test: (cmd: string) => boolean }[] = [
   {
     rule: "global-npm-install",
     test: (cmd) =>
-      /\bnpm\s+(?:i|in|install|add)\b[^&|;\n]*?\s(?:-g|--global)(?=\s|$)/.test(cmd),
+      /\bnpm\s+(?:install|isntall|instal|isntal|insta|isnta|inst|isnt|ins|add|in|i)\b[^&|;\n]*?\s(?:-g|--global)(?=\s|$)/.test(cmd),
   },
   { rule: "pipx-install", test: (cmd) => /\bpipx\s+install\b/.test(cmd) },
   { rule: "cargo-install", test: (cmd) => /\bcargo\s+install\b/.test(cmd) },
