@@ -1,3 +1,12 @@
+-- appManifest.json is generated and often uncommitted, so mirror wdx's fallback: the nearest dir whose presentation/ holds an .amd.
+local function app_root(bufnr)
+  return vim.fs.root(bufnr, "appManifest.json")
+    or vim.fs.root(bufnr, function(name, path)
+      return name == "presentation" and #vim.fn.glob(path .. "/presentation/*.amd", true, true) > 0
+    end)
+    or vim.fs.root(bufnr, ".git")
+end
+
 -- No get_language_id: ftdetect/workday.lua already names each filetype after the language ID wdx expects.
 return {
   cmd = { "wdx", "lsp", "--stdio" },
@@ -18,5 +27,7 @@ return {
     "workday-model-task",
     "workday-model-attachment",
   },
-  root_markers = { "app.amd", ".git" },
+  root_dir = function(bufnr, on_dir)
+    on_dir(app_root(bufnr))
+  end,
 }

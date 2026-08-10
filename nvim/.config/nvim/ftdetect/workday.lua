@@ -1,4 +1,4 @@
--- Filetypes are named for wdx's LSP language IDs verbatim: Neovim sends filetype as languageId, and wdx branches on it (POD placeholders, AMD/SMD, widget outlines) where its path fallback doesn't reach.
+-- Filetypes mirror wdx's LSP language IDs: Neovim sends filetype as languageId, which wdx trusts over the file path.
 vim.filetype.add({
   extension = {
     pmd = "workday-pmd",
