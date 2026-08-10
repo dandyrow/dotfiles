@@ -52,8 +52,7 @@ return {
           return nix_path
         end
       end
-      return vim.fn.stdpath("data")
-        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+      return vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
     end
 
     -- JSON so Nix (nix/home/default.nix) can read it via builtins.fromJSON.

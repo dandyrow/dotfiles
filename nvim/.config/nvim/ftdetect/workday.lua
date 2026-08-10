@@ -1,4 +1,4 @@
--- Filetypes mirror wdx's LSP language IDs: Neovim sends filetype as languageId, which wdx trusts over the file path.
+-- Filetypes mirror wdx's LSP language IDs
 vim.filetype.add({
   extension = {
     pmd = "workday-pmd",
@@ -21,8 +21,5 @@ vim.filetype.add({
   },
   filename = {
     ["app_attribute_extensions.json"] = "workday-app-attributes",
-  },
-  pattern = {
-    [".*%.pmd%.json"] = "workday-pmd",
   },
 })
