@@ -137,5 +137,10 @@
           wsl = true;
         };
       };
+
+      checks.${system} = import ./nix/tests {
+        inherit lib;
+        pkgs = import inputs.nixpkgs { inherit system; };
+      };
     };
 }
