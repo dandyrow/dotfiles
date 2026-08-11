@@ -42,7 +42,7 @@ export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] && \
   source "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
-export PATH="$PATH:$HOME/.local/bin:$HOME/.local/bin/wdcli/bin:$GOPATH/bin"
+export PATH="$PATH:$HOME/.local/bin:$HOME/.local/bin/wdcli/bin:$GOPATH/bin:$XDG_DATA_HOME/npm/bin"
 
 export KEYTIMEOUT=10
 

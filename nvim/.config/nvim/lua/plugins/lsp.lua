@@ -52,8 +52,7 @@ return {
           return nix_path
         end
       end
-      return vim.fn.stdpath("data")
-        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+      return vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
     end
 
     -- JSON so Nix (nix/home/default.nix) can read it via builtins.fromJSON.
@@ -170,6 +169,12 @@ return {
         vim.lsp.config[tool.name] = config
         vim.lsp.enable(tool.name)
       end
+    end
+
+    -- wdx ships inside the internal Workday Extend tooling repo, so it is absent from both Nix and Mason.
+    if vim.fn.executable("wdx") == 1 then
+      vim.lsp.config("wdx", { capabilities = capabilities })
+      vim.lsp.enable("wdx")
     end
 
     -- Document highlight: highlight all references to the symbol under cursor

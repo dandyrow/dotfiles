@@ -41,6 +41,8 @@ vim.keymap.set("n", "<leader>pa", function()
   print("file:", path)
 end, { desc = "Print file path & copy it to clipboard" })
 
+vim.keymap.set("n", "grd", vim.lsp.buf.definition, { desc = "Go to definition" })
+
 -- Open diagnostic list
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic quickfix list" })
 
