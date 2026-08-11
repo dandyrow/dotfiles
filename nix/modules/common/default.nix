@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./dotfiles.nix
+    ./clone-dotfiles.nix
     ./locale.nix
     ./systemd-boot.nix
     ./ssh.nix
