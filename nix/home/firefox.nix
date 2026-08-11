@@ -2,15 +2,13 @@
   config,
   pkgs,
   lib,
-  osConfig ? null,
   ...
 }:
 let
-  hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
   # Helper to build an AMO download URL from an add-on slug.
   amo = slug: "https://addons.mozilla.org/firefox/downloads/latest/${slug}/latest.xpi";
 in
-lib.mkIf hasDesktop {
+lib.mkIf config.dandyrow.hasDesktop {
   programs.firefox = {
     enable = true;
     configPath = "${config.xdg.configHome}/mozilla/firefox";

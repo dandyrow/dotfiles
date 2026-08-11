@@ -11,7 +11,6 @@ let
   dotfilesDir = "${config.home.homeDirectory}/.dotfiles";
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
-  hasDesktop = osConfig != null && (osConfig.gnome.enable or false);
 
   nvimToolsJson = builtins.fromJSON (builtins.readFile ../../nvim/.config/nvim/lua/config/tools.json);
   nvimToolAttrs = lib.unique (
@@ -22,7 +21,10 @@ let
   nvimToolPackages = map (attr: lib.getAttrFromPath (lib.splitString "." attr) pkgs) nvimToolAttrs;
 in
 {
-  imports = [ ./firefox.nix ];
+  imports = [
+    ./desktop.nix
+    ./firefox.nix
+  ];
 
   home = {
     username = "dandyrow";
@@ -46,11 +48,10 @@ in
         bubblewrap
         socat
       ]
-      # Only install kitty on systems with Gnome desktop environment
-      ++ lib.optionals (osConfig != null && (osConfig.gnome.enable or false)) [
+      ++ lib.optionals config.dandyrow.hasDesktop [
         kitty
       ]
-      ++ lib.optionals hasDesktop (
+      ++ lib.optionals config.dandyrow.hasDesktop (
         with pkgs.gnomeExtensions;
         [
           appindicator
@@ -105,7 +106,7 @@ in
       (mkConfigLink "starship")
       (mkConfigLink "yazi")
       (mkConfigLink "zsh")
-      (lib.optionalAttrs hasDesktop (mkConfigLink "kitty"))
+      (lib.optionalAttrs config.dandyrow.hasDesktop (mkConfigLink "kitty"))
 
       # Work-specific git config included via includeIf in the main git config.
       # Sets work email and disables GPG signing for all repos under ~/Projects/work/.
@@ -183,7 +184,7 @@ in
 
   # Wire Firefox up as the default browser so xdg-open (used by kitty and
   # other tools) can resolve http/https URLs to a handler.
-  xdg.mimeApps = lib.mkIf hasDesktop {
+  xdg.mimeApps = lib.mkIf config.dandyrow.hasDesktop {
     enable = true;
     defaultApplications = {
       "x-scheme-handler/http" = "firefox.desktop";
@@ -224,13 +225,13 @@ in
     autoEnable = false;
     flavor = "mocha";
     accent = "green";
-    firefox = lib.mkIf hasDesktop {
+    firefox = lib.mkIf config.dandyrow.hasDesktop {
       enable = true;
       force = true;
     };
   };
 
-  gtk = lib.mkIf hasDesktop {
+  gtk = lib.mkIf config.dandyrow.hasDesktop {
     enable = true;
     iconTheme = {
       name = "Papirus-Dark";
@@ -241,7 +242,7 @@ in
     };
   };
 
-  dconf.settings = lib.mkIf hasDesktop {
+  dconf.settings = lib.mkIf config.dandyrow.hasDesktop {
     "org/gnome/desktop/interface".icon-theme = lib.mkDefault "Papirus-Dark";
     "org/gnome/shell".enabled-extensions = [
       "appindicatorsupport@rgcjonas.gmail.com"
