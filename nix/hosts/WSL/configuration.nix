@@ -11,8 +11,6 @@
   # WSL provides its own boot path; conflicts with common/systemd-boot.nix.
   systemd-boot.enable = false;
 
-  documentation.nixos.enable = false;
-
   # Corporate CA cert, manually placed at /etc/nixos/corp.pem (never committed).
   # Requires --impure; evaluates to [] when absent.
   security.pki.certificateFiles = lib.optionals (builtins.pathExists /etc/nixos/corp.pem) [
@@ -56,5 +54,6 @@
   virtualisation.docker.enable = true;
   users.users.dandyrow.extraGroups = [ "docker" ];
 
+  # Coincides with the other hosts by install date, not by sharing — do not consolidate.
   system.stateVersion = "25.11";
 }

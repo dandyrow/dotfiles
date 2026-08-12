@@ -8,6 +8,8 @@
       cups-pdf.enable = true;
     };
 
+    users.users.dandyrow.extraGroups = [ "print" ];
+
     # GNOME auto-enables system-config-printer when printing is on, which adds
     # a "Print Settings" entry to the app menu. Disable it — printer management
     # is accessible via GNOME Settings without this separate tool.

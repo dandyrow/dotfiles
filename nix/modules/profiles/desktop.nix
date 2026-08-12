@@ -11,6 +11,8 @@
   pipewire.enable = true;
   printing.enable = true;
 
+  programs.steam.enable = true;
+
   environment.systemPackages = with pkgs; [
     vlc
     darktable

@@ -17,6 +17,7 @@
     };
 
     networking.networkmanager.enable = true;
+    users.users.dandyrow.extraGroups = [ "networkmanager" ];
 
     services.gnome.gnome-browser-connector.enable = true;
 
