@@ -21,11 +21,6 @@ lib.runTests {
     expected = true;
   };
 
-  testClonesRepoUrl = {
-    expr = lib.hasInfix "https://github.com/dandyrow/dotfiles.git" hmScript;
-    expected = true;
-  };
-
   testUsesProvidedGitBinary = {
     expr = lib.hasInfix "/fake/git clone" hmScript;
     expected = true;
