@@ -35,10 +35,10 @@ to system scope is the cheap future move if a system consumer appears.
 
 Stowing a tool's checked-in config out of the `~/.dotfiles` clone via
 `mkOutOfStoreSymlink`. The dominant case is the **config-link convention**:
-`~/.config/NAME` → `~/.dotfiles/NAME/.config/NAME`, driven by the list option
-`dandyrow.dotfiles.configLinks` (`nix/home/dotfiles.nix`). Add a name to stow a
-new tool. Tools that don't fit the convention (gnupg, copilot, tmux, the work
-gitconfig) are co-located exceptions in the same module.
+`~/.config/NAME` → `~/.dotfiles/NAME/.config/NAME`, driven by the `configLinks`
+list in `nix/home/dotfiles.nix`. Add a name to stow a new tool. Tools that don't
+fit the convention (gnupg, copilot, tmux, the work gitconfig) are co-located
+exceptions in the same module.
 
 A concern distinct from the **dotfiles clone** — linking assumes the clone
 already exists.
@@ -54,5 +54,4 @@ NixOS (`nix/home/clone-dotfiles.nix`). See `docs/adr/0001-dotfiles-clone-two-ada
 ## Related
 
 - Tests: `nix/tests/has-desktop.nix`, exposed as `checks.<system>.has-desktop`.
-- Tests: `nix/tests/dotfiles.nix` and `nix/tests/clone-dotfiles.nix`, exposed as
-  `checks.<system>.dotfiles` and `checks.<system>.clone-dotfiles`.
+- Tests: `nix/tests/clone-dotfiles.nix`, exposed as `checks.<system>.clone-dotfiles`.

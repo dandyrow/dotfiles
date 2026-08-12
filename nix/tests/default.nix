@@ -11,5 +11,4 @@ in
 {
   has-desktop = mkTest "has-desktop" (import ./has-desktop.nix { inherit lib; });
   clone-dotfiles = mkTest "clone-dotfiles" (import ./clone-dotfiles.nix { inherit lib; });
-  dotfiles = mkTest "dotfiles" (import ./dotfiles.nix { inherit lib; });
 }

@@ -5,43 +5,31 @@
   ...
 }:
 let
-  cfg = config.dandyrow.dotfiles;
   dotfilesDir = "${config.home.homeDirectory}/.dotfiles";
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
+
+  # Stowed by the convention ~/.config/NAME -> ~/.dotfiles/NAME/.config/NAME; add a name to stow a tool.
+  configLinks = [
+    "agents"
+    "bat"
+    "btop"
+    "eza"
+    "fastfetch"
+    "git"
+    "npm"
+    "nvim"
+    "opencode"
+    "starship"
+    "yazi"
+    "zsh"
+  ]
+  ++ lib.optionals config.dandyrow.hasDesktop [ "kitty" ];
 in
 {
-  options.dandyrow.dotfiles.configLinks = lib.mkOption {
-    type = lib.types.listOf lib.types.str;
-    default = [
-      "agents"
-      "bat"
-      "btop"
-      "eza"
-      "fastfetch"
-      "git"
-      "npm"
-      "nvim"
-      "opencode"
-      "starship"
-      "yazi"
-      "zsh"
-    ]
-    ++ lib.optionals config.dandyrow.hasDesktop [ "kitty" ];
-    defaultText = lib.literalExpression ''
-      [ "agents" "bat" "btop" "eza" "fastfetch" "git" "npm" "nvim" "opencode" "starship" "yazi" "zsh" ]
-      ++ lib.optionals config.dandyrow.hasDesktop [ "kitty" ]'';
-    description = ''
-      Tools whose XDG config is stowed from the dotfiles repo by the convention
-      `~/.config/NAME` → `~/.dotfiles/NAME/.config/NAME`. Add a name to stow a
-      new tool; exceptions that do not fit the convention live alongside it in
-      `nix/home/dotfiles.nix`.
-    '';
-  };
-
   # Symlinked from the ~/.dotfiles clone created by the clone-dotfiles adapters.
-  config.home.file = lib.mkMerge (
-    map mkConfigLink cfg.configLinks
+  home.file = lib.mkMerge (
+    map mkConfigLink configLinks
     ++ [
       # Work identity + no GPG signing, pulled into git via includeIf for ~/Projects/work/.
       {
