@@ -31,6 +31,27 @@ to system scope is the cheap future move if a system consumer appears.
 
 **Avoid these synonyms:** `gnomeEnabled`, `isDesktop`, `desktopMode`.
 
+### dotfile linking
+
+Stowing a tool's checked-in config out of the `~/.dotfiles` clone via
+`mkOutOfStoreSymlink`. The dominant case is the **config-link convention**:
+`~/.config/NAME` → `~/.dotfiles/NAME/.config/NAME`, driven by the `configLinks`
+list in `nix/home/dotfiles.nix`. Add a name to stow a new tool. Tools that don't
+fit the convention (gnupg, copilot, tmux, the work gitconfig) are co-located
+exceptions in the same module.
+
+A concern distinct from the **dotfiles clone** — linking assumes the clone
+already exists.
+
+### dotfiles clone
+
+Ensuring the `~/.dotfiles` clone of the dotfiles repo exists before linking.
+A single command definition (`nix/lib/clone-dotfiles.nix`) rendered through two
+activation adapters: root system activation on NixOS
+(`nix/modules/common/clone-dotfiles.nix`) and user Home Manager activation off
+NixOS (`nix/home/clone-dotfiles.nix`). See `docs/adr/0001-dotfiles-clone-two-adapters.md`.
+
 ## Related
 
 - Tests: `nix/tests/has-desktop.nix`, exposed as `checks.<system>.has-desktop`.
+- Tests: `nix/tests/clone-dotfiles.nix`, exposed as `checks.<system>.clone-dotfiles`.
