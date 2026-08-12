@@ -9,7 +9,7 @@ let
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
 
-  # Stowed by the convention ~/.config/NAME -> ~/.dotfiles/NAME/.config/NAME; add a name to stow a tool.
+  # Directories to stow from dotfiles repo.
   configLinks = [
     "agents"
     "bat"
@@ -27,8 +27,8 @@ let
   ++ lib.optionals config.dandyrow.hasDesktop [ "kitty" ];
 in
 {
-  # Symlinked from the ~/.dotfiles clone created by the clone-dotfiles adapters.
   home.file = lib.mkMerge (
+    # Symlinked from the ~/.dotfiles clone created by the clone-dotfiles adapters.
     map mkConfigLink configLinks
     ++ [
       # Work identity + no GPG signing, pulled into git via includeIf for ~/Projects/work/.
