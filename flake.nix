@@ -72,21 +72,24 @@
             ./nix/hosts/${host}
             inputs.home-manager.nixosModules.home-manager
             inputs.nix-index-database.nixosModules.nix-index
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {
-                mattPocockSkills = inputs.mattpocock-skills;
-              };
-              home-manager.users.dandyrow = {
-                imports = [
-                  ./nix/home
-                  inputs.catppuccin.homeModules.catppuccin
-                ];
-              };
-              # Prevent activation failures when HM wants to overwrite pre-existing files.
-              home-manager.backupFileExtension = "bak";
-            }
+            (
+              { config, ... }:
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = {
+                  mattPocockSkills = inputs.mattpocock-skills;
+                };
+                home-manager.users.${config.dandyrow.primaryUser} = {
+                  imports = [
+                    ./nix/home
+                    inputs.catppuccin.homeModules.catppuccin
+                  ];
+                };
+                # Prevent activation failures when HM wants to overwrite pre-existing files.
+                home-manager.backupFileExtension = "bak";
+              }
+            )
           ]
           ++ lib.optionals (host == "WSL") [
             inputs.nixos-wsl.nixosModules.default

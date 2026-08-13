@@ -22,11 +22,10 @@ in
     ./desktop.nix
     ./dotfiles.nix
     ./firefox.nix
+    ./primary-user.nix
   ];
 
   home = {
-    username = "dandyrow";
-    homeDirectory = "/home/dandyrow";
     stateVersion = "25.11";
 
     packages =

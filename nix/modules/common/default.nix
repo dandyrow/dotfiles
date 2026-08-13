@@ -1,4 +1,7 @@
-{ lib, ... }:
+{ config, lib, ... }:
+let
+  user = config.users.users.${config.dandyrow.primaryUser};
+in
 {
   imports = [
     ./clone-dotfiles.nix
@@ -31,6 +34,6 @@
 
   programs.git = {
     enable = true;
-    config = [ { safe.directory = "/home/dandyrow/.dotfiles"; } ];
+    config = [ { safe.directory = "${user.home}/.dotfiles"; } ];
   };
 }

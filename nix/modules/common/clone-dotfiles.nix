@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  user = config.users.users.dandyrow;
+  user = config.users.users.${config.dandyrow.primaryUser};
   cloneDotfiles = import ../../lib/clone-dotfiles.nix { inherit (pkgs) lib; };
 in
 {

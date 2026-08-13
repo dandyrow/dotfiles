@@ -1,8 +1,16 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  primaryUser = config.dandyrow.primaryUser;
+in
 {
   wsl = {
     enable = true;
-    defaultUser = "dandyrow";
+    defaultUser = primaryUser;
 
     # Enable systemd under WSL2 (requires Windows 11 / WSL 0.67.6+).
     useWindowsDriver = true;
@@ -43,7 +51,7 @@
     after = [ "network.target" ];
     serviceConfig = {
       Type = "simple";
-      User = "dandyrow";
+      User = primaryUser;
       ExecStart = "${pkgs.docker-sbx}/bin/sbx daemon start";
       ExecStop = "${pkgs.docker-sbx}/bin/sbx daemon stop";
       Restart = "on-failure";
@@ -52,7 +60,7 @@
   };
 
   virtualisation.docker.enable = true;
-  users.users.dandyrow.extraGroups = [ "docker" ];
+  users.users.${primaryUser}.extraGroups = [ "docker" ];
 
   # Coincides with the other hosts by install date, not by sharing — do not consolidate.
   system.stateVersion = "25.11";
