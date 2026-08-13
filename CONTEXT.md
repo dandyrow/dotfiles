@@ -73,6 +73,11 @@ overrides it as ordinary configuration.
 **Namespacing.** Lives under the personal `dandyrow` namespace on both sides,
 avoiding collision with upstream options — as `hasDesktop` does.
 
+**The password-hash file names the role, not the occupant** —
+`/etc/secrets/primary-user-password`, injected at install time. It does not
+follow the option, so a rename never moves the secret and the installer needs no
+knowledge of the name.
+
 **Not the primary user**, despite sharing the string: the GitHub account in the
 dotfiles clone URL, the `homeConfigurations` output names, the flake
 description, the comment fields inside SSH public keys, and the clone-dotfiles

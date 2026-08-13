@@ -10,8 +10,7 @@ The flake at the repo root controls everything — NixOS hosts, home configurati
 ### Prerequisites
 
 - Target machine booted into a NixOS live ISO (for fresh installs)
-- A `secrets/` directory containing `etc/secrets/<primary-user>-password` (bcrypt-hashed password),
-  where `<primary-user>` is the value of `dandyrow.primaryUser` — `dandyrow` unless a host overrides it
+- A `secrets/` directory containing `etc/secrets/primary-user-password` (bcrypt-hashed password)
   - Generate with: `mkpasswd -m bcrypt`
 
 ### Install NixOS on a new machine
@@ -53,10 +52,9 @@ bare-metal installs. Create the secrets directory structure with restrictive
 permissions:
 
 ```bash
-PRIMARY_USER=dandyrow # the value of dandyrow.primaryUser
 mkdir -p -m 700 ./secrets/etc/secrets
-mkpasswd -m bcrypt > "./secrets/etc/secrets/${PRIMARY_USER}-password"
-chmod 600 "./secrets/etc/secrets/${PRIMARY_USER}-password"
+mkpasswd -m bcrypt > ./secrets/etc/secrets/primary-user-password
+chmod 600 ./secrets/etc/secrets/primary-user-password
 ```
 
 This directory is `.gitignore`d and must never be committed.
@@ -91,7 +89,7 @@ sudo ./result/bin/nixos-wsl-tarball-builder --extra-files ./secrets nixos.wsl
 > regardless of whether the repo is cloned — it is never committed.
 
 This produces `nixos.wsl` — a compressed archive ready to import into WSL,
-with the hashed password baked in at `/etc/secrets/${PRIMARY_USER}-password`.
+with the hashed password baked in at `/etc/secrets/primary-user-password`.
 
 #### 3. Import the tarball into WSL
 

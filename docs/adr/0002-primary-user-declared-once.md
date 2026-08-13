@@ -2,13 +2,12 @@
 
 The login name of the human this machine belongs to is declared as an option
 (`dandyrow.primaryUser`, `types.str`, defaulting to `"dandyrow"`) and referenced
-everywhere the name was previously a literal: the user definition and its
-password-hash file, the dotfiles clone adapter, git's `safe.directory`, the
-`networkmanager` and `print` group memberships, the WSL default user, the
-`sbx-daemon` service user, the `docker` group, the host `authorizedKeys` path,
-the flake's Home Manager user attribute, and the installer's secrets path.
-Renaming the user on a NixOS host is a one-line edit, and a single host can
-override the name without `mkForce`.
+everywhere the name was previously a literal: the user definition, the dotfiles
+clone adapter, git's `safe.directory`, the `networkmanager` and `print` group
+memberships, the WSL default user, the `sbx-daemon` service user, the `docker`
+group, the host `authorizedKeys` path, and the flake's Home Manager user
+attribute. Renaming the user on a NixOS host is a one-line edit, and a single
+host can override the name without `mkForce`.
 
 The name **cannot** be derived from the configuration. Filtering `users.users`
 for the single `isNormalUser` entry and defining `users.users.<that name>` asks
@@ -24,6 +23,12 @@ clone URL (coupling it would repoint the repo at a URL that does not exist), the
 README, and evaluated outside any module so structurally out of reach anyway),
 the flake description, the comment fields inside SSH public keys, and the
 clone-dotfiles test fixtures.
+
+The password-hash file is the one site that names the *role* instead. It sits at
+`/etc/secrets/primary-user-password` — not at a path built from the option — so
+the installer, which is shell and cannot read a NixOS option without evaluating
+the flake, needs no derivation and a rename cannot desynchronise it. Following
+the name would have been strictly worse than not having to follow it.
 
 ## Considered Options
 
