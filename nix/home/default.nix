@@ -4,7 +4,7 @@
   pkgs,
   mattPocockSkills,
   # osConfig is populated when running as a NixOS module; null in standalone HM.
-  osConfig ? null,
+  osConfig,
   ...
 }:
 let
