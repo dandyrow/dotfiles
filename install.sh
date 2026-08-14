@@ -9,7 +9,7 @@ set -euo pipefail
 #                        rather than locally. Useful on slow or proxied connections.
 #   host               — NixOS configuration name (e.g. DansSpectre, New-H0Ryzen)
 #   target-ip          — IP address of the target machine (must be booted into a NixOS live ISO)
-#   secrets-dir        — path to a directory containing etc/secrets/dandyrow-password
+#   secrets-dir        — path to a directory containing etc/secrets/primary-user-password
 #                        (bcrypt-hashed password, generated with: mkpasswd -m bcrypt)
 #
 # Example:
@@ -31,7 +31,7 @@ fi
 HOST="$1"
 TARGET_IP="$2"
 SECRETS_DIR="$3"
-PASSWORD_FILE="${SECRETS_DIR}/etc/secrets/dandyrow-password"
+PASSWORD_FILE="${SECRETS_DIR}/etc/secrets/primary-user-password"
 
 if [[ ! -f "${PASSWORD_FILE}" ]]; then
   echo "Error: password file not found at ${PASSWORD_FILE}." >&2

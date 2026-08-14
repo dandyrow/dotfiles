@@ -51,6 +51,40 @@ activation adapters: root system activation on NixOS
 (`nix/modules/common/clone-dotfiles.nix`) and user Home Manager activation off
 NixOS (`nix/home/clone-dotfiles.nix`). See `docs/adr/0001-dotfiles-clone-two-adapters.md`.
 
+### primary user
+
+Exposed as the option `dandyrow.primaryUser`, declared once per module system —
+once for NixOS, once for Home Manager.
+
+The login name of the single human this machine belongs to — the account with a
+password, a home directory, a shell, group memberships and a Home Manager
+generation. Singular by design: this names *the* primary user, not a set of
+users.
+
+**Derivation.** It is not derived; it is declared, with the same default on both
+sides. Deriving it by filtering the configured users for the normal one is
+impossible, not merely awkward — see
+`docs/adr/0002-primary-user-declared-once.md`. The NixOS declaration is
+authoritative on NixOS, where Home Manager takes the user's identity from the
+NixOS account and the Home Manager declaration is inert. Off NixOS the Home
+Manager declaration stands alone. A plain `str` with a default, so a single host
+overrides it as ordinary configuration.
+
+**Namespacing.** Lives under the personal `dandyrow` namespace on both sides,
+avoiding collision with upstream options — as `hasDesktop` does.
+
+**The password-hash file names the role, not the occupant** —
+`/etc/secrets/primary-user-password`, injected at install time. It does not
+follow the option, so a rename never moves the secret and the installer needs no
+knowledge of the name.
+
+**Not the primary user**, despite sharing the string: the GitHub account in the
+dotfiles clone URL, the `homeConfigurations` output names, the flake
+description, the comment fields inside SSH public keys, and the clone-dotfiles
+test fixtures.
+
+**Avoid these synonyms:** `mainUser`, `owner`, `theUser`.
+
 ## Related
 
 - Tests: `nix/tests/has-desktop.nix`, exposed as `checks.<system>.has-desktop`.
