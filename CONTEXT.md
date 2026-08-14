@@ -89,3 +89,7 @@ test fixtures.
 
 - Tests: `nix/tests/has-desktop.nix`, exposed as `checks.<system>.has-desktop`.
 - Tests: `nix/tests/clone-dotfiles.nix`, exposed as `checks.<system>.clone-dotfiles`.
+- Tests: `nix/tests/undeclared-groups.nix`, exposed as `checks.<system>.undeclared-groups`.
+  Sweeps every host's users for `extraGroups` names that no `users.groups` entry
+  declares — NixOS resolves membership from the group's side, so such a name is a
+  silent no-op rather than an error.

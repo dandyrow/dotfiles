@@ -1,4 +1,8 @@
-{ lib, pkgs }:
+{
+  lib,
+  pkgs,
+  nixosConfigurations,
+}:
 let
   # runTests returns [] on success; surface any failures as an eval error so `nix flake check` reports them.
   mkTest =
@@ -11,4 +15,7 @@ in
 {
   has-desktop = mkTest "has-desktop" (import ./has-desktop.nix { inherit lib; });
   clone-dotfiles = mkTest "clone-dotfiles" (import ./clone-dotfiles.nix { inherit lib; });
+  undeclared-groups = mkTest "undeclared-groups" (
+    import ./undeclared-groups.nix { inherit lib nixosConfigurations; }
+  );
 }
