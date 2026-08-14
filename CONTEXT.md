@@ -84,8 +84,3 @@ description, the comment fields inside SSH public keys, and the clone-dotfiles
 test fixtures.
 
 **Avoid these synonyms:** `mainUser`, `owner`, `theUser`.
-
-## Related
-
-- Tests: `nix/tests/has-desktop.nix`, exposed as `checks.<system>.has-desktop`.
-- Tests: `nix/tests/clone-dotfiles.nix`, exposed as `checks.<system>.clone-dotfiles`.
