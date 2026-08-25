@@ -16,7 +16,7 @@
   environment.systemPackages = with pkgs; [
     vlc
     darktable
-    libreoffice-fresh
+    libreoffice
 
     # Video Thumbnailer
     ffmpeg-headless
