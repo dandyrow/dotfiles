@@ -124,4 +124,15 @@ lib.mkIf config.dandyrow.hasDesktop {
       };
     };
   };
+
+  # Wire Firefox up as the default browser so xdg-open (used by kitty and
+  # other tools) can resolve http/https URLs to a handler.
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "text/html" = "firefox.desktop";
+    };
+  };
 }
