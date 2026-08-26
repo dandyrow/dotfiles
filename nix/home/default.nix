@@ -71,7 +71,6 @@
 
   xdg.dataFile."agents/skills/mattpocock".source = "${mattPocockSkills}/skills";
 
-  # Move ~/.nix-defexpr and ~/.nix-profile to XDG state directory.
-  # use-xdg-base-directories is enabled system-wide in common/default.nix.
+  # Move nix profile paths into XDG state directory.
   nix.assumeXdg = true;
 }
