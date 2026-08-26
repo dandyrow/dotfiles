@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  # No default — HM always supplies it, null off NixOS.
+  # No default - HM always supplies it, null off NixOS.
   osConfig,
   ...
 }:
@@ -18,6 +18,6 @@
     ];
   };
 
-  # Only add gnupg for standalone HM — NixOS provides it system-wide.
+  # Only add gnupg for standalone HM - NixOS provides it system-wide.
   home.packages = lib.optionals (osConfig == null) [ pkgs.gnupg ];
 }
