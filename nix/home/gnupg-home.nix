@@ -7,19 +7,17 @@
   ...
 }:
 {
-  # GNUPGHOME must be in the systemd user environment so gpg-agent (launched
-  # as a systemd user service at login) uses the XDG path rather than ~/.gnupg.
+  # gpg-agent needs GNUPGHOME in systemd env to use XDG path instead of ~/.gnupg.
   systemd.user = {
     sessionVariables = {
       GNUPGHOME = "${config.xdg.dataHome}/gnupg";
     };
-    # gpg requires strict 700 permissions on its home directory.
+    # gpg requires 700 permissions on its home directory.
     tmpfiles.rules = [
       "d %h/.local/share/gnupg 0700 - - -"
     ];
   };
 
-  # gnupg is provided system-wide on NixOS via the gnupg common module;
-  # only add it here for standalone Home Manager (non-NixOS).
+  # Only add gnupg for standalone HM — NixOS provides it system-wide.
   home.packages = lib.optionals (osConfig == null) [ pkgs.gnupg ];
 }

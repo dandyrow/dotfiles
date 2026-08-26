@@ -5,7 +5,7 @@
   ...
 }:
 let
-  # Helper to build an AMO download URL from an add-on slug.
+  # Build an AMO download URL from an add-on slug.
   amo = slug: "https://addons.mozilla.org/firefox/downloads/latest/${slug}/latest.xpi";
 in
 lib.mkIf config.dandyrow.hasDesktop {
@@ -43,8 +43,7 @@ lib.mkIf config.dandyrow.hasDesktop {
         };
       };
 
-      # Remove distracting sections from the new tab page and lock the settings
-      # so Firefox cannot reset them on update.
+      # Lock new-tab settings so Firefox cannot reset them on update.
       FirefoxHome = {
         TopSites = false;
         SponsoredTopSites = false;
@@ -125,8 +124,7 @@ lib.mkIf config.dandyrow.hasDesktop {
     };
   };
 
-  # Wire Firefox up as the default browser so xdg-open (used by kitty and
-  # other tools) can resolve http/https URLs to a handler.
+  # Set Firefox as default browser for xdg-open.
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {

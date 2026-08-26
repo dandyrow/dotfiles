@@ -1,7 +1,7 @@
-# Helper functions shared between nvim-tools.nix and its tests.
+# Shared between nvim-tools.nix and its tests.
 { lib }:
 {
-  # Keep only tools without masonOnly, then resolve to nixpkgs attribute names.
+  # Filter masonOnly tools and resolve to nixpkgs attribute names.
   filterMasonOnly =
     tools:
     lib.unique (
