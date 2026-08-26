@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (import ../tests/nvim-tools-helpers.nix { inherit lib; })
+  inherit (import ./nvim-tools-helpers.nix { inherit lib; })
     filterMasonOnly
     resolveNixpkgsAttrs
     ;
