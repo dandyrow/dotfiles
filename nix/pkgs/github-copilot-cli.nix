@@ -20,19 +20,19 @@ let
   sources = {
     x86_64-linux = {
       suffix = "linux-x64";
-      hash = "sha256-z70Rb+FZviiaut8sK/GKJairCe7KVKCR1AJeHLzaRwk=";
+      hash = "sha256-2s6jYMgj3Vj3ENeoHDa76fZ3PfRYkIeqJctmumN8gig=";
     };
     aarch64-linux = {
       suffix = "linux-arm64";
-      hash = "sha256-saIHbLOlh+uivG9HjONeU/IKNNDWm0GAdDmzMC3191o=";
+      hash = "sha256-TYgTS5IT+B9eMetc7noZH5FvVv9m4/s9Eh7sdspigJ4=";
     };
     x86_64-darwin = {
       suffix = "darwin-x64";
-      hash = "sha256-biISO2sXX+HWeGo+4vXRu3M9BN839sFBN0McAcPBWNI=";
+      hash = "sha256-mxqn3jGddO4eIglerqwyB6XNp42d8bzMM1AJfgSYWZg=";
     };
     aarch64-darwin = {
       suffix = "darwin-arm64";
-      hash = "sha256-Tr+isxFUmWQgQX3ivglJ7x9ONa8JQ9ZVFUdNWuPCKxE=";
+      hash = "sha256-HR4GBZ0LrHONzMND3rqXzQvw0XV1TsKfg6Ckc6osa0A=";
     };
   };
   source =
@@ -41,7 +41,7 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "github-copilot-cli";
-  version = "1.0.70";
+  version = "1.0.80";
 
   src = fetchurl {
     url = "https://github.com/github/copilot-cli/releases/download/v${finalAttrs.version}/github-copilot-${finalAttrs.version}-${source.suffix}.tgz";
@@ -59,6 +59,19 @@ stdenv.mkDerivation (finalAttrs: {
   ];
   sourceRoot = "package";
   dontStrip = true;
+  # Only the optional canvas-GUI webview prebuild wants these; terminal use never loads it.
+  autoPatchelfIgnoreMissingDeps = [
+    "libwebkit2gtk-4.1.so.0"
+    "libgtk-3.so.0"
+    "libgdk-3.so.0"
+    "libcairo.so.2"
+    "libgdk_pixbuf-2.0.so.0"
+    "libsoup-3.0.so.0"
+    "libjavascriptcoregtk-4.1.so.0"
+    "libwayland-client.so.0"
+    "libdbus-1.so.3"
+    "libxdo.so.3"
+  ];
 
   installPhase = ''
     runHook preInstall
