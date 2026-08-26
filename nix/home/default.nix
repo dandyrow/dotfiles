@@ -13,6 +13,7 @@
     ./dotfiles.nix
     ./firefox.nix
     ./gnupg-home.nix
+    ./kitty.nix
     ./nvim-tools.nix
     ./primary-user.nix
     ./theme.nix
@@ -37,9 +38,6 @@
         # VS Code AI SBX tools
         bubblewrap
         socat
-      ]
-      ++ lib.optionals config.dandyrow.hasDesktop [
-        kitty
       ]
       ++ [
         # Zsh dependencies (see zsh dotfile README)
