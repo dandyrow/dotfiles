@@ -50,6 +50,8 @@ in
       {
         ".local/share/gnupg/gpg.conf".source = mkLink "gnupg/.local/share/gnupg/gpg.conf";
         ".local/share/gnupg/gpg-agent.conf".source = mkLink "gnupg/.local/share/gnupg/gpg-agent.conf";
+        ".local/share/agents/skills/unslop.md".source =
+          mkLink "agents/.local/share/agents/skills/unslop.md";
         ".config/copilot/mcp-config.json".source = mkLink "copilot/.config/copilot/mcp-config.json";
 
         # Copilot only reads instructions from $COPILOT_HOME/copilot-instructions.md — no home-level AGENTS.md.
