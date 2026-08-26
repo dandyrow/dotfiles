@@ -11,10 +11,7 @@ lib.mkIf config.dandyrow.hasDesktop {
     status-area-horizontal-spacing
   ];
 
-  # Hide packages from the GNOME app menu that have no place in the launcher.
-  # These ship .desktop files that GNOME picks up automatically; overriding
-  # each entry with NoDisplay=true suppresses the menu entry while keeping the
-  # package fully functional.
+  # Suppress CLI .desktop entries from the GNOME launcher.
   xdg.desktopEntries = {
     btop = {
       name = "btop++";

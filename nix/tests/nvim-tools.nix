@@ -1,6 +1,6 @@
 { lib, pkgs }:
 let
-  inherit (import ../home/nvim-tools-helpers.nix { inherit lib; })
+  inherit (import ./nvim-tools-helpers.nix { inherit lib; })
     filterMasonOnly
     resolveNixpkgsAttrs
     ;
