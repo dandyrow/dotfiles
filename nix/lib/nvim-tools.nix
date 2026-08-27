@@ -1,7 +1,5 @@
-# Shared between nvim-tools.nix and its tests.
 { lib }:
-{
-  # Filter masonOnly tools and resolve to nixpkgs attribute names.
+let
   filterMasonOnly =
     tools:
     lib.unique (
@@ -10,7 +8,9 @@
       )
     );
 
-  # Resolve attribute name strings to actual nixpkgs packages.
   resolveNixpkgsAttrs =
     pkgs: attrs: map (attr: lib.getAttrFromPath (lib.splitString "." attr) pkgs) attrs;
+in
+{
+  nvimToolPackages = json: pkgs: resolveNixpkgsAttrs pkgs (filterMasonOnly json);
 }

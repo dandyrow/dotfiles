@@ -1,13 +1,10 @@
 { lib, pkgs }:
 let
-  inherit (import ../home/nvim-tools-helpers.nix { inherit lib; })
-    filterMasonOnly
-    resolveNixpkgsAttrs
-    ;
+  nvimToolPackages = (import ../lib/nvim-tools.nix { inherit lib; }).nvimToolPackages;
 in
 lib.runTests {
   testMasonOnlyExcluded = {
-    expr = filterMasonOnly [
+    expr = nvimToolPackages [
       {
         name = "lua-ls";
         nixpkgsAttr = "lua-language-server";
@@ -20,15 +17,15 @@ lib.runTests {
         name = "stylua";
         nixpkgsAttr = "stylua";
       }
-    ];
+    ] pkgs;
     expected = [
-      "lua-language-server"
-      "stylua"
+      pkgs.lua-language-server
+      pkgs.stylua
     ];
   };
 
   testDeduplication = {
-    expr = filterMasonOnly [
+    expr = nvimToolPackages [
       {
         name = "rust-analyzer";
         nixpkgsAttr = "rust-analyzer";
@@ -37,12 +34,17 @@ lib.runTests {
         name = "rust-analyzer-copy";
         nixpkgsAttr = "rust-analyzer";
       }
-    ];
-    expected = [ "rust-analyzer" ];
+    ] pkgs;
+    expected = [ pkgs.rust-analyzer ];
   };
 
   testDottedAttrPathResolves = {
-    expr = resolveNixpkgsAttrs pkgs [ "python3Packages.requests" ];
+    expr = nvimToolPackages [
+      {
+        name = "debugpy";
+        nixpkgsAttr = "python3Packages.requests";
+      }
+    ] pkgs;
     expected = [ pkgs.python3Packages.requests ];
   };
 }
