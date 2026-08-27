@@ -6,7 +6,6 @@
 {
   options.dandyrow.hasDesktop = lib.mkOption {
     type = lib.types.bool;
-    # Named for the concept, not the signal — a second DE joins this disjunction without touching consumers.
     default = osConfig != null && (osConfig.gnome.enable or false);
     defaultText = lib.literalExpression "osConfig != null && (osConfig.gnome.enable or false)";
     description = ''
