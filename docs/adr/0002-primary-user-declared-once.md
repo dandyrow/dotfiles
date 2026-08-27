@@ -35,8 +35,8 @@ the name would have been strictly worse than not having to follow it.
 **Declaring the name in the flake** and threading it into modules via
 `specialArgs` was rejected. It reaches the same one-place goal, but it moves
 ownership of a fact away from the module that materialises the user and makes
-`nix/modules/common/users.nix` unusable on its own. An option keeps the module
-self-contained and gets per-host override for free.
+that module unusable on its own. An option keeps the module self-contained and
+gets per-host override for free.
 
 **Deriving the Home Manager name from `osConfig`** was rejected as unnecessary
 rather than wrong. Home Manager's NixOS module already sets `home.username` and

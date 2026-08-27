@@ -5,9 +5,8 @@ symlinks out of it, in two different contexts: a NixOS host (so a single
 `nixos-anywhere` command installs with zero interaction) and standalone Home
 Manager off NixOS. We keep the `git clone` command as a **single definition**
 (`nix/lib/clone-dotfiles.nix`) rendered through **two thin adapters** — a root
-`system.activationScripts` entry on NixOS (`nix/modules/common/clone-dotfiles.nix`,
-with `chown` and the CA bundle for the install-time proxy) and a user
-`home.activation` entry off NixOS (`nix/home/clone-dotfiles.nix`).
+`system.activationScripts` entry on NixOS (with `chown` and the CA bundle for
+the install-time proxy) and a user `home.activation` entry off NixOS.
 
 ## Considered Options
 
