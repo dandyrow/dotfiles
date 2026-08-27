@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cloneDotfiles = import ../lib/clone-dotfiles.nix { inherit lib; };
+  cloneDotfiles = import ../../lib/clone-dotfiles.nix { inherit lib; };
 in
 {
   # Standalone HM clones as the user; on NixOS the root adapter owns the clone.

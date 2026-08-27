@@ -2,6 +2,7 @@
   lib,
   pkgs,
   nixosConfigurations,
+  homeConfigurations,
 }:
 let
   # runTests returns [] on success; surface any failures as an eval error so `nix flake check` reports them.
@@ -18,5 +19,8 @@ in
   nvim-tools = mkTest "nvim-tools" (import ./nvim-tools.nix { inherit lib pkgs; });
   undeclared-groups = mkTest "undeclared-groups" (
     import ./undeclared-groups.nix { inherit lib nixosConfigurations; }
+  );
+  deployments = mkTest "deployments" (
+    import ./deployments.nix { inherit lib homeConfigurations nixosConfigurations; }
   );
 }
