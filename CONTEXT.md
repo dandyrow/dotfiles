@@ -6,7 +6,9 @@ Glossary of domain terms used across this NixOS + Home Manager configuration.
 
 ### hasDesktop
 
-Exposed as the Home Manager option `dandyrow.hasDesktop` (`nix/home/desktop.nix`).
+Exposed as the Home Manager option `dandyrow.hasDesktop`, declared by the
+option module `nix/home/desktop.nix` (distinct from the `desktop/` directory of
+consumer modules).
 
 Whether the machine runs a graphical desktop environment. Consumers gate
 desktop-only configuration on it: kitty, GNOME extensions, Firefox, GTK theming,
@@ -36,9 +38,9 @@ to system scope is the cheap future move if a system consumer appears.
 Stowing a tool's checked-in config out of the `~/.dotfiles` clone via
 `mkOutOfStoreSymlink`. The dominant case is the **config-link convention**:
 `~/.config/NAME` → `~/.dotfiles/NAME/.config/NAME`, driven by the `configLinks`
-list in `nix/home/dotfiles.nix`. Add a name to stow a new tool. Tools that don't
-fit the convention (gnupg, copilot, tmux, the work gitconfig) are co-located
-exceptions in the same module.
+list in the dotfile-linking home module. Add a name to stow a new tool. Tools
+that don't fit the convention (gnupg, copilot, tmux, the work gitconfig) are
+co-located exceptions in the same module.
 
 A concern distinct from the **dotfiles clone** — linking assumes the clone
 already exists.
@@ -47,9 +49,8 @@ already exists.
 
 Ensuring the `~/.dotfiles` clone of the dotfiles repo exists before linking.
 A single command definition (`nix/lib/clone-dotfiles.nix`) rendered through two
-activation adapters: root system activation on NixOS
-(`nix/modules/common/clone-dotfiles.nix`) and user Home Manager activation off
-NixOS (`nix/home/clone-dotfiles.nix`). See `docs/adr/0001-dotfiles-clone-two-adapters.md`.
+activation adapters: root system activation on NixOS and user Home Manager
+activation off NixOS. See `docs/adr/0001-dotfiles-clone-two-adapters.md`.
 
 ### nvim tools
 
