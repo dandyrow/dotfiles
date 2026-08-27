@@ -5,6 +5,6 @@
     ./gnupg-home.nix
     ./nvim.nix
     ./primary-user.nix
-    ./zsh-deps.nix
+    ./zsh.nix
   ];
 }
