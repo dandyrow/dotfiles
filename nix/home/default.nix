@@ -7,11 +7,8 @@
 }:
 let
   coreTools = with pkgs; [
-    bat
     btop
     eza
-    fastfetch
-    neovim
     tmux
     yazi
     opencode

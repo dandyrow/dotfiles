@@ -3,9 +3,8 @@
     ./clone-dotfiles.nix
     ./dotfiles.nix
     ./gnupg-home.nix
-    ./nvim-tools.nix
+    ./nvim.nix
     ./primary-user.nix
-    ./vscode-sandbox.nix
     ./zsh-deps.nix
   ];
 }

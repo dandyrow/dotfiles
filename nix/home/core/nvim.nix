@@ -1,6 +1,8 @@
 {
+  config,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 let
@@ -12,7 +14,9 @@ let
 in
 {
   home.packages =
-    (nvimToolPackages nvimToolsJson pkgs)
+    # Only add neovim for standalone HM, NixOS provides it system-wide.
+    lib.optionals (osConfig == null) [ pkgs.neovim ]
+    ++ (nvimToolPackages nvimToolsJson pkgs)
     ++ (with pkgs; [
       fd
       gcc
