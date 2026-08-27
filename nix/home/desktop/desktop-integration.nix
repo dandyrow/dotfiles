@@ -5,11 +5,15 @@
   ...
 }:
 lib.mkIf config.dandyrow.hasDesktop {
-  home.packages = with pkgs.gnomeExtensions; [
-    appindicator
-    dash-to-dock
-    status-area-horizontal-spacing
-  ];
+  home.packages =
+    (with pkgs; [
+      kitty
+    ])
+    ++ (with pkgs.gnomeExtensions; [
+      appindicator
+      dash-to-dock
+      status-area-horizontal-spacing
+    ]);
 
   # Suppress CLI .desktop entries from the GNOME launcher.
   xdg.desktopEntries = {

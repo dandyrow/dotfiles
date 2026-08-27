@@ -5,64 +5,30 @@
   mattPocockSkills,
   ...
 }:
+let
+  coreTools = with pkgs; [
+    bat
+    btop
+    eza
+    fastfetch
+    neovim
+    tmux
+    yazi
+    opencode
+  ];
+in
 {
   imports = [
-    ./clone-dotfiles.nix
-    ./desktop-integration.nix
+    ./core
     ./desktop.nix
-    ./dotfiles.nix
-    ./firefox.nix
-    ./gnupg-home.nix
-    ./nvim-tools.nix
-    ./primary-user.nix
-    ./theme.nix
+    ./desktop
   ];
 
   home = {
     stateVersion = "25.11";
 
     packages =
-      with pkgs;
-      [
-        # Dotfile tools
-        bat
-        btop
-        eza
-        fastfetch
-        neovim
-        tmux
-        yazi
-        opencode
-
-        # VS Code AI SBX tools
-        bubblewrap
-        socat
-      ]
-      ++ lib.optionals config.dandyrow.hasDesktop [
-        kitty
-      ]
-      ++ [
-        # Zsh dependencies (see zsh dotfile README)
-        fzf
-        starship
-        zoxide
-
-        # Neovim dependencies (see neovim dotfile README)
-        fd
-        gcc
-        gh
-        github-copilot-cli
-        gnumake
-        python3
-        ripgrep
-        stylua
-        tree-sitter
-        unzip
-        wl-clipboard
-        yamllint
-        nodejs
-        wget
-      ]
+      coreTools
       ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
         # docker-sbx is only published for x86_64-linux; no aarch64 release.
         pkgs.docker-sbx
