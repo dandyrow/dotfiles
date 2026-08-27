@@ -1,10 +1,10 @@
+# Force every deployment's activation to render — NixOS hosts keep the standalone branch lazy, masking broken adapter paths.
 {
   lib,
   homeConfigurations,
   nixosConfigurations,
 }:
 let
-  # NixOS hosts never force the standalone branch thanks to the osConfig guard.
   allActivations =
     (map (hc: hc.config.home.activationPackage.drvPath) (lib.attrValues homeConfigurations))
     ++ (map (sys: sys.config.system.activationScripts.cloneDotfiles.text) (
