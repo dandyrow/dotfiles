@@ -1,4 +1,4 @@
-# Force every deployment's activation to render — NixOS hosts keep the standalone branch lazy, masking broken adapter paths.
+# NixOS host builds never evaluate the standalone home configs (their clone step is gated on osConfig == null), so force those and the NixOS clone scripts to evaluate here instead.
 {
   lib,
   homeConfigurations,
