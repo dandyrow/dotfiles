@@ -20,7 +20,7 @@ in
   undeclared-groups = mkTest "undeclared-groups" (
     import ./undeclared-groups.nix { inherit lib nixosConfigurations; }
   );
-  deployments = mkTest "deployments" (
-    import ./deployments.nix { inherit lib homeConfigurations nixosConfigurations; }
+  config-eval = mkTest "config-eval" (
+    import ./config-eval.nix { inherit lib homeConfigurations nixosConfigurations; }
   );
 }
