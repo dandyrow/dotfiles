@@ -4,14 +4,10 @@
   ...
 }:
 let
-  inherit (import ./nvim-tools-helpers.nix { inherit lib; })
-    filterMasonOnly
-    resolveNixpkgsAttrs
-    ;
+  nvimToolPackages = (import ../lib/nvim-tools.nix { inherit lib; }).nvimToolPackages;
 
   nvimToolsJson = builtins.fromJSON (builtins.readFile ../../nvim/.config/nvim/lua/config/tools.json);
-  nvimToolPackages = resolveNixpkgsAttrs pkgs (filterMasonOnly nvimToolsJson);
 in
 {
-  home.packages = nvimToolPackages;
+  home.packages = nvimToolPackages nvimToolsJson pkgs;
 }

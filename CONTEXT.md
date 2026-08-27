@@ -51,6 +51,18 @@ activation adapters: root system activation on NixOS
 (`nix/modules/common/clone-dotfiles.nix`) and user Home Manager activation off
 NixOS (`nix/home/clone-dotfiles.nix`). See `docs/adr/0001-dotfiles-clone-two-adapters.md`.
 
+### nvim tools
+
+The definition of which LSP/formatter/linter/dap binaries Neovim needs, in
+`nvim/.config/nvim/lua/config/tools.json`. The same JSON drives two install
+paths: on NixOS/Home Manager the nixpkgs path resolves every entry that is not
+`masonOnly` to a package (`nix/lib/nvim-tools.nix`, via the single
+`nvimToolPackages` function); off NixOS, Mason installs them at runtime.
+
+The `nixOnly` flag marks tools Mason cannot provide (nixd, nixfmt), so they
+must come from nixpkgs. The nixpkgs path already includes them because they are
+not `masonOnly`; the flag is read only by the Mason side, not the nixpkgs one.
+
 ### primary user
 
 Exposed as the option `dandyrow.primaryUser`, declared once per module system —
