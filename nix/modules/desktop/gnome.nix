@@ -5,9 +5,17 @@
   ...
 }:
 {
+  imports = [
+    ../base/pipewire.nix
+    ../base/printing.nix
+    ./desktop-packages.nix
+  ];
+
   options.gnome.enable = lib.mkEnableOption "GNOME desktop";
 
   config = lib.mkIf config.gnome.enable {
+    pipewire.enable = true;
+    printing.enable = true;
     # Hardware graphics acceleration is required for Wayland compositing.
     hardware.graphics.enable = true;
 
