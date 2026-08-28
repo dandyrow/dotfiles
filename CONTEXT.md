@@ -4,6 +4,25 @@ Glossary of domain terms used across this NixOS + Home Manager configuration.
 
 ## Glossary
 
+### agent
+
+A coding-agent process (opencode, copilot, Claude Code, …) running inside a
+herdr pane whose lifecycle state — `idle`, `working`, `blocked`, `done` — herdr
+detects and rolls up to its workspace. The reason tmux was replaced: tmux sees
+only an undifferentiated process; herdr sees whether it needs you.
+
+**Session identity.** With an official integration installed (Nix-linked from
+the herdr source, never `herdr integration install`), an agent reports a native
+session reference so herdr can resume the conversation after a server restart —
+something resurrect/continuum never did. This is distinct from a herdr **session**
+or the old tmux sessions.
+
+**Detected by screen manifest** (state authority) or by integration hooks/
+plugins (lifecycle authority). Not every pane holds an agent; a pane is the
+terminal, an agent is an identified process inside it.
+
+**Avoid these synonyms:** pane, process, workspace.
+
 ### hasDesktop
 
 Exposed as the Home Manager option `dandyrow.hasDesktop`, declared by the
@@ -97,3 +116,30 @@ description, the comment fields inside SSH public keys, and the clone-dotfiles
 test fixtures.
 
 **Avoid these synonyms:** `mainUser`, `owner`, `theUser`.
+
+### session
+
+Herdr's top-level container; its server owns the panes and the terminals people
+attach to. This configuration runs exactly one — the default — and all projects
+live inside it as **workspaces**.
+
+**Not the old tmux session.** The tmux concept of a named, parallel session
+(say, one per project) was the thing that went away: herdr maps that need to
+**workspaces** inside the single session instead. The `HERDR_ENV` variable the
+server injects into panes doubles as the "inside herdr" marker the old `$TMUX`
+guard used.
+
+**Avoid these synonyms:** server, server session, tmux session.
+
+### workspace
+
+Herdr's per-project container for tabs, panes, and agents; pages the sidebar's
+rolled-up agent state by project.
+
+**The mapping that made the move work:** one tmux session → one herdr workspace,
+in a single default herdr session. The convenience of the old per-project named
+tmux sessions survives as per-project workspaces, only now the sidebar shows all
+of them at once. Not to be confused with the git worktree concept herdr also
+manages (`worktrees.directory`), which spawns a grouped child workspace.
+
+**Avoid these synonyms:** project in a tab, tmux session, worktree.
