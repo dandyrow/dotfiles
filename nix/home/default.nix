@@ -26,7 +26,6 @@ in
     packages =
       coreTools
       ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
-        # docker-sbx is only published for x86_64-linux; no aarch64 release.
         pkgs.docker-sbx
       ];
   };
