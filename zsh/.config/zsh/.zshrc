@@ -318,4 +318,4 @@ source <(fzf --zsh)
 # Enable zoxide
 eval "$(zoxide init --cmd cd zsh)"
 
-[[ $SHLVL -eq 1 && -z "$TMUX" ]] && fastfetch
+[[ $SHLVL -eq 1 && -z "$TMUX" && -z "$HERDR_ENV" ]] && fastfetch

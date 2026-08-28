@@ -9,6 +9,14 @@ let
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
 
+  # Pinned alongside nixpkgs herdr so integration assets match the installed binary.
+  herdrSrc = pkgs.fetchFromGitHub {
+    owner = "herdrdev";
+    repo = "herdr";
+    rev = "v0.8.2";
+    hash = "sha256-sEGIN3dLZasaHob3EHscWBCIQHflMQVchYmzgsETDk4=";
+  };
+
   # Directories to stow from dotfiles repo.
   configLinks = [
     "agents"
@@ -17,9 +25,9 @@ let
     "eza"
     "fastfetch"
     "git"
+    "herdr"
     "npm"
     "nvim"
-    "opencode"
     "starship"
     "yazi"
     "zsh"
@@ -56,6 +64,39 @@ in
         # Copilot only reads instructions from $COPILOT_HOME/copilot-instructions.md — no home-level AGENTS.md.
         ".config/copilot/copilot-instructions.md".source =
           config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/agents/nix-native-deps.md";
+
+        # herdr session-restore hook, mirrors `herdr integration install copilot` under COPILOT_HOME.
+        ".config/copilot/hooks/herdr-agent-state.sh".source =
+          "${herdrSrc}/src/integration/assets/copilot/herdr-agent-state.sh";
+        ".config/copilot/settings.json".text = ''
+          {
+            "hooks": {
+              "SessionStart": [
+                {
+                  "type": "command",
+                  "bash": "bash '${config.home.homeDirectory}/.config/copilot/hooks/herdr-agent-state.sh'",
+                  "timeoutSec": 10
+                }
+              ]
+            }
+          }
+        '';
+      }
+
+      # Per-file so the herdr plugin (store-linked) can sit beside repo-owned opencode config.
+      {
+        ".config/opencode/opencode.json".source = mkLink "opencode/.config/opencode/opencode.json";
+        ".config/opencode/tui.json".source = mkLink "opencode/.config/opencode/tui.json";
+        ".config/opencode/lib/nix-native-guard.ts".source =
+          mkLink "opencode/.config/opencode/lib/nix-native-guard.ts";
+        ".config/opencode/plugins/nix-native-guard.ts".source =
+          mkLink "opencode/.config/opencode/plugins/nix-native-guard.ts";
+        ".config/opencode/plugins/terminal-bell.ts".source =
+          mkLink "opencode/.config/opencode/plugins/terminal-bell.ts";
+        ".config/opencode/test/nix-native-guard.test.ts".source =
+          mkLink "opencode/.config/opencode/test/nix-native-guard.test.ts";
+        ".config/opencode/plugins/herdr-agent-state.js".source =
+          "${herdrSrc}/src/integration/assets/opencode/herdr-agent-state.js";
       }
 
       # Per-file so HM can also own the Nix-generated plugins.conf in this dir.
