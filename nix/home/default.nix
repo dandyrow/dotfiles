@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   mattPocockSkills,
   ...
@@ -23,11 +22,7 @@ in
   home = {
     stateVersion = "25.11";
 
-    packages =
-      coreTools
-      ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
-        pkgs.docker-sbx
-      ];
+    packages = coreTools;
   };
 
   xdg.dataFile."agents/skills/mattpocock".source = "${mattPocockSkills}/skills";

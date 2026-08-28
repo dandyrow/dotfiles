@@ -30,8 +30,8 @@ in
   systemd.services.nix-daemon.environment.NIX_SSL_CERT_FILE =
     lib.mkIf (builtins.pathExists /etc/nixos/corp.pem) "/etc/ssl/certs/ca-certificates.crt";
 
-  # sbx daemon as a user-scoped system service. No CAP_SYS_ADMIN / disk group:
-  # the working Ubuntu/WSL2 install runs sbx 0.30.0 without either.
+  users.users.${primaryUser}.extraGroups = [ "docker" ];
+
   systemd.services.sbx-daemon = {
     description = "Docker Sandboxes daemon (sbx)";
     wantedBy = [ "multi-user.target" ];
@@ -46,8 +46,9 @@ in
     };
   };
 
+  environment.systemPackages = [ pkgs.docker-sbx ];
+
   virtualisation.docker.enable = true;
-  users.users.${primaryUser}.extraGroups = [ "docker" ];
 
   # Coincides with the other hosts by install date, not by sharing — do not consolidate.
   system.stateVersion = "25.11";
