@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   mattPocockSkills,
   ...
@@ -23,12 +22,7 @@ in
   home = {
     stateVersion = "25.11";
 
-    packages =
-      coreTools
-      ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
-        # docker-sbx is only published for x86_64-linux; no aarch64 release.
-        pkgs.docker-sbx
-      ];
+    packages = coreTools;
   };
 
   xdg.dataFile."agents/skills/mattpocock".source = "${mattPocockSkills}/skills";

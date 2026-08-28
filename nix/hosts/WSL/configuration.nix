@@ -30,21 +30,8 @@ in
   systemd.services.nix-daemon.environment.NIX_SSL_CERT_FILE =
     lib.mkIf (builtins.pathExists /etc/nixos/corp.pem) "/etc/ssl/certs/ca-certificates.crt";
 
-  # Lets docker-sbx's Go cgo shim and mkfs.erofs resolve /lib64/ld-linux at
-  # runtime, avoiding patchelf (which corrupts Go binaries' PT_LOAD layout).
-  programs.nix-ld = {
-    enable = true;
-    libraries = with pkgs; [
-      stdenv.cc.cc.lib
-      lz4
-      xxhash
-      zlib
-      zstd
-    ];
-  };
+  users.users.${primaryUser}.extraGroups = [ "docker" ];
 
-  # sbx daemon as a user-scoped system service. No CAP_SYS_ADMIN / disk group:
-  # the working Ubuntu/WSL2 install runs sbx 0.30.0 without either.
   systemd.services.sbx-daemon = {
     description = "Docker Sandboxes daemon (sbx)";
     wantedBy = [ "multi-user.target" ];
@@ -59,8 +46,9 @@ in
     };
   };
 
+  environment.systemPackages = [ pkgs.docker-sbx ];
+
   virtualisation.docker.enable = true;
-  users.users.${primaryUser}.extraGroups = [ "docker" ];
 
   # Coincides with the other hosts by install date, not by sharing — do not consolidate.
   system.stateVersion = "25.11";
