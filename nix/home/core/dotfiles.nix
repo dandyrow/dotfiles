@@ -60,19 +60,6 @@ in
         # herdr session-restore hook; taken from the pkg's own src so it tracks nixpkgs bumps.
         ".config/copilot/hooks/herdr-agent-state.sh".source =
           "${pkgs.herdr.src}/src/integration/assets/copilot/herdr-agent-state.sh";
-        ".config/copilot/settings.json".text = ''
-          {
-            "hooks": {
-              "SessionStart": [
-                {
-                  "type": "command",
-                  "bash": "bash '${config.home.homeDirectory}/.config/copilot/hooks/herdr-agent-state.sh'",
-                  "timeoutSec": 10
-                }
-              ]
-            }
-          }
-        '';
       }
 
       # Per-file so the herdr plugin (store-linked) can sit beside repo-owned opencode config.
@@ -105,5 +92,28 @@ in
         '';
       }
     ]
+  );
+
+  # Copilot rewrites settings.json on config/plugin changes, so merge the herdr hook in instead of owning the file.
+  home.activation.herdrCopilotHooks = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+    let
+      settings = "${config.xdg.configHome}/copilot/settings.json";
+      hookScript = "${config.home.homeDirectory}/.config/copilot/hooks/herdr-agent-state.sh";
+      jq = "${pkgs.jq}/bin/jq";
+    in
+    ''
+      settings='${settings}'
+      hookScript='${hookScript}'
+      if ! [ -f "$settings" ]; then
+        mkdir -p "$(dirname "$settings")"
+        ${jq} -n --arg hook "bash '$hookScript'" \
+          '{hooks:{SessionStart:[{type:"command",bash:$hook,timeoutSec:10}]}}' > "$settings"
+      elif ! ${jq} -e --arg hook "bash '$hookScript'" \
+        '.hooks.SessionStart? | type == "array" and any(.[]; .bash == $hook)' "$settings" >/dev/null; then
+        ${jq} --arg hook "bash '$hookScript'" \
+          '.hooks.SessionStart += [{type:"command",bash:$hook,timeoutSec:10}]' "$settings" > "$settings.tmp"
+        mv "$settings.tmp" "$settings"
+      fi
+    ''
   );
 }
