@@ -34,6 +34,6 @@ come back.
 - Replacing tmux immediately was rejected: the migration period relies on tmux
   staying fully available, so removal becomes a separate, later decision.
 - Running `herdr integration install` imperatively was rejected: the integration
-  artifacts are Nix-linked instead, one `fetchFromGitHub` pinned to the nixpkgs
-  herdr rev and referenced from the store, so a fresh machine rebuilds them
-  without runtime installs.
+  artifacts are Nix-linked instead, taken from the herdr package's own `src` so
+  they track every nixpkgs bump, and a fresh machine rebuilds them without
+  runtime installs.

@@ -9,14 +9,6 @@ let
   mkLink = relPath: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${relPath}";
   mkConfigLink = name: { ".config/${name}".source = mkLink "${name}/.config/${name}"; };
 
-  # Pinned alongside nixpkgs herdr so integration assets match the installed binary.
-  herdrSrc = pkgs.fetchFromGitHub {
-    owner = "herdrdev";
-    repo = "herdr";
-    rev = "v0.8.2";
-    hash = "sha256-sEGIN3dLZasaHob3EHscWBCIQHflMQVchYmzgsETDk4=";
-  };
-
   # Directories to stow from dotfiles repo.
   configLinks = [
     "agents"
@@ -65,9 +57,9 @@ in
         ".config/copilot/copilot-instructions.md".source =
           config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/agents/nix-native-deps.md";
 
-        # herdr session-restore hook, mirrors `herdr integration install copilot` under COPILOT_HOME.
+        # herdr session-restore hook; taken from the pkg's own src so it tracks nixpkgs bumps.
         ".config/copilot/hooks/herdr-agent-state.sh".source =
-          "${herdrSrc}/src/integration/assets/copilot/herdr-agent-state.sh";
+          "${pkgs.herdr.src}/src/integration/assets/copilot/herdr-agent-state.sh";
         ".config/copilot/settings.json".text = ''
           {
             "hooks": {
@@ -96,7 +88,7 @@ in
         ".config/opencode/test/nix-native-guard.test.ts".source =
           mkLink "opencode/.config/opencode/test/nix-native-guard.test.ts";
         ".config/opencode/plugins/herdr-agent-state.js".source =
-          "${herdrSrc}/src/integration/assets/opencode/herdr-agent-state.js";
+          "${pkgs.herdr.src}/src/integration/assets/opencode/herdr-agent-state.js";
       }
 
       # Per-file so HM can also own the Nix-generated plugins.conf in this dir.
