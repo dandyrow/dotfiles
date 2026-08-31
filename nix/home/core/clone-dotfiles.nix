@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  osConfig,
   ...
 }:
 let
@@ -10,7 +9,7 @@ let
 in
 {
   # Standalone HM clones as the user; on NixOS the root adapter owns the clone.
-  home.activation = lib.mkIf (osConfig == null) {
+  home.activation = lib.mkIf config.dandyrow.isStandalone {
     cloneDotfiles = lib.hm.dag.entryBefore [ "linkGeneration" ] (cloneDotfiles {
       home = config.home.homeDirectory;
       git = "${pkgs.git}/bin/git";
