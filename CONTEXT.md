@@ -11,8 +11,7 @@ option module `nix/home/facts.nix` alongside `hasDesktop` and `primaryUser`.
 
 Whether Home Manager runs standalone, outside the NixOS module system with
 `osConfig = null`, and must provide for itself what NixOS would otherwise
-supply. Standalone Home Manager clones its own dotfiles, names its own primary
-user, and installs gnupg, zsh, and any other tool NixOS would provide system-wide.
+supply.
 
 **Derivation.** Defaults to `osConfig == null`: Home Manager always supplies the
 `osConfig` argument, null off NixOS. It is a plain `mkOption`, not
