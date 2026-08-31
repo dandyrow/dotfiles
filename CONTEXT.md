@@ -71,8 +71,7 @@ Stowing a tool's checked-in config out of the `~/.dotfiles` clone via
 `mkOutOfStoreSymlink`. The dominant case is the **config-link convention**:
 `~/.config/NAME` → `~/.dotfiles/NAME/.config/NAME`, driven by the `configLinks`
 list in the dotfile-linking home module. Add a name to stow a new tool. Tools
-that don't fit the convention (gnupg, copilot, tmux, the work gitconfig) are
-co-located exceptions in the same module.
+that don't fit the convention are co-located exceptions in the same module.
 
 A concern distinct from the **dotfiles clone**: linking assumes the clone
 already exists.
@@ -92,9 +91,9 @@ paths: on NixOS/Home Manager the nixpkgs path resolves every entry that is not
 `masonOnly` to a package (`nix/lib/nvim-tools.nix`, via the single
 `nvimToolPackages` function); off NixOS, Mason installs them at runtime.
 
-The `nixOnly` flag marks tools Mason cannot provide (nixd, nixfmt), so they
-must come from nixpkgs. The nixpkgs path already includes them because they are
-not `masonOnly`; the flag is read only by the Mason side, not the nixpkgs one.
+The `nixOnly` flag marks tools Mason cannot provide, so they must come from
+nixpkgs. The nixpkgs path already includes them because they are not
+`masonOnly`; the flag is read only by the Mason side, not the nixpkgs one.
 
 ### primary user
 
