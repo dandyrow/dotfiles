@@ -44,8 +44,7 @@ option module `nix/home/facts.nix` (distinct from the `desktop/` directory of
 consumer modules).
 
 Whether the machine runs a graphical desktop environment. Consumers gate
-desktop-only configuration on it: kitty, GNOME extensions, Firefox, GTK theming,
-dconf settings, and MIME app associations.
+desktop-only configuration on it.
 
 **Derivation.** Defaults to the host NixOS configuration's GNOME state when Home
 Manager runs as a NixOS module; standalone Home Manager derives `false` and may
