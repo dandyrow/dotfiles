@@ -1,4 +1,4 @@
-# NixOS host builds never evaluate the standalone home configs (their clone step is gated on osConfig == null), so force those and the NixOS clone scripts to evaluate here instead.
+# NixOS host builds never evaluate the standalone home configs (its clone step only runs when isStandalone), so force those and the NixOS clone scripts to evaluate here instead.
 {
   lib,
   homeConfigurations,

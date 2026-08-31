@@ -1,4 +1,6 @@
 {
+  config,
+  lib,
   pkgs,
   mattPocockSkills,
   ...
@@ -14,19 +16,27 @@ let
 in
 {
   imports = [
+    ./profile.nix
     ./core
-    ./desktop.nix
     ./desktop
   ];
 
-  home = {
-    stateVersion = "25.11";
+  config = {
+    # NixOS feeds these from the user account, so only inject them standalone.
+    home = lib.mkMerge [
+      (lib.mkIf config.dandyrow.isStandalone {
+        username = config.dandyrow.primaryUser;
+        homeDirectory = "/home/${config.dandyrow.primaryUser}";
+      })
+      {
+        stateVersion = "25.11";
+        packages = coreTools;
+      }
+    ];
 
-    packages = coreTools;
+    xdg.dataFile."agents/skills/mattpocock".source = "${mattPocockSkills}/skills";
+
+    # Move nix profile paths into XDG state directory.
+    nix.assumeXdg = true;
   };
-
-  xdg.dataFile."agents/skills/mattpocock".source = "${mattPocockSkills}/skills";
-
-  # Move nix profile paths into XDG state directory.
-  nix.assumeXdg = true;
 }

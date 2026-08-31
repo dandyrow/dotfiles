@@ -4,20 +4,54 @@ Glossary of domain terms used across this NixOS + Home Manager configuration.
 
 ## Glossary
 
+### isStandalone
+
+Exposed as the Home Manager option `dandyrow.isStandalone`, declared by the
+option module `nix/home/profile.nix` alongside `hasDesktop` and `primaryUser`.
+
+Whether Home Manager runs standalone — outside the NixOS module system, with
+`osConfig = null` — and must provide for itself what NixOS would otherwise
+supply. Standalone Home Manager clones its own dotfiles, names its own primary
+user, and installs gnupg, zsh, and any other tool NixOS would provide system-wide.
+
+**Derivation.** Defaults to `osConfig == null`: Home Manager always supplies the
+`osConfig` argument, null off NixOS. It is a plain `mkOption`, not
+`mkEnableOption`, so a hypothetical future standalone run could override it.
+
+**Why the abstract name.** `isStandalone` was chosen over a NixOS-flavoured
+alias. The interface must not leak `osConfig` into the name — same reasoning as
+*"Why the abstract name"* for `hasDesktop` — so that changing how the fact is
+decided in future stays confined to this one derivation.
+
+**Relationship to hasDesktop and primaryUser.** `hasDesktop` derives from
+`isStandalone` (standalone ⇒ `false`). `primaryUser` is deemed comparable to a
+declaration: though it feeds `home.username`/`home.homeDirectory`, those always
+equal the primary user, so all three live together in `profile.nix`. The
+username frames are applied by the consuming home module, gated on
+`isStandalone`.
+
+**Namespacing.** Lives under the personal `dandyrow` namespace, as `hasDesktop`
+and `primaryUser` do, avoiding collision with upstream Home Manager options.
+
+**Scope.** Home Manager only. NixOS has no "standalone" concept — a NixOS run
+always has an `osConfig` — so no system-side twin exists.
+
+**Avoid these synonyms:** `onNixOS`, `isStandaloneHM`, `osConfigNull`.
+
 ### hasDesktop
 
 Exposed as the Home Manager option `dandyrow.hasDesktop`, declared by the
-option module `nix/home/desktop.nix` (distinct from the `desktop/` directory of
+option module `nix/home/profile.nix` (distinct from the `desktop/` directory of
 consumer modules).
 
 Whether the machine runs a graphical desktop environment. Consumers gate
 desktop-only configuration on it: kitty, GNOME extensions, Firefox, GTK theming,
 dconf settings, and MIME app associations.
 
-**Derivation.** Defaults to the host NixOS configuration's GNOME state
-(`osConfig != null && (osConfig.gnome.enable or false)`). Off NixOS, Home Manager
-supplies `osConfig = null`, so the default is `false`. It is a plain `mkOption`,
-not `mkEnableOption`, so a standalone non-NixOS desktop can override it to `true`.
+**Derivation.** Defaults to the host NixOS configuration's GNOME state when Home
+Manager runs as a NixOS module; standalone Home Manager derives `false` and may
+override it to `true`. It is a plain `mkOption`, not `mkEnableOption`, so a
+standalone non-NixOS desktop can override it to `true`.
 
 **Why the abstract name.** `hasDesktop` was chosen over `gnomeEnabled` on
 purpose. A second desktop environment / window manager is anticipated. The
