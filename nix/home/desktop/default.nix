@@ -1,8 +1,8 @@
 {
   imports = [
     ./desktop-entries.nix
-    ./desktop-integration.nix
     ./firefox.nix
+    ./kitty.nix
     ./theme.nix
     ./vscode-sandbox.nix
   ];
