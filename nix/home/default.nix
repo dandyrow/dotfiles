@@ -16,7 +16,7 @@ let
 in
 {
   imports = [
-    ./profile.nix
+    ./facts.nix
     ./core
     ./desktop
   ];

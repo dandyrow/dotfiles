@@ -1,13 +1,13 @@
 { lib }:
 let
-  profileWith =
+  factsWith =
     {
       specialArgs,
       overrides ? { },
     }:
     (lib.evalModules {
       modules = [
-        ../home/profile.nix
+        ../home/facts.nix
         { dandyrow = overrides; }
       ];
       inherit specialArgs;
@@ -15,18 +15,18 @@ let
 in
 lib.runTests {
   testOsConfigNullIsStandalone = {
-    expr = (profileWith { specialArgs.osConfig = null; }).isStandalone;
+    expr = (factsWith { specialArgs.osConfig = null; }).isStandalone;
     expected = true;
   };
 
   testOsConfigPresentIsNotStandalone = {
-    expr = (profileWith { specialArgs.osConfig = { }; }).isStandalone;
+    expr = (factsWith { specialArgs.osConfig = { }; }).isStandalone;
     expected = false;
   };
 
   testGnomeEnabledIsDesktop = {
     expr =
-      (profileWith {
+      (factsWith {
         specialArgs.osConfig = {
           gnome.enable = true;
         };
@@ -36,7 +36,7 @@ lib.runTests {
 
   testGnomeDisabledIsNotDesktop = {
     expr =
-      (profileWith {
+      (factsWith {
         specialArgs.osConfig = {
           gnome.enable = false;
         };
@@ -46,19 +46,18 @@ lib.runTests {
 
   # NixOS hosts that never import the GNOME module have no `gnome` attr at all.
   testMissingGnomeAttrIsNotDesktop = {
-    expr = (profileWith { specialArgs.osConfig = { }; }).hasDesktop;
+    expr = (factsWith { specialArgs.osConfig = { }; }).hasDesktop;
     expected = false;
   };
 
-  # Standalone Home Manager has no osConfig, so it can never be a desktop by derivation.
   testStandaloneIsNotDesktop = {
-    expr = (profileWith { specialArgs.osConfig = null; }).hasDesktop;
+    expr = (factsWith { specialArgs.osConfig = null; }).hasDesktop;
     expected = false;
   };
 
   testExplicitOverrideWins = {
     expr =
-      (profileWith {
+      (factsWith {
         specialArgs.osConfig = null;
         overrides.hasDesktop = true;
       }).hasDesktop;

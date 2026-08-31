@@ -7,10 +7,10 @@ Glossary of domain terms used across this NixOS + Home Manager configuration.
 ### isStandalone
 
 Exposed as the Home Manager option `dandyrow.isStandalone`, declared by the
-option module `nix/home/profile.nix` alongside `hasDesktop` and `primaryUser`.
+option module `nix/home/facts.nix` alongside `hasDesktop` and `primaryUser`.
 
-Whether Home Manager runs standalone — outside the NixOS module system, with
-`osConfig = null` — and must provide for itself what NixOS would otherwise
+Whether Home Manager runs standalone, outside the NixOS module system with
+`osConfig = null`, and must provide for itself what NixOS would otherwise
 supply. Standalone Home Manager clones its own dotfiles, names its own primary
 user, and installs gnupg, zsh, and any other tool NixOS would provide system-wide.
 
@@ -19,29 +19,29 @@ user, and installs gnupg, zsh, and any other tool NixOS would provide system-wid
 `mkEnableOption`, so a hypothetical future standalone run could override it.
 
 **Why the abstract name.** `isStandalone` was chosen over a NixOS-flavoured
-alias. The interface must not leak `osConfig` into the name — same reasoning as
-*"Why the abstract name"* for `hasDesktop` — so that changing how the fact is
-decided in future stays confined to this one derivation.
+alias. The interface must not leak `osConfig` into the name, for the same reason
+`hasDesktop` avoids a GNOME-specific name: changing how the fact is decided in
+future stays confined to this one derivation.
 
 **Relationship to hasDesktop and primaryUser.** `hasDesktop` derives from
-`isStandalone` (standalone ⇒ `false`). `primaryUser` is deemed comparable to a
-declaration: though it feeds `home.username`/`home.homeDirectory`, those always
-equal the primary user, so all three live together in `profile.nix`. The
-username frames are applied by the consuming home module, gated on
-`isStandalone`.
+`isStandalone` (standalone resolves to `false`). `primaryUser` is deemed
+comparable to a declaration: though it feeds `home.username` and
+`home.homeDirectory`, those always equal the primary user, so all three live
+together in `facts.nix`. The username frames are applied by the consuming
+home module, gated on `isStandalone`.
 
 **Namespacing.** Lives under the personal `dandyrow` namespace, as `hasDesktop`
 and `primaryUser` do, avoiding collision with upstream Home Manager options.
 
-**Scope.** Home Manager only. NixOS has no "standalone" concept — a NixOS run
-always has an `osConfig` — so no system-side twin exists.
+**Scope.** Home Manager only. NixOS has no "standalone" concept; a NixOS run
+always has an `osConfig`, so no system-side twin exists.
 
 **Avoid these synonyms:** `onNixOS`, `isStandaloneHM`, `osConfigNull`.
 
 ### hasDesktop
 
 Exposed as the Home Manager option `dandyrow.hasDesktop`, declared by the
-option module `nix/home/profile.nix` (distinct from the `desktop/` directory of
+option module `nix/home/facts.nix` (distinct from the `desktop/` directory of
 consumer modules).
 
 Whether the machine runs a graphical desktop environment. Consumers gate
@@ -76,7 +76,7 @@ list in the dotfile-linking home module. Add a name to stow a new tool. Tools
 that don't fit the convention (gnupg, copilot, tmux, the work gitconfig) are
 co-located exceptions in the same module.
 
-A concern distinct from the **dotfiles clone** — linking assumes the clone
+A concern distinct from the **dotfiles clone**: linking assumes the clone
 already exists.
 
 ### dotfiles clone
@@ -100,17 +100,17 @@ not `masonOnly`; the flag is read only by the Mason side, not the nixpkgs one.
 
 ### primary user
 
-Exposed as the option `dandyrow.primaryUser`, declared once per module system —
-once for NixOS, once for Home Manager.
+Exposed as the option `dandyrow.primaryUser`, declared once per module system,
+once for NixOS and once for Home Manager.
 
-The login name of the single human this machine belongs to — the account with a
+The login name of the single human this machine belongs to: the account with a
 password, a home directory, a shell, group memberships and a Home Manager
-generation. Singular by design: this names *the* primary user, not a set of
+generation. Singular by design. This names *the* primary user, not a set of
 users.
 
 **Derivation.** It is not derived; it is declared, with the same default on both
 sides. Deriving it by filtering the configured users for the normal one is
-impossible, not merely awkward — see
+impossible, not merely awkward. See
 `docs/adr/0002-primary-user-declared-once.md`. The NixOS declaration is
 authoritative on NixOS, where Home Manager takes the user's identity from the
 NixOS account and the Home Manager declaration is inert. Off NixOS the Home
@@ -118,9 +118,9 @@ Manager declaration stands alone. A plain `str` with a default, so a single host
 overrides it as ordinary configuration.
 
 **Namespacing.** Lives under the personal `dandyrow` namespace on both sides,
-avoiding collision with upstream options — as `hasDesktop` does.
+avoiding collision with upstream options, as `hasDesktop` does.
 
-**The password-hash file names the role, not the occupant** —
+**The password-hash file names the role, not the occupant**:
 `/etc/secrets/primary-user-password`, injected at install time. It does not
 follow the option, so a rename never moves the secret and the installer needs no
 knowledge of the name.
