@@ -70,11 +70,14 @@ to system scope is the cheap future move if a system consumer appears.
 Stowing a tool's checked-in config out of the `~/.dotfiles` clone via
 `mkOutOfStoreSymlink`. The dominant case is the **config-link convention**:
 `~/.config/NAME` → `~/.dotfiles/NAME/.config/NAME`, driven by the `configLinks`
-list in the dotfile-linking home module. Add a name to stow a new tool. Tools
-that don't fit the convention are co-located exceptions in the same module.
+list in the `dotfiles-linking` home module. Add a name to stow a new tool.
+Tools that don't fit the convention are co-located exceptions in the same
+module.
 
 A concern distinct from the **dotfiles clone**: linking assumes the clone
-already exists.
+already exists. A tool whose config is part stowed, part Nix-generated is owned
+whole by the tool's own home module. The runtime-generated half does not live
+in this linking module.
 
 ### dotfiles clone
 
