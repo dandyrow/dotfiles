@@ -6,14 +6,18 @@ onboarding = false
 name = "catppuccin"
 
 [theme.custom]
-# Keep the active tab on the inactive-tab background so text colour alone marks it, like tmux.
-tab_active_bg = "#313244"
+# Tabs share the bar's panel background so only text marks each tab, like tmux.
+tab_active_bg = "#181825"
 tab_active_fg = "#89b4fa"
+tab_inactive_bg = "#181825"
+tab_inactive_fg = "#a6adc8"
+tab_bar_status_fg = "#b4befe"
 
 [ui]
 tab_bar_position = "top"
 tab_bar_right = [
   { type = "hostname" },
-  { type = "datetime", format = "%a %Y-%m-%d  %R" },
+  { type = "text", text = "🌐" },
+  { type = "datetime", format = "%a %Y-%m-%d  %R" },
 ]
 tab_bar_right_separator = " "
