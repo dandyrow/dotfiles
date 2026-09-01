@@ -1,0 +1,13 @@
+onboarding = false
+
+[ui]
+tab_bar_right = [{ type = "datetime", format = "%H:%M" }]
+
+[ui.toast]
+delivery = "system"
+
+[experimental]
+pane_history = true
+
+[worktrees]
+directory = "~/.local/share/herdr/worktrees"

@@ -17,9 +17,9 @@ let
     "eza"
     "fastfetch"
     "git"
+    "herdr"
     "npm"
     "nvim"
-    "opencode"
     "starship"
     "yazi"
     "zsh"
@@ -55,6 +55,27 @@ in
         # Copilot only reads instructions from $COPILOT_HOME/copilot-instructions.md — no home-level AGENTS.md.
         ".config/copilot/copilot-instructions.md".source =
           config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/agents/nix-native-deps.md";
+
+        # herdr session-restore hook; taken from the pkg's own src so it tracks nixpkgs bumps.
+        ".config/copilot/hooks/herdr-agent-state.sh".source =
+          "${pkgs.herdr.src}/src/integration/assets/copilot/herdr-agent-state.sh";
+      }
+
+      # Per-file so the herdr plugin (store-linked) can sit beside repo-owned opencode config.
+      {
+        ".config/opencode/opencode.json".source = mkLink "opencode/.config/opencode/opencode.json";
+        ".config/opencode/tui.json".source = mkLink "opencode/.config/opencode/tui.json";
+        ".config/opencode/lib/nix-native-guard.ts".source =
+          mkLink "opencode/.config/opencode/lib/nix-native-guard.ts";
+        ".config/opencode/plugins/nix-native-guard.ts".source =
+          mkLink "opencode/.config/opencode/plugins/nix-native-guard.ts";
+        ".config/opencode/plugins/terminal-bell.ts".source =
+          mkLink "opencode/.config/opencode/plugins/terminal-bell.ts";
+        ".config/opencode/plugins/herdr-agent-state.js".source =
+          "${pkgs.herdr.src}/src/integration/assets/opencode/herdr-agent-state.js";
+        ".config/opencode/herdr-tui-session.js".source =
+          "${pkgs.herdr.src}/src/integration/assets/opencode/herdr-tui-session.js";
+        ".config/opencode/tui.jsonc".source = mkLink "opencode/.config/opencode/tui.jsonc";
       }
 
       # Per-file so HM can also own the Nix-generated plugins.conf in this dir.
@@ -71,5 +92,28 @@ in
         '';
       }
     ]
+  );
+
+  # Copilot rewrites settings.json on config/plugin changes, so merge the herdr hook in instead of owning the file.
+  home.activation.herdrCopilotHooks = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+    let
+      settings = "${config.xdg.configHome}/copilot/settings.json";
+      hookScript = "${config.home.homeDirectory}/.config/copilot/hooks/herdr-agent-state.sh";
+      jq = "${pkgs.jq}/bin/jq";
+    in
+    ''
+      settings='${settings}'
+      hookScript='${hookScript}'
+      if ! [ -f "$settings" ]; then
+        mkdir -p "$(dirname "$settings")"
+        ${jq} -n --arg hook "bash '$hookScript'" \
+          '{hooks:{SessionStart:[{type:"command",bash:$hook,timeoutSec:10}]}}' > "$settings"
+      elif ! ${jq} -e --arg hook "bash '$hookScript'" \
+        '.hooks.SessionStart? | type == "array" and any(.[]; .bash == $hook)' "$settings" >/dev/null; then
+        ${jq} --arg hook "bash '$hookScript'" \
+          '.hooks.SessionStart += [{type:"command",bash:$hook,timeoutSec:10}]' "$settings" > "$settings.tmp"
+        mv "$settings.tmp" "$settings"
+      fi
+    ''
   );
 }
