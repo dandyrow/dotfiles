@@ -32,6 +32,18 @@ in
 
   users.users.${primaryUser}.extraGroups = [ "docker" ];
 
+  # Runs VS Code Server's dynamically-linked node; its generic-linux build needs the stub loader.
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc.lib
+      lz4
+      xxhash
+      zlib
+      zstd
+    ];
+  };
+
   systemd.services.sbx-daemon = {
     description = "Docker Sandboxes daemon (sbx)";
     wantedBy = [ "multi-user.target" ];

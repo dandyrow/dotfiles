@@ -23,8 +23,7 @@ let
     "starship"
     "yazi"
     "zsh"
-  ]
-  ++ lib.optionals config.dandyrow.hasDesktop [ "kitty" ];
+  ];
 in
 {
   home.file = lib.mkMerge (

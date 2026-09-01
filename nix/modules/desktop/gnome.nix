@@ -29,6 +29,12 @@
 
     services.gnome.gnome-browser-connector.enable = true;
 
+    environment.systemPackages = with pkgs.gnomeExtensions; [
+      appindicator
+      dash-to-dock
+      status-area-horizontal-spacing
+    ];
+
     programs.dconf.profiles.user.databases = [
       {
         settings = {
@@ -37,6 +43,11 @@
             accent-color = "green";
           };
           "org/gnome/shell".always-show-log-out = true;
+          "org/gnome/shell".enabled-extensions = [
+            "appindicatorsupport@rgcjonas.gmail.com"
+            "dash-to-dock@micxgx.gmail.com"
+            "status-area-horizontal-spacing@mathematical.coffee.gmail.com"
+          ];
         };
       }
     ];

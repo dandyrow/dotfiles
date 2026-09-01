@@ -25,7 +25,7 @@ The following rules describe how you should use git:
 - **Never work directly on `main`.** All work must happen in a worktree under `.worktrees/<branch>`.
 - **Always start work via:** `./scripts/agent-start.sh <branch>`
 - Inspect git and GitHub state directly. Do not rely on pre-expanded shell snippets.
-- Use `git commit --no-gpg-sign` when committing.
+- Use `git commit --no-gpg-sign` when committing. The flag is per-invocation and for agents only. GPG signing stays on normally, so never run `git config` to lower `commit.gpgSign` at repo or global scope, or unset a signing key. If signing blocks an automation step, pass `-c commit.gpgSign=false` for that command alone.
 - Before staging, re-read the diff: every added comment must be a single line explaining a non-obvious *why* — trim any that are not.
 - **Commit messages must use gitmoji + conventional commits format.**
 - **Every commit body must include `Co-authored-by: Copilot <copilot@github.com>`** — appended automatically by the worktree hook.

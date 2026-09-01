@@ -14,7 +14,7 @@ let
       throw "test-${name} failed:\n${lib.generators.toPretty { } failures}";
 in
 {
-  has-desktop = mkTest "has-desktop" (import ./has-desktop.nix { inherit lib; });
+  facts = mkTest "facts" (import ./facts.nix { inherit lib; });
   clone-dotfiles = mkTest "clone-dotfiles" (import ./clone-dotfiles.nix { inherit lib; });
   nvim-tools = mkTest "nvim-tools" (import ./nvim-tools.nix { inherit lib pkgs; });
   undeclared-groups = mkTest "undeclared-groups" (
