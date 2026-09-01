@@ -75,6 +75,9 @@ in
           mkLink "opencode/.config/opencode/test/nix-native-guard.test.ts";
         ".config/opencode/plugins/herdr-agent-state.js".source =
           "${pkgs.herdr.src}/src/integration/assets/opencode/herdr-agent-state.js";
+        ".config/opencode/herdr-tui-session.js".source =
+          "${pkgs.herdr.src}/src/integration/assets/opencode/herdr-tui-session.js";
+        ".config/opencode/tui.jsonc".source = mkLink "opencode/.config/opencode/tui.jsonc";
       }
 
       # Per-file so HM can also own the Nix-generated plugins.conf in this dir.
