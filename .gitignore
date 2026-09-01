@@ -24,6 +24,12 @@ result-*
 # Superpowers design/plan files — local use only, not for version control
 docs/superpowers/
 
+# Opencode config — npm dependency scaffolding, keep only hand-written config + plugin sources
+opencode/.config/opencode/node_modules/
+opencode/.config/opencode/package.json
+opencode/.config/opencode/package-lock.json
+opencode/.config/opencode/bun.lock
+
 # Git worktrees
 .worktrees/
 
