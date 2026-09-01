@@ -1,0 +1,24 @@
+{
+  "effortLevel": "high",
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true
+  },
+  "experimental": true,
+  "extraKnownMarketplaces": {
+    "superpowers-marketplace": {
+      "source": {
+        "repo": "obra/superpowers-marketplace",
+        "source": "github"
+      }
+    }
+  },
+  "model": "claude-sonnet-5",
+  "sandbox": {
+    "enabled": false
+  },
+  "skillDirectories": [
+    "/home/dandyrow/Projects/work/EDM-AI/wd-product-ai/skills",
+    "/home/dandyrow/.local/share/agents/skills"
+  ],
+  "theme": "github"
+}
