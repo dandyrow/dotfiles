@@ -8,3 +8,6 @@ delivery = "system"
 
 [experimental]
 pane_history = true
+
+[worktrees]
+directory = "~/.local/share/herdr/worktrees"
