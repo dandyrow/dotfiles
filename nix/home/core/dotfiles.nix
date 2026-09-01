@@ -71,8 +71,6 @@ in
           mkLink "opencode/.config/opencode/plugins/nix-native-guard.ts";
         ".config/opencode/plugins/terminal-bell.ts".source =
           mkLink "opencode/.config/opencode/plugins/terminal-bell.ts";
-        ".config/opencode/test/nix-native-guard.test.ts".source =
-          mkLink "opencode/.config/opencode/test/nix-native-guard.test.ts";
         ".config/opencode/plugins/herdr-agent-state.js".source =
           "${pkgs.herdr.src}/src/integration/assets/opencode/herdr-agent-state.js";
         ".config/opencode/herdr-tui-session.js".source =
