@@ -9,7 +9,6 @@ let
   coreTools = with pkgs; [
     btop
     eza
-    herdr
     tmux
     yazi
     opencode
