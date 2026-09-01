@@ -1,0 +1,218 @@
+diff --git a/src/app/state.rs b/src/app/state.rs
+index d9dcfc9..724e630 100644
+--- a/src/app/state.rs
++++ b/src/app/state.rs
+@@ -105,6 +105,10 @@ pub struct Palette {
+     pub teal: Color,
+     /// Interrupted / warning states.
+     pub peach: Color,
++    /// Active tab background. `None` uses the accent color.
++    pub tab_active_bg: Option<Color>,
++    /// Active tab text. `None` uses the panel-contrast foreground.
++    pub tab_active_fg: Option<Color>,
+ }
+ 
+ impl Palette {
+@@ -130,6 +134,8 @@ impl Palette {
+             blue: Color::Rgb(137, 180, 250),
+             teal: Color::Rgb(148, 226, 213),
+             peach: Color::Rgb(250, 179, 135),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -155,6 +161,8 @@ impl Palette {
+             blue: Color::Rgb(30, 102, 245),
+             teal: Color::Rgb(23, 146, 153),
+             peach: Color::Rgb(254, 100, 11),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -180,6 +188,8 @@ impl Palette {
+             blue: Color::Blue,
+             teal: Color::Cyan,
+             peach: Color::Yellow,
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -205,6 +215,8 @@ impl Palette {
+             blue: Color::Rgb(122, 162, 247),
+             teal: Color::Rgb(125, 207, 255),
+             peach: Color::Rgb(255, 158, 100),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -230,6 +242,8 @@ impl Palette {
+             blue: Color::Rgb(46, 125, 233),
+             teal: Color::Rgb(17, 140, 116),
+             peach: Color::Rgb(177, 92, 0),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -255,6 +269,8 @@ impl Palette {
+             blue: Color::Rgb(139, 233, 253), // cyan-ish
+             teal: Color::Rgb(139, 233, 253),
+             peach: Color::Rgb(255, 184, 108),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -280,6 +296,8 @@ impl Palette {
+             blue: Color::Rgb(129, 161, 193),
+             teal: Color::Rgb(143, 188, 187),
+             peach: Color::Rgb(208, 135, 112),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -305,6 +323,8 @@ impl Palette {
+             blue: Color::Rgb(131, 165, 152),
+             teal: Color::Rgb(142, 192, 124),
+             peach: Color::Rgb(254, 128, 25),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -330,6 +350,8 @@ impl Palette {
+             blue: Color::Rgb(7, 102, 120),
+             teal: Color::Rgb(66, 123, 88),
+             peach: Color::Rgb(175, 58, 3),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -355,6 +377,8 @@ impl Palette {
+             blue: Color::Rgb(97, 175, 239),
+             teal: Color::Rgb(86, 182, 194),
+             peach: Color::Rgb(209, 154, 102),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -380,6 +404,8 @@ impl Palette {
+             blue: Color::Rgb(64, 120, 242),
+             teal: Color::Rgb(1, 132, 188),
+             peach: Color::Rgb(152, 104, 1),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -405,6 +431,8 @@ impl Palette {
+             blue: Color::Rgb(38, 139, 210),
+             teal: Color::Rgb(42, 161, 152),
+             peach: Color::Rgb(203, 75, 22),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -430,6 +458,8 @@ impl Palette {
+             blue: Color::Rgb(38, 139, 210),
+             teal: Color::Rgb(42, 161, 152),
+             peach: Color::Rgb(203, 75, 22),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -455,6 +485,8 @@ impl Palette {
+             blue: Color::Rgb(126, 156, 216),
+             teal: Color::Rgb(127, 180, 202),
+             peach: Color::Rgb(255, 160, 102),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -480,6 +512,8 @@ impl Palette {
+             blue: Color::Rgb(77, 105, 155),
+             teal: Color::Rgb(78, 140, 162),
+             peach: Color::Rgb(204, 109, 0),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -505,6 +539,8 @@ impl Palette {
+             blue: Color::Rgb(49, 116, 143),    // pine
+             teal: Color::Rgb(156, 207, 216),   // foam
+             peach: Color::Rgb(234, 154, 151),  // rose
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -530,6 +566,8 @@ impl Palette {
+             blue: Color::Rgb(40, 105, 131),
+             teal: Color::Rgb(86, 148, 159),
+             peach: Color::Rgb(215, 130, 126),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -555,6 +593,8 @@ impl Palette {
+             blue: Color::Rgb(176, 176, 176),
+             teal: Color::Rgb(102, 221, 204),
+             peach: Color::Rgb(255, 199, 153),
++            tab_active_bg: None,
++            tab_active_fg: None,
+         }
+     }
+ 
+@@ -643,6 +683,12 @@ impl Palette {
+         if let Some(c) = &custom.peach {
+             self.peach = parse_color(c);
+         }
++        if let Some(c) = &custom.tab_active_bg {
++            self.tab_active_bg = Some(parse_color(c));
++        }
++        if let Some(c) = &custom.tab_active_fg {
++            self.tab_active_fg = Some(parse_color(c));
++        }
+         self
+     }
+ }
+diff --git a/src/config/theme.rs b/src/config/theme.rs
+index 8f28390..ecc71c8 100644
+--- a/src/config/theme.rs
++++ b/src/config/theme.rs
+@@ -119,6 +119,8 @@ pub struct CustomThemeColors {
+     pub blue: Option<String>,
+     pub teal: Option<String>,
+     pub peach: Option<String>,
++    pub tab_active_bg: Option<String>,
++    pub tab_active_fg: Option<String>,
+ }
+ 
+ /// Parse a color string into a ratatui Color.
+diff --git a/src/ui/tabs.rs b/src/ui/tabs.rs
+index 603422f..d9e5ab1 100644
+--- a/src/ui/tabs.rs
++++ b/src/ui/tabs.rs
+@@ -391,7 +391,9 @@ pub(super) fn render_tab_bar(app: &AppState, frame: &mut Frame, area: Rect) {
+         }
+         let active = idx == ws.active_tab;
+         let style = if active {
+-            let base = Style::default().fg(panel_contrast_fg(p)).bg(p.accent);
++            let base = Style::default()
++                .fg(p.tab_active_fg.unwrap_or_else(|| panel_contrast_fg(p)))
++                .bg(p.tab_active_bg.unwrap_or(p.accent));
+             if tab.is_auto_named() {
+                 base
+             } else {

@@ -1,0 +1,19 @@
+# Generated config — herdr reads this from ~/.config/herdr/config.toml
+
+onboarding = false
+
+[theme]
+name = "catppuccin"
+
+[theme.custom]
+# Keep the active tab on the inactive-tab background so text colour alone marks it, like tmux.
+tab_active_bg = "#313244"
+tab_active_fg = "#89b4fa"
+
+[ui]
+tab_bar_position = "top"
+tab_bar_right = [
+  { type = "hostname" },
+  { type = "datetime", format = "%a %Y-%m-%d  %R" },
+]
+tab_bar_right_separator = " "

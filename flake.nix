@@ -55,6 +55,10 @@
           # Track a newer upstream than nixos-unstable currently ships; drop
           # this override when nixpkgs catches up.
           github-copilot-cli = final.callPackage ./nix/pkgs/github-copilot-cli.nix { };
+          # herdr < 0.9 lacks tab_active bg/fg tokens; drop when nixpkgs updates past this.
+          herdr = prev.herdr.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [ ./nix/patches/herdr-tab-theme.patch ];
+          });
         })
       ];
 
