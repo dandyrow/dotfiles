@@ -10,6 +10,11 @@ gnupg/.local/share/gnupg/
 !gnupg/.local/share/gnupg/gpg-agent.conf
 !gnupg/.local/share/gnupg/gpg.conf
 
+# Ignore all copilot runtime state, keep only the stowed config files.
+copilot/.config/copilot/*
+!copilot/.config/copilot/mcp-config.json
+!copilot/.config/copilot/copilot-instructions.md
+
 # Nix build outputs
 result
 result-*
