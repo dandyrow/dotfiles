@@ -1,23 +1,22 @@
-# Generated config — herdr reads this from ~/.config/herdr/config.toml
-
 onboarding = false
 
 [theme]
 name = "catppuccin"
 
 [theme.custom]
-# Tabs share the bar's panel background so only text marks each tab, like tmux.
-tab_active_bg = "#181825"
-tab_active_fg = "#89b4fa"
-tab_inactive_bg = "#181825"
+accent = "#a6e3a1"
+tab_bar_bg = "#1e1e2e"
+tab_active_bg = "#1e1e2e"
+tab_active_fg = "#a6e3a1"
+tab_inactive_bg = "#1e1e2e"
 tab_inactive_fg = "#a6adc8"
 tab_bar_status_fg = "#b4befe"
+sidebar_border_fg = "#6c7086"
 
 [ui]
-tab_bar_position = "top"
+sidebar_start_collapsed = true
+sidebar_collapsed_mode = "hidden"
 tab_bar_right = [
-  { type = "hostname" },
-  { type = "text", text = "🌐" },
-  { type = "datetime", format = "%a %Y-%m-%d  %R" },
+  { type = "text", text = "" },
+  { type = "hostname" }
 ]
-tab_bar_right_separator = " "
