@@ -86,6 +86,12 @@ A single command definition (`nix/lib/clone-dotfiles.nix`) rendered through two
 activation adapters: root system activation on NixOS and user Home Manager
 activation off NixOS. See `docs/adr/0001-dotfiles-clone-two-adapters.md`.
 
+### stow
+
+Directory at the repo root holding retired stowable config that Nix now
+generates. Kept for reference, not linked. No module reads it; a tool's config
+moves here when its home module takes over generation.
+
 ### nvim tools
 
 The definition of which LSP/formatter/linter/dap binaries Neovim needs, in

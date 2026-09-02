@@ -14,6 +14,9 @@
       enable = true;
       force = true;
     };
+    kitty = lib.mkIf config.dandyrow.hasDesktop {
+      enable = true;
+    };
   };
 
   gtk = lib.mkIf config.dandyrow.hasDesktop {
