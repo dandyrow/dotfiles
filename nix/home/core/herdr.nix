@@ -21,7 +21,9 @@ in
   '';
 
   # Stable path for .zshrc to source; the store path changes each rebuild.
+  # _har_bin pre-set so the inner hook skips its %N resolution (needs PROMPT_SUBST).
   home.file.".config/herdr-automatic-rename/hook.zsh".text = ''
+    _har_bin="${herdrAutomaticRename}/automatic-rename.sh"
     source "${herdrAutomaticRename}/shell/hook.zsh"
   '';
 

@@ -1,0 +1,31 @@
+Skip the ${(%):-%N} engine resolution when the wrapper has already set _har_bin.
+%N requires PROMPT_SUBST, which many configs do not enable, silently breaking
+the preexec/precmd hooks.
+
+--- a/shell/hook.zsh
++++ b/shell/hook.zsh
+@@ -14,13 +14,17 @@
+ # when the engine is not found next to this file. Runs are backgrounded so the
+ # prompt never blocks on herdr.
+ 
+-# Resolve the engine next to this file, so the hook works no matter where the
+-# plugin is installed (herdr's hashed github dir, a manual clone, a symlink).
+-# ${(%):-%N} is the zsh-standard way to read the sourced file's own path and is
+-# immune to FUNCTION_ARGZERO being toggled, unlike $0.
+-_har_self="${(%):-%N}"
+-_har_bin="${_har_self:A:h:h}/automatic-rename.sh"
+-unset _har_self
++# When sourced through a wrapper that pre-sets _har_bin, skip the %N resolution
++# (which requires PROMPT_SUBST and fails silently without it).
++if [[ -z ${_har_bin:-} ]]; then
++  # Resolve the engine next to this file, so the hook works no matter where the
++  # plugin is installed (herdr's hashed github dir, a manual clone, a symlink).
++  # ${(%):-%N} is the zsh-standard way to read the sourced file's own path and is
++  # immune to FUNCTION_ARGZERO being toggled, unlike $0.
++  _har_self="${(%):-%N}"
++  _har_bin="${_har_self:A:h:h}/automatic-rename.sh"
++  unset _har_self
++fi
+ 
+ if [[ -n ${HERDR_PANE_ID:-} && -x $_har_bin ]]; then
+   # Background in a subshell so the interactive shell never prints the

@@ -16,6 +16,8 @@ stdenv.mkDerivation {
     hash = "sha256-CZcGOFuLtsyVP55rfhh41kpowCcNbxj5XYWJZIcm8u0=";
   };
 
+  patches = [ ../patches/herdr-automatic-rename-hook-path.patch ];
+
   dontBuild = true;
   installPhase = ''
     runHook preInstall
