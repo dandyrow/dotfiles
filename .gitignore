@@ -43,7 +43,10 @@ scripts/ai-commit
 
 # Herdr state
 herdr/.config/herdr/session.json
+herdr/.config/herdr/session-history.json
 herdr/.config/herdr/herdr-server.log
 herdr/.config/herdr/herdr-client.log
+herdr/.config/herdr/herdr-client.sock
+herdr/.config/herdr/herdr.sock
 herdr/.config/herdr/plugins.json
 herdr/.config/herdr/.plugins.lock
