@@ -1,5 +1,9 @@
 onboarding = false
 
+[keys]
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
+
 [[keys.command]]
 key = "ctrl+h"
 type = "plugin_action"
@@ -44,9 +48,12 @@ tab_bar_status_fg = "#b4befe"
 sidebar_border_fg = "#6c7086"
 
 [ui]
+agent_panel_sort = "priority"
 host_cursor = "native"
-status_indicators = "symbols"
+pane_outer_borders = false
+pane_gaps = false
 prompt_new_tab_name = false
+status_indicators = "symbols"
 sidebar_start_collapsed = true
 sidebar_collapsed_mode = "hidden"
 tab_bar_right = [
