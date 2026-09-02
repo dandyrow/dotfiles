@@ -8,11 +8,11 @@ let
   herdrAutomaticRename = pkgs.herdr-automatic-rename;
 in
 {
-  # jq is called by the automatic-rename shell hook at runtime.
-  # The plugin derivations are not in home.packages: both expose herdr-plugin.toml
-  # at the store root, and buildEnv would conflict on that subpath. They're kept
-  # alive via the activation and home.file references below.
-  home.packages = [ pkgs.jq ];
+  # Plugin paths collide on herdr-plugin.toml in buildEnv, so link via path, not packages.
+  home.packages = [
+    pkgs.herdr
+    pkgs.jq
+  ];
 
   # herdr rewrites plugins.json, so a home.file write would be clobbered; re-link on activation.
   home.activation.linkHerdrPlugins = lib.hm.dag.entryBefore [ "linkGeneration" ] ''

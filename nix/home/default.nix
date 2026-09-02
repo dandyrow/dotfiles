@@ -10,7 +10,6 @@ let
     btop
     eza
     tmux
-    herdr
     yazi
     opencode
   ];
