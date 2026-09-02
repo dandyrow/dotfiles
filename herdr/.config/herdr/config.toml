@@ -1,0 +1,75 @@
+onboarding = false
+
+[keys]
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
+
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "herdr-navigator.left"
+description = "navigate left (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "herdr-navigator.down"
+description = "navigate down (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "herdr-navigator.up"
+description = "navigate up (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "herdr-navigator.right"
+description = "navigate right (nvim/herdr)"
+
+[[keys.command]]
+key = "prefix+ctrl+l"
+type = "shell"
+command = "\"$HERDR_BIN_PATH\" pane send-keys \"$HERDR_ACTIVE_PANE_ID\" ctrl+l"
+description = "send ctrl+l (clear screen) to pane"
+
+[theme]
+name = "catppuccin"
+
+[theme.custom]
+accent = "#a6e3a1"
+tab_bar_bg = "#1e1e2e"
+tab_active_bg = "#1e1e2e"
+tab_active_fg = "#a6e3a1"
+tab_inactive_bg = "#1e1e2e"
+tab_inactive_fg = "#a6adc8"
+tab_bar_status_fg = "#b4befe"
+sidebar_border_fg = "#6c7086"
+
+[ui]
+agent_panel_sort = "priority"
+host_cursor = "native"
+pane_outer_borders = false
+pane_gaps = false
+prompt_new_tab_name = false
+status_indicators = "symbols"
+sidebar_start_collapsed = true
+sidebar_collapsed_mode = "hidden"
+tab_bar_right = [
+  { type = "text", text = "" },
+  { type = "hostname" }
+]
+
+[ui.toast]
+delivery = "herdr"
+
+[ui.toast.herdr]
+position = "top-right"
+
+[ui.toast.clipboard]
+enabled = true
+position = "top-right"
+
+[experimental]
+pane_history = true

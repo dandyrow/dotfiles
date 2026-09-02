@@ -15,6 +15,8 @@ copilot/.config/copilot/*
 !copilot/.config/copilot/mcp-config.json
 !copilot/.config/copilot/copilot-instructions.md
 !copilot/.config/copilot/settings.json
+!copilot/.config/copilot/hooks
+!copilot/.config/copilot/hooks/**
 
 # Nix build outputs
 result
@@ -38,3 +40,13 @@ opencode/.config/opencode/bun.lock
 .AI_WORKFLOW.md
 .githooks/
 scripts/ai-commit
+
+# Herdr state
+herdr/.config/herdr/session.json
+herdr/.config/herdr/session-history.json
+herdr/.config/herdr/herdr-server.log
+herdr/.config/herdr/herdr-client.log
+herdr/.config/herdr/herdr-client.sock
+herdr/.config/herdr/herdr.sock
+herdr/.config/herdr/plugins.json
+herdr/.config/herdr/.plugins.lock

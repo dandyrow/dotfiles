@@ -318,4 +318,8 @@ source <(fzf --zsh)
 # Enable zoxide
 eval "$(zoxide init --cmd cd zsh)"
 
+# Guarded: missing until home-manager activation first runs the module.
+[ -f "$HOME/.config/herdr-automatic-rename/hook.zsh" ] && \
+  source "$HOME/.config/herdr-automatic-rename/hook.zsh"
+
 [[ $SHLVL -eq 1 && -z "$TMUX" ]] && fastfetch

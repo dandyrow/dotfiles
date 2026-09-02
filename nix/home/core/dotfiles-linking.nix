@@ -18,6 +18,7 @@ let
     "eza"
     "fastfetch"
     "git"
+    "herdr"
     "npm"
     "nvim"
     "opencode"
