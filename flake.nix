@@ -59,6 +59,7 @@
           herdr = prev.herdr.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [ ./nix/patches/herdr-tab-theme.patch ];
           });
+          herdr-navigator = final.callPackage ./nix/pkgs/herdr-navigator.nix { };
         })
       ];
 

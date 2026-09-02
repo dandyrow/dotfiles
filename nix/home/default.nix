@@ -11,6 +11,7 @@ let
     eza
     tmux
     herdr
+    herdr-navigator
     yazi
     opencode
   ];

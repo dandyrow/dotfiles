@@ -1,5 +1,41 @@
 onboarding = false
 
+[keys]
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "herdr-navigator.left"
+description = "navigate left (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "herdr-navigator.down"
+description = "navigate down (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "herdr-navigator.up"
+description = "navigate up (nvim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "herdr-navigator.right"
+description = "navigate right (nvim/herdr)"
+
+[[keys.command]]
+key = "prefix+ctrl+l"
+type = "shell"
+command = "\"$HERDR_BIN_PATH\" pane send-keys \"$HERDR_ACTIVE_PANE_ID\" ctrl+l"
+description = "send ctrl+l (clear screen) to pane"
+
 [theme]
 name = "catppuccin"
 
@@ -14,9 +50,22 @@ tab_bar_status_fg = "#b4befe"
 sidebar_border_fg = "#6c7086"
 
 [ui]
+host_cursor = "native"
+status_indicators = "symbols"
+prompt_new_tab_name = false
 sidebar_start_collapsed = true
 sidebar_collapsed_mode = "hidden"
 tab_bar_right = [
   { type = "text", text = "" },
   { type = "hostname" }
 ]
+
+[ui.toast]
+delivery = "herdr"
+
+[ui.toast.herdr]
+position = "top-right"
+
+[ui.toast.clipboard]
+enabled = true
+position = "top-right"

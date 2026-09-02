@@ -1,0 +1,39 @@
+[
+  {
+    "plugin_id": "herdr-navigator",
+    "name": "Herdr Navigator",
+    "version": "0.1.0",
+    "min_herdr_version": "0.7.4",
+    "description": "Seamless ctrl+h/j/k/l across herdr panes and Neovim splits.",
+    "manifest_path": "/home/dandyrow/.config/herdr/plugins/config/herdr-navigator/herdr-plugin.toml",
+    "plugin_root": "/home/dandyrow/.config/herdr/plugins/config/herdr-navigator",
+    "enabled": true,
+    "platforms": ["linux", "macos"],
+    "actions": [
+      {
+        "id": "left",
+        "title": "Navigate left (nvim/herdr)",
+        "contexts": ["global"],
+        "command": ["sh", "h-nav", "left"]
+      },
+      {
+        "id": "down",
+        "title": "Navigate down (nvim/herdr)",
+        "contexts": ["global"],
+        "command": ["sh", "h-nav", "down"]
+      },
+      {
+        "id": "up",
+        "title": "Navigate up (nvim/herdr)",
+        "contexts": ["global"],
+        "command": ["sh", "h-nav", "up"]
+      },
+      {
+        "id": "right",
+        "title": "Navigate right (nvim/herdr)",
+        "contexts": ["global"],
+        "command": ["sh", "h-nav", "right"]
+      }
+    ]
+  }
+]
