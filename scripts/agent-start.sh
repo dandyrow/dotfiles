@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-set -euo pipefail
-
 # scripts/agent-start <branch>
 #
 # Creates a worktree at .worktrees/<branch> based on origin/main and
@@ -11,26 +9,18 @@ set -euo pipefail
 # agent-cleanup.sh uses `git worktree list --porcelain` to locate worktrees
 # by branch name, so the on-disk path layout is not assumed.
 
-BRANCH="${1:-}"
+SELF_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=worktree.sh
+source "$SELF_DIR/worktree.sh"
 
-if [[ -z "${BRANCH}" ]]; then
-  echo "Usage: $0 <branch>"
-  echo "Example: $0 feat/nix-devshell"
-  exit 1
-fi
+parse_branch "$@"
 
 # --- configurable AI co-author trailer (override via env vars) ---
 AI_COAUTHOR_NAME="${AI_COAUTHOR_NAME:-Copilot}"
 AI_COAUTHOR_EMAIL="${AI_COAUTHOR_EMAIL:-copilot@github.com}"
 AI_TRAILER="Co-authored-by: ${AI_COAUTHOR_NAME} <${AI_COAUTHOR_EMAIL}>"
 
-# --- sanity checks ---
-if ! git rev-parse --show-toplevel >/dev/null 2>&1; then
-  echo "Error: not inside a git repository."
-  exit 1
-fi
-
-ROOT="$(git rev-parse --show-toplevel)"
+resolve_root
 cd "$ROOT"
 
 # Ensure we can base branches off origin/main

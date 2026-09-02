@@ -23,4 +23,5 @@ in
   config-eval = mkTest "config-eval" (
     import ./config-eval.nix { inherit lib homeConfigurations nixosConfigurations; }
   );
+  worktree-scripts = import ./worktree-scripts.nix { inherit pkgs; };
 }

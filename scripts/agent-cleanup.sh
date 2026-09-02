@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-set -euo pipefail
-
 # scripts/agent-cleanup <branch>
 #
 # Tears down a merged feature branch: removes the worktree (if one is
@@ -18,50 +16,19 @@ set -euo pipefail
 # - Refuses to delete a branch whose remote has not been deleted, unless
 #   --force is passed.
 
-BRANCH="${1:-}"
-FORCE=0
+SELF_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=worktree.sh
+source "$SELF_DIR/worktree.sh"
 
-for arg in "$@"; do
-  case "$arg" in
-    --force) FORCE=1 ;;
-  esac
-done
+parse_branch "$@"
 
-if [[ -z "${BRANCH}" || "${BRANCH}" == --* ]]; then
-  echo "Usage: $0 <branch> [--force]"
-  echo "Example: $0 fix/wsl-sbx-shim-segfault"
-  exit 1
-fi
-
-if ! git rev-parse --show-toplevel >/dev/null 2>&1; then
-  echo "Error: not inside a git repository."
-  exit 1
-fi
-
-ROOT="$(git rev-parse --show-toplevel)"
-
-# Refuse to run from inside .worktrees/. The current directory would be
-# pulled out from under us when the worktree is removed.
-case "$ROOT" in
-  */.worktrees/*)
-    echo "Error: refuse to run from inside a worktree. cd to the main checkout first."
-    exit 1
-    ;;
-esac
-
+resolve_root
+require_main_worktree
 cd "$ROOT"
 
 # Find the worktree path for this branch via porcelain output, which
 # parses as paired `worktree <path>` / `branch refs/heads/<name>` lines.
 # Returns empty if no worktree is associated with the branch.
-find_worktree_path() {
-  local branch="$1"
-  git worktree list --porcelain | awk -v branch="refs/heads/$branch" '
-    /^worktree / { path = substr($0, 10) }
-    /^branch /   { if ($2 == branch) { print path; exit } }
-  '
-}
-
 TARGET_DIR="$(find_worktree_path "$BRANCH")"
 
 # Update remote tracking so the merged-remote check below is accurate.
@@ -90,11 +57,7 @@ if [[ -n "$TARGET_DIR" ]]; then
   # $ROOT/.worktrees itself never matches, so the loop terminates
   # naturally at the .worktrees/ boundary without needing extra checks.
   if [[ "$TARGET_DIR" == "$ROOT/.worktrees/"* ]]; then
-    parent="$(dirname "$TARGET_DIR")"
-    while [[ "$parent" == "$ROOT/.worktrees/"* ]]; do
-      rmdir "$parent" 2>/dev/null || break
-      parent="$(dirname "$parent")"
-    done
+    cleanup_empty_parents "$TARGET_DIR"
   fi
 else
   echo "ℹ️  No worktree associated with branch '$BRANCH' (already gone or never existed)."
