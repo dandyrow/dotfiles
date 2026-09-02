@@ -1,16 +1,18 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
-let
-  dotfilesDir = "${config.home.homeDirectory}/.dotfiles";
-in
 lib.mkIf config.dandyrow.hasDesktop {
-  home.packages = [ pkgs.kitty ];
-
-  # Points at the live clone of config, not the Nix store.
-  home.file.".config/kitty".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/kitty/.config/kitty";
+  programs.kitty = {
+    enable = true;
+    # Nerd font ships system-wide via the zsh module, so font.package stays unset.
+    font = {
+      name = "DejaVuSansM Nerd Font Mono";
+      size = 14;
+    };
+    mouseBindings = {
+      "ctrl+left click" = "ungrabbed mouse_handle_click selection link prompt";
+    };
+  };
 }
