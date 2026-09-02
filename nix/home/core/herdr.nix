@@ -24,4 +24,9 @@ in
   home.file.".config/herdr-automatic-rename/hook.zsh".text = ''
     source "${herdrAutomaticRename}/shell/hook.zsh"
   '';
+
+  # Read by automatic-rename.sh; TAB_CONTEXT=0 names tabs by program only.
+  home.file.".config/herdr-automatic-rename/config.sh".text = ''
+    TAB_CONTEXT=0
+  '';
 }
