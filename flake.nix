@@ -60,6 +60,7 @@
             patches = (old.patches or [ ]) ++ [ ./nix/patches/herdr-tab-theme.patch ];
           });
           herdr-navigator = final.callPackage ./nix/pkgs/herdr-navigator.nix { };
+          herdr-automatic-rename = final.callPackage ./nix/pkgs/herdr-automatic-rename.nix { };
         })
       ];
 
