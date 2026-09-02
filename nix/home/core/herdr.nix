@@ -14,10 +14,10 @@ in
     pkgs.jq
   ];
 
-  # herdr rewrites plugins.json, so a home.file write would be clobbered; re-link on activation.
-  home.activation.linkHerdrPlugins = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
-    ${pkgs.herdr}/bin/herdr plugin link "${herdrNavigator}" >/dev/null 2>&1 || true
-    ${pkgs.herdr}/bin/herdr plugin link "${herdrAutomaticRename}" >/dev/null 2>&1 || true
+  # Re-link after linkGeneration so plugins.json survives the symlink/orphan cleanup.
+  home.activation.linkHerdrPlugins = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    ${pkgs.herdr}/bin/herdr plugin link "${herdrNavigator}" || echo "herdr: failed to link herdr-navigator" >&2
+    ${pkgs.herdr}/bin/herdr plugin link "${herdrAutomaticRename}" || echo "herdr: failed to link herdr-automatic-rename" >&2
   '';
 
   # Stable path for .zshrc to source; the store path changes each rebuild.
