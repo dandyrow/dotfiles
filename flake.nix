@@ -108,7 +108,6 @@
       mkHome =
         {
           hostSystem,
-          wsl ? false,
         }:
         inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = import inputs.nixpkgs {
@@ -124,7 +123,6 @@
             inputs.catppuccin.homeModules.catppuccin
           ];
           extraSpecialArgs = {
-            inherit wsl;
             mattPocockSkills = inputs.mattpocock-skills;
           };
         };
@@ -140,10 +138,7 @@
       homeConfigurations = {
         "dandyrow@x86_64-linux" = mkHome { hostSystem = "x86_64-linux"; };
         "dandyrow@aarch64-linux" = mkHome { hostSystem = "aarch64-linux"; };
-        "dandyrow@wsl" = mkHome {
-          hostSystem = "x86_64-linux";
-          wsl = true;
-        };
+        "dandyrow@wsl" = mkHome { hostSystem = "x86_64-linux"; };
       };
 
       checks.${system} = import ./nix/tests {
