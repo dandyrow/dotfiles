@@ -33,6 +33,18 @@ in
       {
         stateVersion = "25.11";
         packages = coreTools;
+        activation.herdrPlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+          builtins.readFile (
+            pkgs.substitute {
+              src = ./core/herdr-plugins.sh;
+              replacements = [
+                "--replace"
+                "@herdrNavigator@"
+                "${pkgs.herdr-navigator}"
+              ];
+            }
+          )
+        );
       }
     ];
 
