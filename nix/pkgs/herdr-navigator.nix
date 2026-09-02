@@ -16,11 +16,11 @@ stdenv.mkDerivation {
   };
 
   dontBuild = true;
-
   installPhase = ''
-    mkdir -p $out
-    cp -r herdr-plugin.toml h-nav $out/
-    chmod +x $out/h-nav
+    runHook preInstall
+    cp -r . "$out"
+    chmod +x "$out/h-nav"
+    runHook postInstall
   '';
 
   meta = {

@@ -1,11 +1,5 @@
 onboarding = false
 
-[keys]
-focus_pane_left = "prefix+h"
-focus_pane_down = "prefix+j"
-focus_pane_up = "prefix+k"
-focus_pane_right = "prefix+l"
-
 [[keys.command]]
 key = "ctrl+h"
 type = "plugin_action"
