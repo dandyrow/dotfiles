@@ -70,3 +70,6 @@ position = "top-right"
 [ui.toast.clipboard]
 enabled = true
 position = "top-right"
+
+[experimental]
+pane_history = true
