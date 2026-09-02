@@ -15,7 +15,8 @@ copilot/.config/copilot/*
 !copilot/.config/copilot/mcp-config.json
 !copilot/.config/copilot/copilot-instructions.md
 !copilot/.config/copilot/settings.json
-!copilot/.config/copilot/hooks/*
+!copilot/.config/copilot/hooks
+!copilot/.config/copilot/hooks/**
 
 # Nix build outputs
 result

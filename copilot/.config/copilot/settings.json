@@ -12,6 +12,15 @@
       }
     }
   },
+  "hooks": {
+    "SessionStart": [
+      {
+        "bash": "bash '/home/dandyrow/.config/copilot/hooks/herdr-agent-state.sh'",
+        "timeoutSec": 10,
+        "type": "command"
+      }
+    ]
+  },
   "model": "claude-sonnet-5",
   "sandbox": {
     "enabled": false
