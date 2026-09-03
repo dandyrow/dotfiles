@@ -55,7 +55,7 @@ EOF
 
   mkdir -p .githooks
 
-  # commit-msg hook: append the trailer only when absent
+  # Append the trailer only when absent
   cat > .githooks/commit-msg <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
