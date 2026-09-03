@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-set -euo pipefail
-
 # scripts/agent-start <branch>
 #
 # Creates a worktree at .worktrees/<branch> based on origin/main and
@@ -11,29 +9,22 @@ set -euo pipefail
 # agent-cleanup.sh uses `git worktree list --porcelain` to locate worktrees
 # by branch name, so the on-disk path layout is not assumed.
 
-BRANCH="${1:-}"
+SELF_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=worktree.sh
+source "$SELF_DIR/worktree.sh"
 
-if [[ -z "${BRANCH}" ]]; then
-  echo "Usage: $0 <branch>"
-  echo "Example: $0 feat/nix-devshell"
-  exit 1
-fi
+parse_branch "$@"
 
 # --- configurable AI co-author trailer (override via env vars) ---
 AI_COAUTHOR_NAME="${AI_COAUTHOR_NAME:-Copilot}"
 AI_COAUTHOR_EMAIL="${AI_COAUTHOR_EMAIL:-copilot@github.com}"
 AI_TRAILER="Co-authored-by: ${AI_COAUTHOR_NAME} <${AI_COAUTHOR_EMAIL}>"
 
-# --- sanity checks ---
-if ! git rev-parse --show-toplevel >/dev/null 2>&1; then
-  echo "Error: not inside a git repository."
-  exit 1
-fi
-
-ROOT="$(git rev-parse --show-toplevel)"
+resolve_root
+require_main_worktree
 cd "$ROOT"
 
-# Ensure we can base branches off origin/main
+# Base branches off a freshly-fetched origin/main, not a stale local copy.
 git fetch origin main --quiet || {
   echo "Error: failed to fetch origin/main. Check your remotes."
   exit 1
@@ -53,19 +44,18 @@ fi
 # Create the worktree and new branch from origin/main
 git worktree add -b "$BRANCH" "$TARGET_DIR" "origin/main"
 
-# Configure hook in the worktree only
+# Scoped to this worktree so the main checkout stays clean
 (
   cd "$TARGET_DIR"
 
-  # Store trailer in a file for reuse
+  # Kept on disk so the commit-msg hook can match it against each message
   cat > .ai-coauthor.txt <<EOF
 ${AI_TRAILER}
 EOF
 
-  # Worktree-local hooks directory
   mkdir -p .githooks
 
-  # commit-msg hook: append co-author trailer if missing
+  # Append the trailer only when absent
   cat > .githooks/commit-msg <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -79,7 +69,6 @@ fi
 
 TRAILER="$(cat "$TRAILER_FILE")"
 
-# Append trailer if not already present
 if ! grep -Fq "$TRAILER" "$MSG_FILE"; then
   printf "\n%s\n" "$TRAILER" >> "$MSG_FILE"
 fi
