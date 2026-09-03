@@ -7,17 +7,18 @@ let
       description = "Declarative file bindings mirroring Home Manager's home.file.";
     };
   };
+  workIdentityModule = [
+    ../home/core/work-identity.nix
+    ../home/facts.nix
+    homeFileOption
+  ];
   workText =
     {
       specialArgs,
       overrides ? { },
     }:
     (lib.evalModules {
-      modules = [
-        ../home/core/work-identity.nix
-        homeFileOption
-        overrides
-      ];
+      modules = workIdentityModule ++ [ overrides ];
       inherit specialArgs;
     }).config.home.file."Projects/work/.gitconfig".text or null;
 in
