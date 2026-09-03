@@ -22,11 +22,9 @@ in
       gnumake
       python3
       ripgrep
-      stylua
       tree-sitter
       unzip
       wl-clipboard
-      yamllint
       nodejs
       wget
     ]);

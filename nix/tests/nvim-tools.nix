@@ -47,4 +47,26 @@ lib.runTests {
     ] pkgs;
     expected = [ pkgs.python3Packages.requests ];
   };
+
+  testNixOnlyResolvesByFallbackToName = {
+    expr = nvimToolPackages [
+      {
+        name = "nixd";
+        nixOnly = true;
+      }
+    ] pkgs;
+    expected = [ pkgs.nixd ];
+  };
+
+  testUnresolvableNameThrows = {
+    expr =
+      (builtins.tryEval (
+        builtins.deepSeq (nvimToolPackages [
+          {
+            name = "no-such-tool";
+          }
+        ] pkgs) null
+      )).success;
+    expected = false;
+  };
 }
