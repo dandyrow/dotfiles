@@ -21,9 +21,10 @@ AI_COAUTHOR_EMAIL="${AI_COAUTHOR_EMAIL:-copilot@github.com}"
 AI_TRAILER="Co-authored-by: ${AI_COAUTHOR_NAME} <${AI_COAUTHOR_EMAIL}>"
 
 resolve_root
+require_main_worktree
 cd "$ROOT"
 
-# Ensure we can base branches off origin/main
+# Base branches off a freshly-fetched origin/main, not a stale local copy.
 git fetch origin main --quiet || {
   echo "Error: failed to fetch origin/main. Check your remotes."
   exit 1
@@ -43,19 +44,18 @@ fi
 # Create the worktree and new branch from origin/main
 git worktree add -b "$BRANCH" "$TARGET_DIR" "origin/main"
 
-# Configure hook in the worktree only
+# Configure the co-author hook only inside this worktree, via worktree-local hooksPath
 (
   cd "$TARGET_DIR"
 
-  # Store trailer in a file for reuse
+  # Store the trailer in a file so the hook can grep it out of each commit message
   cat > .ai-coauthor.txt <<EOF
 ${AI_TRAILER}
 EOF
 
-  # Worktree-local hooks directory
   mkdir -p .githooks
 
-  # commit-msg hook: append co-author trailer if missing
+  # commit-msg hook: append the co-author trailer if missing
   cat > .githooks/commit-msg <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -69,7 +69,6 @@ fi
 
 TRAILER="$(cat "$TRAILER_FILE")"
 
-# Append trailer if not already present
 if ! grep -Fq "$TRAILER" "$MSG_FILE"; then
   printf "\n%s\n" "$TRAILER" >> "$MSG_FILE"
 fi

@@ -5,16 +5,31 @@ set -euo pipefail
 parse_branch() {
   BRANCH=""
   FORCE=0
+  local allow_force=0
+  if [[ "${1:-}" == "--allow-force" ]]; then
+    allow_force=1
+    shift
+  fi
+  usage() {
+    local msg="Usage: $0 <branch>"
+    [[ "$allow_force" -eq 1 ]] && msg+=" [--force]"
+    echo "$msg" >&2
+    exit 1
+  }
   for arg in "$@"; do
     case "$arg" in
-      --force) FORCE=1 ;;
-      --*) echo "Usage: $0 <branch> [--force]" >&2; exit 1 ;;
+      --force)
+        if [[ "$allow_force" -eq 1 ]]; then
+          FORCE=1
+        else
+          usage
+        fi ;;
+      --*) usage ;;
       *) [[ -z "$BRANCH" ]] && BRANCH="$arg" ;;
     esac
   done
   if [[ -z "$BRANCH" ]]; then
-    echo "Usage: $0 <branch> [--force]" >&2
-    exit 1
+    usage
   fi
 }
 

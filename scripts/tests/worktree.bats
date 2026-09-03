@@ -11,16 +11,21 @@ setup() {
   [[ "${FORCE}" -eq 0 ]]
 }
 
-@test "parse_branch honors --force after the branch" {
-  parse_branch "feat/nix" --force
+@test "parse_branch honors --force with --allow-force, flag after branch" {
+  parse_branch --allow-force "feat/nix" --force
   [[ "${BRANCH}" == "feat/nix" ]]
   [[ "${FORCE}" -eq 1 ]]
 }
 
-@test "parse_branch honors --force before the branch" {
-  parse_branch --force "feat/nix"
+@test "parse_branch honors --force with --allow-force, flag before branch" {
+  parse_branch --allow-force --force "feat/nix"
   [[ "${BRANCH}" == "feat/nix" ]]
   [[ "${FORCE}" -eq 1 ]]
+}
+
+@test "parse_branch without --allow-force rejects --force" {
+  run parse_branch --force "feat/nix"
+  [[ "${status}" -eq 1 ]]
 }
 
 @test "parse_branch rejects unknown flags" {

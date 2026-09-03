@@ -20,22 +20,18 @@ SELF_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=worktree.sh
 source "$SELF_DIR/worktree.sh"
 
-parse_branch "$@"
+parse_branch --allow-force "$@"
 
 resolve_root
 require_main_worktree
 cd "$ROOT"
 
-# Find the worktree path for this branch via porcelain output, which
-# parses as paired `worktree <path>` / `branch refs/heads/<name>` lines.
-# Returns empty if no worktree is associated with the branch.
 TARGET_DIR="$(find_worktree_path "$BRANCH")"
 
-# Update remote tracking so the merged-remote check below is accurate.
+# Refresh remote tracking so the merged-remote check below is accurate.
 git fetch --prune origin --quiet || true
 
-# Verify the branch was actually merged. If origin/<branch> still exists
-# the PR has not been merged-and-deleted yet; bail unless --force.
+# Bail unless --force: origin/<branch> still existing means the PR is not merged-and-deleted yet.
 if [[ "$FORCE" -ne 1 ]]; then
   if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
     echo "Error: origin/$BRANCH still exists. Merge the PR (which deletes the remote branch) first, or re-run with --force."
@@ -43,22 +39,11 @@ if [[ "$FORCE" -ne 1 ]]; then
   fi
 fi
 
-# Remove the worktree if one is registered for this branch.
 if [[ -n "$TARGET_DIR" ]]; then
   git worktree remove "$TARGET_DIR"
   echo "✅ Removed worktree: $TARGET_DIR"
 
-  # Clean up newly-empty parent directories — but only when the worktree
-  # lived strictly inside $ROOT/.worktrees/. Worktrees in other locations
-  # (created with a custom path) are left alone; rmdir'ing arbitrary
-  # parents outside .worktrees/ is not this script's job.
-  #
-  # The trailing slash in the prefix is load-bearing: it means
-  # $ROOT/.worktrees itself never matches, so the loop terminates
-  # naturally at the .worktrees/ boundary without needing extra checks.
-  if [[ "$TARGET_DIR" == "$ROOT/.worktrees/"* ]]; then
-    cleanup_empty_parents "$TARGET_DIR"
-  fi
+  cleanup_empty_parents "$TARGET_DIR"
 else
   echo "ℹ️  No worktree associated with branch '$BRANCH' (already gone or never existed)."
 fi
