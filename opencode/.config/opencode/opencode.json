@@ -12,6 +12,7 @@
   },
   "instructions": ["{env:HOME}/.config/agents/nix-native-deps.md"],
   "permission": {
+    "external_directory": { "/tmp/**": "allow" },
     "bash": {
       "npm i -g*": "deny",
       "npm install -g*": "deny",
