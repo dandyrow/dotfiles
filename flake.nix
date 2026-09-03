@@ -83,6 +83,7 @@
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
                 home-manager.extraSpecialArgs = {
+                  configName = host;
                   mattPocockSkills = inputs.mattpocock-skills;
                 };
                 home-manager.users.${config.dandyrow.primaryUser} = {
@@ -106,10 +107,7 @@
         };
 
       mkHome =
-        {
-          hostSystem,
-          enableVscodeSandbox ? false,
-        }:
+        { configName, hostSystem }:
         inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = import inputs.nixpkgs {
             system = hostSystem;
@@ -121,10 +119,10 @@
           };
           modules = [
             ./nix/home
-            { dandyrow.enableVscodeSandbox = enableVscodeSandbox; }
             inputs.catppuccin.homeModules.catppuccin
           ];
           extraSpecialArgs = {
+            inherit configName;
             mattPocockSkills = inputs.mattpocock-skills;
           };
         };
@@ -138,11 +136,17 @@
         inputs.self.nixosConfigurations.WSL.config.system.build.tarballBuilder;
 
       homeConfigurations = {
-        "dandyrow@x86_64-linux" = mkHome { hostSystem = "x86_64-linux"; };
-        "dandyrow@aarch64-linux" = mkHome { hostSystem = "aarch64-linux"; };
-        "dandyrow@wsl" = mkHome {
+        "dandyrow@x86_64-linux" = mkHome {
+          configName = "dandyrow@x86_64-linux";
           hostSystem = "x86_64-linux";
-          enableVscodeSandbox = true;
+        };
+        "dandyrow@aarch64-linux" = mkHome {
+          configName = "dandyrow@aarch64-linux";
+          hostSystem = "aarch64-linux";
+        };
+        "dandyrow@wsl" = mkHome {
+          configName = "dandyrow@wsl";
+          hostSystem = "x86_64-linux";
         };
       };
 
