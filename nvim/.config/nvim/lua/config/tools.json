@@ -32,6 +32,7 @@
   { "name": "ansible-lint",           "category": "linter" },
   { "name": "jsonlint",               "category": "linter", "masonOnly": true },
   { "name": "golangci-lint",          "category": "linter" },
+  { "name": "yamllint",               "category": "linter" },
 
   { "name": "codelldb",               "category": "dap", "nixpkgsAttr": "vscode-extensions.vadimcn.vscode-lldb" },
   { "name": "bash-debug-adapter",     "category": "dap", "masonOnly": true },

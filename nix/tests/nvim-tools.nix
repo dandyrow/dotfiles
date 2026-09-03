@@ -47,4 +47,36 @@ lib.runTests {
     ] pkgs;
     expected = [ pkgs.python3Packages.requests ];
   };
+
+  testNixOnlyResolvesByFallbackToName = {
+    expr = nvimToolPackages [
+      {
+        name = "nixd";
+        nixOnly = true;
+      }
+    ] pkgs;
+    expected = [ pkgs.nixd ];
+  };
+
+  testUnresolvableNameThrows = {
+    expr =
+      (builtins.tryEval (
+        builtins.deepSeq (nvimToolPackages [
+          {
+            name = "no-such-tool";
+          }
+        ] pkgs) null
+      )).success;
+    expected = false;
+  };
+
+  testRealInventoryResolvesStyluaAndYamllint = {
+    expr =
+      let
+        resolved = nvimToolPackages (builtins.fromJSON (builtins.readFile ../../nvim/.config/nvim/lua/config/tools.json)) pkgs;
+        contains = pkg: builtins.any (p: p == pkg) resolved;
+      in
+      (contains pkgs.stylua && contains pkgs.yamllint);
+    expected = true;
+  };
 }
