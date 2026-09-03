@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {
   isMainCheckout,
   blockedForBash,
-  blockedForEditTool,
+  blockedForFileTool,
 } from "../lib/worktree-guard.ts";
 
 const blocked = (cmd: string) =>
@@ -80,8 +80,38 @@ describe("blockedForBash", () => {
   });
 });
 
-describe("blockedForEditTool", () => {
-  it("blocks edits unconditionally when in main", () => {
-    assert.equal(blockedForEditTool().protected, true);
+describe("blockedForFileTool", () => {
+  const mainConfig = `${process.env.HOME}/.dotfiles/opencode/.config/opencode/opencode.json`;
+
+  it("blocks an edit to a tracked file in the main clone", () => {
+    assert.equal(blockedForFileTool(mainConfig).protected, true);
+  });
+
+  it("blocks an edit to a repo file via a ~/.config symlink from any cwd", () => {
+    assert.equal(
+      blockedForFileTool(`${process.env.HOME}/.config/opencode/opencode.json`).protected,
+      true,
+    );
+  });
+
+  it("blocks a new file in the main clone", () => {
+    assert.equal(
+      blockedForFileTool(`${process.env.HOME}/.dotfiles/opencode/.config/opencode/new.ts`).protected,
+      true,
+    );
+  });
+
+  it("allows edits inside a worktree", () => {
+    assert.equal(
+      blockedForFileTool(`${process.env.HOME}/.dotfiles/.worktrees/foo/bar.ts`).protected,
+      false,
+    );
+  });
+
+  it("allows edits outside the repo", () => {
+    assert.equal(
+      blockedForFileTool(`${process.env.HOME}/projects/foo/bar.ts`).protected,
+      false,
+    );
   });
 });

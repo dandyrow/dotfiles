@@ -1,5 +1,6 @@
 import path from "node:path";
 import os from "node:os";
+import { realpathSync } from "node:fs";
 
 export type WorktreeGuardResult = {
   protected: boolean;
@@ -43,6 +44,23 @@ export function blockedForBash(command: string): WorktreeGuardResult {
     : SAFE;
 }
 
-export function blockedForEditTool(): WorktreeGuardResult {
-  return { protected: true, reason: MESSAGE };
+function resolveTarget(targetPath: string): string {
+  try {
+    return realpathSync(targetPath);
+  } catch {
+    // New file: symlink-resolve the parent dir, keep the basename.
+    try {
+      return path.join(realpathSync(path.dirname(targetPath)), path.basename(targetPath));
+    } catch {
+      return targetPath;
+    }
+  }
+}
+
+export function blockedForFileTool(filePath: string): WorktreeGuardResult {
+  if (typeof filePath !== "string" || filePath.length === 0) return SAFE;
+  // Resolve through ~/.config symlinks so stow-live files are caught regardless of session cwd.
+  return isMainCheckout(resolveTarget(filePath))
+    ? { protected: true, reason: MESSAGE }
+    : SAFE;
 }
