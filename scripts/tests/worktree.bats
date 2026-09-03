@@ -17,6 +17,17 @@ setup() {
   [[ "${FORCE}" -eq 1 ]]
 }
 
+@test "parse_branch honors --force before the branch" {
+  parse_branch --force "feat/nix"
+  [[ "${BRANCH}" == "feat/nix" ]]
+  [[ "${FORCE}" -eq 1 ]]
+}
+
+@test "parse_branch rejects unknown flags" {
+  run parse_branch --bogus "feat/nix"
+  [[ "${status}" -eq 1 ]]
+}
+
 @test "parse_branch rejects an empty branch" {
   run parse_branch ""
   [[ "${status}" -eq 1 ]]

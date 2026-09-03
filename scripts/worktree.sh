@@ -3,14 +3,16 @@
 set -euo pipefail
 
 parse_branch() {
-  BRANCH="${1:-}"
+  BRANCH=""
   FORCE=0
   for arg in "$@"; do
     case "$arg" in
       --force) FORCE=1 ;;
+      --*) echo "Usage: $0 <branch> [--force]" >&2; exit 1 ;;
+      *) [[ -z "$BRANCH" ]] && BRANCH="$arg" ;;
     esac
   done
-  if [[ -z "${BRANCH}" || "${BRANCH}" == --* ]]; then
+  if [[ -z "$BRANCH" ]]; then
     echo "Usage: $0 <branch> [--force]" >&2
     exit 1
   fi
