@@ -10,7 +10,10 @@
   "skills": {
     "paths": ["~/.local/share/agents/skills"]
   },
-  "instructions": ["{env:HOME}/.config/agents/nix-native-deps.md"],
+  "instructions": [
+    "{env:HOME}/.config/agents/nix-native-deps.md",
+    "{env:HOME}/.config/agents/unslop.md"
+  ],
   "permission": {
     "external_directory": { "/tmp/**": "allow" },
     "bash": {
