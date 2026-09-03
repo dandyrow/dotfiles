@@ -108,6 +108,7 @@
       mkHome =
         {
           hostSystem,
+          enableVscodeSandbox ? false,
         }:
         inputs.home-manager.lib.homeManagerConfiguration {
           pkgs = import inputs.nixpkgs {
@@ -120,6 +121,7 @@
           };
           modules = [
             ./nix/home
+            { dandyrow.enableVscodeSandbox = enableVscodeSandbox; }
             inputs.catppuccin.homeModules.catppuccin
           ];
           extraSpecialArgs = {
@@ -138,7 +140,10 @@
       homeConfigurations = {
         "dandyrow@x86_64-linux" = mkHome { hostSystem = "x86_64-linux"; };
         "dandyrow@aarch64-linux" = mkHome { hostSystem = "aarch64-linux"; };
-        "dandyrow@wsl" = mkHome { hostSystem = "x86_64-linux"; };
+        "dandyrow@wsl" = mkHome {
+          hostSystem = "x86_64-linux";
+          enableVscodeSandbox = true;
+        };
       };
 
       checks.${system} = import ./nix/tests {

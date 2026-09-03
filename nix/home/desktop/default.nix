@@ -5,6 +5,5 @@
     ./gnome-initial-setup.nix
     ./kitty.nix
     ./theme.nix
-    ./vscode-sandbox.nix
   ];
 }
