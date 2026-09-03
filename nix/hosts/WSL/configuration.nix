@@ -8,6 +8,7 @@ let
   primaryUser = config.dandyrow.primaryUser;
 in
 {
+  dandyrow.isWork = true;
   wsl = {
     enable = true;
     defaultUser = primaryUser;
