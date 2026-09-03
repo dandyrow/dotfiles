@@ -85,11 +85,16 @@
                 home-manager.extraSpecialArgs = {
                   mattPocockSkills = inputs.mattpocock-skills;
                 };
+                # WSL is the work machine; both flags are home concerns, set here not on NixOS.
                 home-manager.users.${config.dandyrow.primaryUser} = {
                   imports = [
                     ./nix/home
                     inputs.catppuccin.homeModules.catppuccin
                   ];
+                }
+                // lib.optionalAttrs (host == "WSL") {
+                  dandyrow.enableVscodeSandbox = true;
+                  dandyrow.isWork = true;
                 };
                 # Prevent activation failures when HM wants to overwrite pre-existing files.
                 home-manager.backupFileExtension = "bak";
