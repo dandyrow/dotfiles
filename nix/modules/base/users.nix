@@ -14,13 +14,6 @@
     '';
   };
 
-  # Gates the work git identity; only the WSL host turns it on.
-  options.dandyrow.isWork = lib.mkOption {
-    type = lib.types.bool;
-    default = false;
-    description = "Whether this machine is Daniel's work machine.";
-  };
-
   config.users.users.${config.dandyrow.primaryUser} = {
     isNormalUser = true;
     extraGroups = [

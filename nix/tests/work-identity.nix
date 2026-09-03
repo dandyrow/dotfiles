@@ -7,31 +7,24 @@ let
       description = "Declarative file bindings mirroring Home Manager's home.file.";
     };
   };
-  workIdentityModule = [
-    ../home/core/work-identity.nix
-    ../home/facts.nix
-    homeFileOption
-  ];
   workText =
-    {
-      specialArgs,
-      overrides ? { },
-    }:
+    isWork:
     (lib.evalModules {
-      modules = workIdentityModule ++ [ overrides ];
-      inherit specialArgs;
+      modules = [
+        ../home/core/work-identity.nix
+        homeFileOption
+        { dandyrow.isWork = isWork; }
+      ];
     }).config.home.file."Projects/work/.gitconfig".text or null;
 in
 lib.runTests {
   testWorkIdentityAbsentWhenNotWorkHost = {
-    expr = workText { specialArgs.osConfig = { }; };
+    expr = workText false;
     expected = null;
   };
 
   testWorkIdentityMatchesWorkEmailAndGpgOff = {
-    expr = workText {
-      specialArgs.osConfig.dandyrow.isWork = true;
-    };
+    expr = workText true;
     expected = ''
       [user]
         name = Daniel Lowry
