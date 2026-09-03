@@ -20,6 +20,7 @@ in
   undeclared-groups = mkTest "undeclared-groups" (
     import ./undeclared-groups.nix { inherit lib nixosConfigurations; }
   );
+  work-identity = mkTest "work-identity" (import ./work-identity.nix { inherit lib; });
   config-eval = mkTest "config-eval" (
     import ./config-eval.nix { inherit lib homeConfigurations nixosConfigurations; }
   );
