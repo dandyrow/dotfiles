@@ -6,6 +6,7 @@
     ./herdr.nix
     ./nvim.nix
     ./tmux.nix
+    ./vscode-sandbox.nix
     ./zsh.nix
   ];
 }
