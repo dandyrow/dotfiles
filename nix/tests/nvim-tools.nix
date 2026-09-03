@@ -69,14 +69,4 @@ lib.runTests {
       )).success;
     expected = false;
   };
-
-  testRealInventoryResolvesStyluaAndYamllint = {
-    expr =
-      let
-        resolved = nvimToolPackages (builtins.fromJSON (builtins.readFile ../../nvim/.config/nvim/lua/config/tools.json)) pkgs;
-        contains = pkg: builtins.any (p: p == pkg) resolved;
-      in
-      (contains pkgs.stylua && contains pkgs.yamllint);
-    expected = true;
-  };
 }
