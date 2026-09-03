@@ -1,6 +1,5 @@
 {
   config,
-  configName,
   lib,
   pkgs,
   ...
@@ -8,10 +7,10 @@
 {
   options.dandyrow.enableVscodeSandbox = lib.mkOption {
     type = lib.types.bool;
-    default = configName == "dandyrow@wsl";
+    default = false;
     description = ''
       Whether to install the VS Code sandbox tooling (bubblewrap, socat).
-      Defaults on for the standalone WSL home, where graphics live in Windows.
+      Off by default; WSL enables it explicitly.
     '';
   };
 
