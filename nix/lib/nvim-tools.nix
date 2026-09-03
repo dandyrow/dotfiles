@@ -13,7 +13,7 @@ let
     map (
       attr:
       if !(lib.hasAttrByPath (lib.splitString "." attr) pkgs) then
-        throw "nvim-tools: cannot resolve '${attr}' — add nixpkgsAttr to tools.json for this tool"
+        throw "nvim-tools: cannot resolve '${attr}', add nixpkgsAttr to tools.json for this tool"
       else
         lib.getAttrFromPath (lib.splitString "." attr) pkgs
     ) attrs;
