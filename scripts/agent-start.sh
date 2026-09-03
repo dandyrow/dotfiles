@@ -44,18 +44,18 @@ fi
 # Create the worktree and new branch from origin/main
 git worktree add -b "$BRANCH" "$TARGET_DIR" "origin/main"
 
-# Configure the co-author hook only inside this worktree, via worktree-local hooksPath
+# Scoped to this worktree so the main checkout stays clean
 (
   cd "$TARGET_DIR"
 
-  # Store the trailer in a file so the hook can grep it out of each commit message
+  # Kept on disk so the commit-msg hook can match it against each message
   cat > .ai-coauthor.txt <<EOF
 ${AI_TRAILER}
 EOF
 
   mkdir -p .githooks
 
-  # commit-msg hook: append the co-author trailer if missing
+  # commit-msg hook: append the trailer only when absent
   cat > .githooks/commit-msg <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail

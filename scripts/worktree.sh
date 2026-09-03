@@ -10,27 +10,28 @@ parse_branch() {
     allow_force=1
     shift
   fi
-  usage() {
-    local msg="Usage: $0 <branch>"
-    [[ "$allow_force" -eq 1 ]] && msg+=" [--force]"
-    echo "$msg" >&2
-    exit 1
-  }
   for arg in "$@"; do
     case "$arg" in
       --force)
         if [[ "$allow_force" -eq 1 ]]; then
           FORCE=1
         else
-          usage
+          error_usage "$allow_force"
         fi ;;
-      --*) usage ;;
+      --*) error_usage "$allow_force" ;;
       *) [[ -z "$BRANCH" ]] && BRANCH="$arg" ;;
     esac
   done
   if [[ -z "$BRANCH" ]]; then
-    usage
+    error_usage "$allow_force"
   fi
+}
+
+error_usage() {
+  local msg="Usage: $0 <branch>"
+  [[ "${1:-}" -eq 1 ]] && msg+=" [--force]"
+  echo "$msg" >&2
+  exit 1
 }
 
 resolve_root() {
