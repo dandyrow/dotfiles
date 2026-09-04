@@ -47,33 +47,50 @@ describe("isMainCheckout", () => {
 });
 
 describe("canCommandMutate", () => {
-  it("blocks file-mutating commands", () => {
-    blocked("mv a b");
-    blocked("rm -r kitty/");
-    blocked("rmdir old");
-    blocked("mkdir -p foo/bar");
-    blocked("touch foo");
-    blocked("cp a b");
-    blocked("ln -s a b");
-    blocked("cat > file");
-    blocked("cat > current-theme.conf");
-    blocked("cat file > out.txt");
-    blocked("echo hi > file");
-    blocked("printf hi >> file");
-    blocked("tee out.txt");
-    blocked("sudo rm /nix/store/foo");
-    blocked("foo && mv a b");
-    blocked("cd /tmp && rm x");
-    blocked("cat <<EOF > file");
-    blocked("cat << 'EOF' >> file");
-    blocked("bash << 'SCRIPT' > out.txt");
-    blocked("cat <<- EOF > file");
+  it("blocks commands targeting files in main checkout", () => {
+    blocked("rm ~/.dotfiles/foo");
+    blocked("mv a ~/.dotfiles/nix/home/default.nix");
+    blocked("cp src ~/.dotfiles/config.json");
+    blocked("touch ~/.dotfiles/new-file");
+    blocked("mkdir -p ~/.dotfiles/new-dir");
+    blocked("ln -s a ~/.dotfiles/link");
+    blocked("cat > ~/.dotfiles/config.json");
+    blocked("echo hi > ~/.dotfiles/out.txt");
+    blocked("printf hi >> ~/.dotfiles/out.txt");
+    blocked("tee ~/.dotfiles/out.txt");
   });
 
-  it("allows read-only and build commands", () => {
+  it("blocks symlinked paths that resolve into main checkout", () => {
+    blocked("rm ~/.config/opencode/plugins/test.ts");
+    blocked("touch ~/.config/opencode/new-file.ts");
+    blocked("echo hi > ~/.config/opencode/out.txt");
+  });
+
+  it("blocks commands with mixed targets when any resolves into main", () => {
+    blocked("mv /tmp/safe-file ~/.dotfiles/nix/home/default.nix");
+    blocked("cp /tmp/src ~/.config/opencode/config.json");
+  });
+
+  it("allows commands targeting files outside the repo", () => {
+    allowed("rm /tmp/pr-body.md");
+    allowed("mv a /tmp/b");
+    allowed("cp src /tmp/dest");
+    allowed("touch /tmp/new-file");
+    allowed("mkdir -p /tmp/new-dir");
+    allowed("echo hi > /tmp/out.txt");
+    allowed("printf hi >> /tmp/out.txt");
+    allowed("tee /tmp/out.txt");
+    allowed("cat > /tmp/file.txt");
+  });
+
+  it("allows commands with all targets outside the repo", () => {
+    allowed("mv /tmp/a /tmp/b");
+    allowed("cp /tmp/src /tmp/dest");
+  });
+
+  it("allows read-only commands", () => {
     allowed("git status");
     allowed("git log --oneline");
-    allowed("git ls-files");
     allowed("ls -la");
     allowed("cat file");
     allowed("nix flake check");
@@ -81,6 +98,29 @@ describe("canCommandMutate", () => {
     allowed("nix eval .#x");
     allowed("find . -name foo");
     allowed("rg something");
+  });
+
+  it("allows heredocs inside non-mutating commands", () => {
+    allowed(`gh issue create --title "foo" --body "$(cat <<'EOF'
+body
+EOF
+)"`);
+    allowed(`echo "$(cat <<'EOF'
+hello
+EOF
+)"`);
+    allowed("gh pr create --body \"$(cat <<'EOF'\ntext\nEOF\n)\"");
+  });
+
+  it("allows git add and commit", () => {
+    allowed("git add file.nix");
+    allowed("git commit -m 'message'");
+    allowed("git add . && git commit -m 'msg'");
+  });
+
+  it("allows nixos-rebuild (no direct file targets)", () => {
+    allowed("nixos-rebuild switch --flake .#WSL");
+    allowed("nix flake update");
   });
 });
 

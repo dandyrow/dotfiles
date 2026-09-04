@@ -22,9 +22,8 @@ Before starting any task, review available skills and invoke any that apply.
 
 The following rules describe how you should use git:
 
-- **Never work directly on `main`.** All work must happen in a worktree under `.worktrees/<branch>`.
-- **Always start work via:** `./scripts/agent-start.sh <branch>`
-- **Start the worktree BEFORE any file edit, move, or creation.** If the task changes any tracked or stow-live file (including config under `opencode/`, `nix/`, or `~/.config` symlinks pointing into this repo), create the worktree first and make changes there — never in the `main` checkout. Only after `agent-start.sh` succeeds should you `cd` into the new worktree and edit.
+- **Never edit files on `main`.** Read-only commands (`gh`, `git status`, `git log`, `nix eval`, `nix flake check`, etc.) are safe from the main checkout. Only file edits, moves, and creations require a worktree.
+- **Always start work via:** `./scripts/agent-start.sh <branch>` — before any file edit, move, or creation. If the task changes any tracked or stow-live file (including config under `opencode/`, `nix/`, or `~/.config` symlinks pointing into this repo), create the worktree first and make changes there — never in the `main` checkout. Only after `agent-start.sh` succeeds should you `cd` into the new worktree and edit.
 - Inspect git and GitHub state directly. Do not rely on pre-expanded shell snippets.
 - Use `git commit --no-gpg-sign` when committing. The flag is per-invocation and for agents only. GPG signing stays on normally, so never run `git config` to lower `commit.gpgSign` at repo or global scope, or unset a signing key. If signing blocks an automation step, pass `-c commit.gpgSign=false` for that command alone.
 - Before staging, re-read the diff: every added comment must be a single line explaining a non-obvious *why* — trim any that are not.
@@ -36,7 +35,7 @@ The following rules describe how you should use git:
 
 ## Never do
 
-- Never edit, move, or create files in the `main` checkout, including files reached through `~/.config` symlinks that resolve into this repo. Always create and use a worktree first.
+- Never edit, move, or create files in the `main` checkout, including files reached through `~/.config` symlinks that resolve into this repo. Read-only commands are fine from main. Always create and use a worktree for file modifications.
 - Never commit secrets, tokens, private keys, or `.env` files with secrets.
 - Never rewrite history on `main`.
 - Never use `git add -A` or `git add .`. Stage changes explicitly using file paths from status.
