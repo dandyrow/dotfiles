@@ -10,7 +10,7 @@ export const WorktreeGuardPlugin: Plugin = async ({ directory }) => {
   return {
     "tool.execute.before": async (input, output) => {
       if (input.tool === "bash" && typeof output.args?.command === "string") {
-        // Bash mutation paths are heuristic, so gate on the session cwd only.
+        // Shell text is too free-form to extract the touched paths, so gate on the session cwd instead.
         if (isMainCheckout(directory)) {
           const result = canBashCommandMutate(output.args.command);
           if (result.protected) throw new Error(result.reason);
