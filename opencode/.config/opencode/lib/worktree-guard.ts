@@ -26,7 +26,7 @@ export function isMainCheckout(dir: string): boolean {
 
 const MESSAGE = `Blocked: this targets the live main dotfiles checkout. Never edit main directly — start a worktree with ./scripts/agent-start.sh <branch> and make changes there.`;
 
-export function bashCommandCouldMutate(command: string): WorktreeGuardResult {
+export function canBashCommandMutate(command: string): WorktreeGuardResult {
   if (typeof command !== "string" || command.length === 0) return SAFE;
   const couldMutate =
     /(?:^|[\s;&|=(])(?:mv|cp|rm|rmdir|mkdir|touch|ln|truncate|dd|tee)\b/s.test(

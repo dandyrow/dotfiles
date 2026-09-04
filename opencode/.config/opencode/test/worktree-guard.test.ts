@@ -3,19 +3,19 @@ import assert from "node:assert/strict";
 
 import {
   isMainCheckout,
-  bashCommandCouldMutate,
+  canBashCommandMutate,
   isFileInMainCheckout,
 } from "../lib/worktree-guard.ts";
 
 const blocked = (cmd: string) =>
   assert.equal(
-    bashCommandCouldMutate(cmd).protected,
+    canBashCommandMutate(cmd).protected,
     true,
     `expected BLOCK: ${cmd}`,
   );
 const allowed = (cmd: string) =>
   assert.equal(
-    bashCommandCouldMutate(cmd).protected,
+    canBashCommandMutate(cmd).protected,
     false,
     `expected ALLOW: ${cmd}`,
   );
@@ -46,7 +46,7 @@ describe("isMainCheckout", () => {
   });
 });
 
-describe("bashCommandCouldMutate", () => {
+describe("canBashCommandMutate", () => {
   it("blocks file-mutating commands", () => {
     blocked("mv a b");
     blocked("rm -r kitty/");
