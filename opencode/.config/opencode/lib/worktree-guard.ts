@@ -17,7 +17,7 @@ export function isMainCheckout(dir: string): boolean {
   if (!dir) return false;
   const resolved = path.resolve(dir);
   if (resolved === MAIN_DIR) return true;
-  // Exclude worktrees — that's where edits belong.
+  // Exclude worktrees; edits belong there.
   return (
     resolved.startsWith(MAIN_DIR_PREFIX) &&
     !resolved.startsWith(WORKTREES_PREFIX)
