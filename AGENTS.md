@@ -24,7 +24,7 @@ Before starting any task, review available skills and invoke any that apply.
 The following rules describe how you should use git:
 
 - **Never edit files on `main`.** Read-only commands (`gh`, `git status`, `git log`, `nix eval`, `nix flake check`, etc.) are safe from the main checkout. Only file edits, moves, and creations require a worktree.
-- **Always start work via:** `./scripts/agent-start.sh <branch>` — before any file edit, move, or creation. If the task changes any tracked or stow-live file (including config under `opencode/`, `nix/`, or `~/.config` symlinks pointing into this repo), create the worktree first and make changes there — never in the `main` checkout. Only after `agent-start.sh` succeeds should you `cd` into the new worktree and edit.
+- **Always start work via:** `./scripts/agent-start.sh <branch>` before any file edit, move, or creation. If the task changes any tracked or stow-live file (including config under `opencode/`, `nix/`, or `~/.config` symlinks pointing into this repo), create the worktree first and make changes there, never in the `main` checkout. Only after `agent-start.sh` succeeds should you `cd` into the new worktree and edit.
 - Inspect git and GitHub state directly. Do not rely on pre-expanded shell snippets.
 - Use `git commit --no-gpg-sign` when committing. The flag is per-invocation and for agents only. GPG signing stays on normally, so never run `git config` to lower `commit.gpgSign` at repo or global scope, or unset a signing key. If signing blocks an automation step, pass `-c commit.gpgSign=false` for that command alone.
 - Before staging, re-read the diff: every added comment must be a single line explaining a non-obvious *why* — trim any that are not.
