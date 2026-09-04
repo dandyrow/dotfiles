@@ -17,7 +17,7 @@ export function isMainCheckout(dir: string): boolean {
   if (!dir) return false;
   const resolved = path.resolve(dir);
   if (resolved === MAIN_DIR) return true;
-  // Inside the clone, but only a worktree counts as safe to edit.
+  // Exclude worktrees — that's where edits belong.
   return (
     resolved.startsWith(MAIN_DIR_PREFIX) &&
     !resolved.startsWith(WORKTREES_PREFIX)
