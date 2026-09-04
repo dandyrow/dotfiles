@@ -26,31 +26,68 @@ export function isMainCheckout(dir: string): boolean {
 
 const MESSAGE = `Blocked: this targets the live main dotfiles checkout. Never edit main directly — start a worktree with ./scripts/agent-start.sh <branch> and make changes there.`;
 
+/** Extract probable file targets from a shell command string. */
+function extractTargets(command: string): string[] {
+  const targets: string[] = [];
+
+  // mv, cp, rm, rmdir, mkdir, touch, ln, truncate, dd — args after flags are targets.
+  for (const cmd of ["mv", "cp", "rm", "rmdir", "mkdir", "touch", "ln", "truncate", "dd"]) {
+    const re = new RegExp(`(?:^|[\\s;&|=(])${cmd}\\b(.*)`, "s");
+    const m = command.match(re);
+    if (m) {
+      for (const arg of m[1].split(/\s+/)) {
+        if (arg && !arg.startsWith("-")) targets.push(arg);
+      }
+    }
+  }
+
+  // tee — last arg is the output file.
+  const teeMatch = command.match(/(?:^|[\s;&|=(])\btee\b(.*)/s);
+  if (teeMatch) {
+    const args = teeMatch[1].split(/\s+/).filter(Boolean);
+    if (args.length && !args[args.length - 1].startsWith("-")) {
+      targets.push(args[args.length - 1]);
+    }
+  }
+
+  // cat/echo/printf with > or >> — extract target after the redirect.
+  const redirectMatch = command.match(
+    /(?:^|[;&|]\s*)(?:sudo\s+)?(?:cat|echo|printf)\b[^|;&\n]*[>2]>\s*(\S+)/,
+  );
+  if (redirectMatch) targets.push(redirectMatch[1]);
+
+  // Bare > or >> at top level.
+  const bareRedirect = command.match(/(?:^|[\s;&|])\s*(?:>|>>)\s*(\S+)/);
+  if (bareRedirect) targets.push(bareRedirect[1]);
+
+  // Deduplicate. Skip relative paths — they're ambiguous without CWD context.
+  return [...new Set(targets)].filter((t) => path.isAbsolute(t) || t.startsWith("~") || t.startsWith("."));
+}
+
 export function canCommandMutate(command: string): WorktreeGuardResult {
   if (typeof command !== "string" || command.length === 0) return SAFE;
-  const couldMutate =
-    /(?:^|[\s;&|=(])(?:mv|cp|rm|rmdir|mkdir|touch|ln|truncate|dd|tee)\b/s.test(
-      command,
-    ) ||
-    /(?:^|[;&|]\s*)(?:sudo\s+)?(?:cat|echo|printf)\b[^|;&\n]*[>2]>/s.test(
-      command,
-    ) ||
-    /(?:^|[\s;&|])\s*(?:>|>>)\s*\S/.test(command) ||
-    /<<-?\s*['"]?\w+['"]?/.test(command);
-  return couldMutate
-    ? { protected: true, reason: MESSAGE }
-    : SAFE;
+
+  const targets = extractTargets(command);
+  for (const target of targets) {
+    if (isMainCheckout(resolveTarget(target))) {
+      return { protected: true, reason: MESSAGE };
+    }
+  }
+  return SAFE;
 }
 
 function resolveTarget(targetPath: string): string {
+  const expanded = targetPath.startsWith("~")
+    ? path.join(os.homedir(), targetPath.slice(1))
+    : targetPath;
   try {
-    return realpathSync(targetPath);
+    return realpathSync(expanded);
   } catch {
     // New file: symlink-resolve the parent dir, keep the basename.
     try {
-      return path.join(realpathSync(path.dirname(targetPath)), path.basename(targetPath));
+      return path.join(realpathSync(path.dirname(expanded)), path.basename(expanded));
     } catch {
-      return targetPath;
+      return path.resolve(expanded);
     }
   }
 }
