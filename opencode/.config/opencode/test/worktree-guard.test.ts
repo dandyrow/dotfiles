@@ -64,6 +64,10 @@ describe("blockedForBash", () => {
     blocked("sudo rm /nix/store/foo");
     blocked("foo && mv a b");
     blocked("cd /tmp && rm x");
+    blocked("cat <<EOF > file");
+    blocked("cat << 'EOF' >> file");
+    blocked("bash << 'SCRIPT' > out.txt");
+    blocked("cat <<- EOF > file");
   });
 
   it("allows read-only and build commands", () => {

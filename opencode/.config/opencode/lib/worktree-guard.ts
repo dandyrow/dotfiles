@@ -9,12 +9,9 @@ export type WorktreeGuardResult = {
 
 const SAFE: WorktreeGuardResult = { protected: false };
 
-export const MAIN_REPO_DIR_NAME = ".dotfiles";
-export const WORKTREES_DIR_NAME = ".worktrees";
-
-const MAIN_DIR = path.join(os.homedir(), MAIN_REPO_DIR_NAME);
+const MAIN_DIR = path.join(os.homedir(), ".dotfiles");
 const MAIN_DIR_PREFIX = MAIN_DIR + path.sep;
-const WORKTREES_PREFIX = path.join(MAIN_DIR, WORKTREES_DIR_NAME, path.sep);
+const WORKTREES_PREFIX = path.join(MAIN_DIR, ".worktrees", path.sep);
 
 export function isMainCheckout(dir: string): boolean {
   if (!dir) return false;
@@ -38,7 +35,8 @@ export function blockedForBash(command: string): WorktreeGuardResult {
     /(?:^|[;&|]\s*)(?:sudo\s+)?(?:cat|echo|printf)\b[^|;&\n]*[>2]>/s.test(
       command,
     ) ||
-    /(?:^|[\s;&|])\s*(?:>|>>)\s*\S/.test(command);
+    /(?:^|[\s;&|])\s*(?:>|>>)\s*\S/.test(command) ||
+    /<<-?\s*['"]?\w+['"]?/.test(command);
   return couldMutate
     ? { protected: true, reason: MESSAGE }
     : SAFE;
