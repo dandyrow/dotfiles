@@ -14,7 +14,7 @@ Before starting any task, review available skills and invoke any that apply.
     ```
   - Good, one line, non-obvious *why* only:
     ```nix
-    # Only cert var forwarded into FOD sandboxes — carries the corp CA past the proxy.
+    # Only cert var forwarded into FOD sandboxes, carries the corp CA past the proxy.
     ```
 - Root-cause analyses, falsified hypotheses, and link-outs to upstream issues belong in commit messages and PR bodies, not source comments.
 - Apply the `unslop` skill to all prose before finalizing: PR descriptions, issue bodies, commit messages, ADRs, comments.
