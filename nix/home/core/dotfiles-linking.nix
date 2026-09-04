@@ -23,6 +23,7 @@ let
     "nvim"
     "opencode"
     "starship"
+    "tmux"
     "yazi"
     "zsh"
   ];
