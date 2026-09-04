@@ -3,7 +3,7 @@ import type { Plugin } from "@opencode-ai/plugin";
 import {
   isMainCheckout,
   blockedForBash,
-  blockedForFileTool,
+  isFileInMainCheckout,
 } from "../lib/worktree-guard.ts";
 
 export const WorktreeGuardPlugin: Plugin = async ({ directory }) => {
@@ -18,8 +18,7 @@ export const WorktreeGuardPlugin: Plugin = async ({ directory }) => {
         return;
       }
       if (input.tool === "edit" || input.tool === "write") {
-        // Resolve the target file itself so symlinked stow paths are caught from any cwd.
-        const result = blockedForFileTool(output.args?.filePath);
+        const result = isFileInMainCheckout(output.args?.filePath);
         if (result.protected) throw new Error(result.reason);
       }
     },

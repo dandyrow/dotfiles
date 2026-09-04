@@ -55,9 +55,8 @@ function resolveTarget(targetPath: string): string {
   }
 }
 
-export function blockedForFileTool(filePath: string): WorktreeGuardResult {
+export function isFileInMainCheckout(filePath: string): WorktreeGuardResult {
   if (typeof filePath !== "string" || filePath.length === 0) return SAFE;
-  // Resolve through ~/.config symlinks so stow-live files are caught regardless of session cwd.
   return isMainCheckout(resolveTarget(filePath))
     ? { protected: true, reason: MESSAGE }
     : SAFE;
