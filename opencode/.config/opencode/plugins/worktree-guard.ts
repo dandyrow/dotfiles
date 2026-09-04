@@ -2,7 +2,7 @@ import type { Plugin } from "@opencode-ai/plugin";
 
 import {
   isMainCheckout,
-  blockedForBash,
+  bashCommandCouldMutate,
   isFileInMainCheckout,
 } from "../lib/worktree-guard.ts";
 
@@ -12,7 +12,7 @@ export const WorktreeGuardPlugin: Plugin = async ({ directory }) => {
       if (input.tool === "bash" && typeof output.args?.command === "string") {
         // Bash mutation paths are heuristic, so gate on the session cwd only.
         if (isMainCheckout(directory)) {
-          const result = blockedForBash(output.args.command);
+          const result = bashCommandCouldMutate(output.args.command);
           if (result.protected) throw new Error(result.reason);
         }
         return;
