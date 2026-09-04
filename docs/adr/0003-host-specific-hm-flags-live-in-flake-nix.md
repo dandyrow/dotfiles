@@ -1,9 +1,8 @@
 # Host-specific Home Manager flags live in flake.nix
 
 `enableVscodeSandbox` and `isWork` are Home Manager options declared under
-`dandyrow.*` in `nix/home/core/work-identity.nix` and
-`nix/home/core/vscode-sandbox.nix`. They vary per host: the work laptop
-enables the sandbox, the personal machine does not.
+`dandyrow.*`. They vary per host: the work laptop enables the sandbox, the
+personal machine does not.
 
 NixOS modules cannot set Home Manager options. The two module systems are
 separate, so moving these flags into per-host NixOS configuration is not
