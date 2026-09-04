@@ -5,7 +5,6 @@
     ./gnupg-home.nix
     ./herdr.nix
     ./nvim.nix
-    ./tmux.nix
     ./vscode-sandbox.nix
     ./work-identity.nix
     ./zsh.nix
