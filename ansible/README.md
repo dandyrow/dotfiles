@@ -24,7 +24,7 @@ provider will use.
 
 Controller needs `ansible` (bundles `community.proxmox`), or `ansible-core`
 plus `ansible-galaxy collection install -r requirements.yml`. Auth comes from
-environment variables resolved via `lookup('env', ...)`; the collection marks
+environment variables resolved via `lookup('ansible.builtin.env', ...)`; the collection marks
 `api_password` `no_log`, so the root password is masked in all output including
 `-vvv`.
 
