@@ -22,14 +22,24 @@ provider will use.
 
 ### Run
 
-Controller needs `ansible` (bundles `community.proxmox`), or `ansible-core`
-plus `ansible-galaxy collection install -r requirements.yml`. Auth comes from
-environment variables resolved via `lookup('ansible.builtin.env', ...)`; the collection marks
-`api_password` `no_log`, so the root password is masked in all output including
-`-vvv`.
+The controller needs `ansible-core`, the collection's Python runtime deps on
+the interpreter that executes the module (`proxmoxer >= 2.3`, `requests`), and
+the collection itself. The `ansible` metapackage alone does not provide those
+Python libs. NixOS env that carries all three:
+
+```
+nix shell --impure --expr 'let pkgs = import <nixpkgs> {}; in pkgs.python3.withPackages (ps: [ ps.ansible-core ps.proxmoxer ps.requests ])' -c bash -c '
+  ansible-galaxy collection install -r requirements.yml -p "$HOME/.local/share/ansible/collections"
+  export ANSIBLE_COLLECTIONS_PATH="$HOME/.local/share/ansible/collections"'
+```
+
+Auth comes from environment variables resolved via
+`lookup('ansible.builtin.env', ...)`; the collection marks `api_password`
+`no_log`, so the root password is masked in all output including `-vvv`.
 
 ```
 cd ansible
+export ANSIBLE_COLLECTIONS_PATH="$HOME/.local/share/ansible/collections"
 export PROXMOX_HOST=https://pve.example.net:8006
 export PROXMOX_USER=root@pam
 read -rs PROXMOX_PASSWORD   # silent read keeps the root password out of shell history
