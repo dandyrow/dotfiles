@@ -33,24 +33,22 @@
       ansible.builtin.command: pveum aclmod / -user {{ pve_user }} -role {{ pve_role }}
       changed_when: false
 
-    - name: Remove provider token to force a fresh secret
-      ansible.builtin.command:
-        pveum user token remove {{ pve_user }} {{ pve_token }}
-      register: pve_token_remove
-      when: regenerate_provider_token
-      changed_when: false
-      failed_when: pve_token_remove.rc != 0 and 'does not exist' not in pve_token_remove.stderr
-
     - name: Check for existing provider token
       ansible.builtin.command:
         pveum user token list {{ pve_user }} --output-format json
       changed_when: false
       register: pve_token_list
 
+    - name: Remove provider token to force a fresh secret
+      ansible.builtin.command:
+        pveum user token remove {{ pve_user }} {{ pve_token }}
+      when: regenerate_provider_token and "'{{ pve_token }}' in pve_token_list.stdout"
+      changed_when: false
+
     - name: Create provider API token
       ansible.builtin.command:
         pveum user token add {{ pve_user }} {{ pve_token }} --privsep 0 --output-format json
-      when: "'{{ pve_token }}' not in pve_token_list.stdout"
+      when: regenerate_provider_token or "'{{ pve_token }}' not in pve_token_list.stdout"
       register: pve_token_add
 
     - name: Show newly-created token secret (capture into your secret manager now)
