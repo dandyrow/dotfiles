@@ -1,2 +1,2 @@
-[proxmox]
-# pve ansible_host=<proxmox-ip-or-fqdn>
+# API-only bootstrap: community.proxmox modules authenticate via PROXMOX_* env vars, no SSH.
+localhost ansible_connection=local
