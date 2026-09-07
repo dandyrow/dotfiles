@@ -1,0 +1,2 @@
+[proxmox]
+# pve ansible_host=<proxmox-ip-or-fqdn> ansible_user=root ansible_connection=ssh

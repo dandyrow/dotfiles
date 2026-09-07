@@ -1,0 +1,63 @@
+---
+- name: Bootstrap least-privilege Proxmox user for OpenTofu
+  hosts: proxmox
+  gather_facts: false
+  become: true
+  vars:
+    pve_user: terraform@pve
+    pve_role: Terraform
+    pve_token: provider
+    regenerate_provider_token: false
+    pve_role_privs: >-
+      VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit
+      VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory
+      VM.Config.Network VM.Config.Options VM.Monitor VM.PowerMgmt
+      Datastore.Allocate Datastore.AllocateSpace Datastore.AllocateTemplate
+      Datastore.Audit Sys.Audit Sys.Modify
+      Mapping.Use Mapping.Modify Mapping.Audit
+
+  tasks:
+    - name: Create dedicated OpenTofu PVE user
+      ansible.builtin.command: pveum user add {{ pve_user }}
+      register: pve_user_add
+      changed_when: "'already exists' not in pve_user_add.stderr"
+      failed_when: pve_user_add.rc != 0 and 'already exists' not in pve_user_add.stderr
+
+    - name: Create scoped Terraform role
+      ansible.builtin.command: pveum role add {{ pve_role }} -privs "{{ pve_role_privs }}"
+      register: pve_role_add
+      changed_when: "'already exists' not in pve_role_add.stderr"
+      failed_when: pve_role_add.rc != 0 and 'already exists' not in pve_role_add.stderr
+
+    - name: Bind Terraform role to user on datacenter root
+      ansible.builtin.command: pveum aclmod / -user {{ pve_user }} -role {{ pve_role }}
+      changed_when: false
+
+    - name: Remove provider token to force a fresh secret
+      ansible.builtin.command:
+        pveum user token remove {{ pve_user }} {{ pve_token }}
+      register: pve_token_remove
+      when: regenerate_provider_token
+      changed_when: false
+      failed_when: pve_token_remove.rc != 0 and 'does not exist' not in pve_token_remove.stderr
+
+    - name: Check for existing provider token
+      ansible.builtin.command:
+        pveum user token list {{ pve_user }} --output-format json
+      changed_when: false
+      register: pve_token_list
+
+    - name: Create provider API token
+      ansible.builtin.command:
+        pveum user token add {{ pve_user }} {{ pve_token }} --privsep 0 --output-format json
+      when: "'{{ pve_token }}' not in pve_token_list.stdout"
+      register: pve_token_add
+
+    - name: Show newly-created token secret (capture into your secret manager now)
+      ansible.builtin.debug:
+        msg: "{{ pve_token_add.stdout }}"
+      when: pve_token_add is defined and pve_token_add.changed
+
+    - name: Verify effective permissions
+      ansible.builtin.command: pveum user permissions {{ pve_user }}
+      changed_when: false
