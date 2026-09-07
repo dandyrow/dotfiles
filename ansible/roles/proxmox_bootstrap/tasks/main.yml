@@ -1,17 +1,26 @@
 ---
 - name: Create scoped Terraform role
-  community.proxmox.proxmox_role:  # noqa: args[module]
+  community.proxmox.proxmox_role:
+    api_host: "{{ lookup('env', 'PROXMOX_HOST') }}"
+    api_user: "{{ lookup('env', 'PROXMOX_USER') }}"
+    api_password: "{{ lookup('env', 'PROXMOX_PASSWORD') }}"
     roleid: "{{ proxmox_bootstrap_role }}"
     privs: "{{ proxmox_bootstrap_role_privs | split() }}"
 
 - name: Drop provider token so regenerate can mint a fresh secret
-  community.proxmox.proxmox_user:  # noqa: args[module]
+  community.proxmox.proxmox_user:
+    api_host: "{{ lookup('env', 'PROXMOX_HOST') }}"
+    api_user: "{{ lookup('env', 'PROXMOX_USER') }}"
+    api_password: "{{ lookup('env', 'PROXMOX_PASSWORD') }}"
     userid: "{{ proxmox_bootstrap_user }}"
     tokens: []
   when: proxmox_bootstrap_regenerate_token
 
 - name: Create dedicated OpenTofu PVE user with provider token
-  community.proxmox.proxmox_user:  # noqa: args[module]
+  community.proxmox.proxmox_user:
+    api_host: "{{ lookup('env', 'PROXMOX_HOST') }}"
+    api_user: "{{ lookup('env', 'PROXMOX_USER') }}"
+    api_password: "{{ lookup('env', 'PROXMOX_PASSWORD') }}"
     userid: "{{ proxmox_bootstrap_user }}"
     tokens:
       - tokenid: "{{ proxmox_bootstrap_token }}"
@@ -20,7 +29,10 @@
   register: proxmox_bootstrap_user_result
 
 - name: Bind Terraform role to user on datacenter root
-  community.proxmox.proxmox_access_acl:  # noqa: args[module]
+  community.proxmox.proxmox_access_acl:
+    api_host: "{{ lookup('env', 'PROXMOX_HOST') }}"
+    api_user: "{{ lookup('env', 'PROXMOX_USER') }}"
+    api_password: "{{ lookup('env', 'PROXMOX_PASSWORD') }}"
     path: /
     roleid: "{{ proxmox_bootstrap_role }}"
     type: user
