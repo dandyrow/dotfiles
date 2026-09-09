@@ -3,10 +3,7 @@ proxmox_bootstrap_user: terraform@pve
 proxmox_bootstrap_role: Terraform
 proxmox_bootstrap_token: provider
 proxmox_bootstrap_regenerate_token: false
-# Controller-only; install flows stage only etc/, never this.
-proxmox_bootstrap_secret_file: >-
-  {{ playbook_dir }}/../secrets/proxmox/provider-token
-# Scoped to New-H0Ryzen; User.Modify omitted to block self-privilege-escalation.
+# Scoped to the New-H0Ryzen deploy; User.Modify omitted to block self-privilege-escalation.
 # VM.Monitor dropped in PVE 9.0; the provider never needs it.
 proxmox_bootstrap_role_privs: >-
   VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit

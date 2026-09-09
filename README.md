@@ -82,15 +82,11 @@ hosts do not require it.
 
 ```bash
 nix build --impure .#wsl-tarball
-stage=$(mktemp -d)
-cp -a ./secrets/etc "$stage/"
-sudo ./result/bin/nixos-wsl-tarball-builder --extra-files "$stage" nixos.wsl
-rm -rf "$stage"
+sudo ./result/bin/nixos-wsl-tarball-builder --extra-files ./secrets nixos.wsl
 ```
 
-> **Note:** Stage only the `etc/` subtree — `--extra-files` maps the passed root
-> onto `/`, so the controller-only Proxmox token under `secrets/proxmox/` must
-> never be bundled into the image.
+> **Note:** The `secrets/` directory must always be prepared locally (step 1)
+> regardless of whether the repo is cloned — it is never committed.
 
 This produces `nixos.wsl` — a compressed archive ready to import into WSL,
 with the hashed password baked in at `/etc/secrets/primary-user-password`.
