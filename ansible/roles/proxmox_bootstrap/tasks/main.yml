@@ -1,0 +1,44 @@
+---
+- name: Create scoped Terraform role
+  community.proxmox.proxmox_role:
+    api_host: "{{ lookup('ansible.builtin.env', 'PROXMOX_HOST') }}"
+    api_user: "{{ lookup('ansible.builtin.env', 'PROXMOX_USER') }}"
+    api_password: "{{ lookup('ansible.builtin.env', 'PROXMOX_PASSWORD') }}"
+    roleid: "{{ proxmox_bootstrap_role }}"
+    privs: "{{ proxmox_bootstrap_role_privs | split() }}"
+
+- name: Drop provider token so regenerate can mint a fresh secret
+  community.proxmox.proxmox_user:
+    api_host: "{{ lookup('ansible.builtin.env', 'PROXMOX_HOST') }}"
+    api_user: "{{ lookup('ansible.builtin.env', 'PROXMOX_USER') }}"
+    api_password: "{{ lookup('ansible.builtin.env', 'PROXMOX_PASSWORD') }}"
+    userid: "{{ proxmox_bootstrap_user }}"
+    tokens: []
+  when: proxmox_bootstrap_regenerate_token
+
+- name: Create dedicated OpenTofu PVE user with provider token
+  community.proxmox.proxmox_user:
+    api_host: "{{ lookup('ansible.builtin.env', 'PROXMOX_HOST') }}"
+    api_user: "{{ lookup('ansible.builtin.env', 'PROXMOX_USER') }}"
+    api_password: "{{ lookup('ansible.builtin.env', 'PROXMOX_PASSWORD') }}"
+    userid: "{{ proxmox_bootstrap_user }}"
+    tokens:
+      - tokenid: "{{ proxmox_bootstrap_token }}"
+        privsep: false
+        comment: OpenTofu provider token for New-H0Ryzen deploy
+  register: proxmox_bootstrap_user_result
+
+- name: Bind Terraform role to user on datacenter root
+  community.proxmox.proxmox_access_acl:
+    api_host: "{{ lookup('ansible.builtin.env', 'PROXMOX_HOST') }}"
+    api_user: "{{ lookup('ansible.builtin.env', 'PROXMOX_USER') }}"
+    api_password: "{{ lookup('ansible.builtin.env', 'PROXMOX_PASSWORD') }}"
+    path: /
+    roleid: "{{ proxmox_bootstrap_role }}"
+    type: user
+    ugid: "{{ proxmox_bootstrap_user }}"
+
+- name: Show freshly-minted token secret (capture into your secret manager now)
+  ansible.builtin.debug:
+    var: proxmox_bootstrap_user_result.secrets
+  when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0
