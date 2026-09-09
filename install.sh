@@ -42,10 +42,15 @@ fi
 chmod 700 "$(dirname "${PASSWORD_FILE}")"
 chmod 600 "${PASSWORD_FILE}"
 
+# --extra-files maps the passed root onto /, so controller-only secrets under secrets/proxmox/ stay behind.
+STAGE_ROOT="$(mktemp -d)"
+trap 'rm -rf "${STAGE_ROOT}"' EXIT
+cp -a "${SECRETS_DIR}/etc" "${STAGE_ROOT}/"
+
 echo "Installing NixOS (${HOST}) on ${TARGET_IP}..."
 
 nix run nixpkgs#nixos-anywhere -- \
   ${BUILD_ON_REMOTE:+--build-on-remote} \
   --flake "$(dirname "$0")#${HOST}" \
-  --extra-files "${SECRETS_DIR}" \
+  --extra-files "${STAGE_ROOT}" \
   "root@${TARGET_IP}"

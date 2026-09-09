@@ -49,15 +49,18 @@ export PROXMOX_VALIDATE_CERTS=false   # only needed if the node cert isn't trust
 ansible-playbook proxmox.yml -e ansible_python_interpreter=$(which python3)
 ```
 
-The first run prints the token secret once. Store it in a secret manager,
-never in this repo. Later runs are no-ops.
+The first run writes the token secret to `secrets/proxmox/provider-token`
+(gitignored, mode 0600) at the repo root — the copy OpenTofu reads at apply
+time. Controller-only: install flows stage only the `etc/` subtree, so the
+token never reaches a VM. Keep a separate copy in your password manager as a
+personal record. Later runs are no-ops.
 
 ### Rotating a lost secret
 
 If the secret is lost and the token still exists, force a fresh one with the
 same env vars as above plus the regenerate flag. The playbook drops the
 user's tokens (this user only ever has `provider`), then mints a new one and
-prints its secret.
+rewrites the token file.
 
 ```
 cd ansible
