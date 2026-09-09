@@ -46,7 +46,7 @@ export PROXMOX_USER=root@pam
 read -rs PROXMOX_PASSWORD   # silent read keeps the root password out of shell history
 export PROXMOX_PASSWORD
 export PROXMOX_VALIDATE_CERTS=false   # only needed if the node cert isn't trusted yet
-ansible-playbook proxmox.yml
+ansible-playbook proxmox.yml -e ansible_python_interpreter=$(which python3)
 ```
 
 The first run prints the token secret once. Store it in a secret manager,
@@ -61,7 +61,7 @@ prints its secret.
 
 ```
 cd ansible
-ansible-playbook proxmox.yml -e proxmox_bootstrap_regenerate_token=true
+ansible-playbook proxmox.yml -e proxmox_bootstrap_regenerate_token=true -e ansible_python_interpreter=$(which python3)
 ```
 
 ### What gets created
