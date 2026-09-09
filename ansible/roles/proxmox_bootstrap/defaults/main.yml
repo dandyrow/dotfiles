@@ -4,10 +4,11 @@ proxmox_bootstrap_role: Terraform
 proxmox_bootstrap_token: provider
 proxmox_bootstrap_regenerate_token: false
 # Scoped to the New-H0Ryzen deploy; User.Modify omitted to block self-privilege-escalation.
+# VM.Monitor dropped in PVE 9.0; the provider never needs it.
 proxmox_bootstrap_role_privs: >-
   VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit
   VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory
-  VM.Config.Network VM.Config.Options VM.Monitor VM.PowerMgmt
+  VM.Config.Network VM.Config.Options VM.PowerMgmt
   Datastore.Allocate Datastore.AllocateSpace Datastore.AllocateTemplate
   Datastore.Audit Sys.Audit Sys.Modify
   Mapping.Use Mapping.Modify Mapping.Audit
