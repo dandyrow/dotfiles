@@ -1,8 +1,10 @@
 Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be styled to match the terminal.
 
+diff --git a/src/app/state.rs b/src/app/state.rs
+index 892ec5e..fad785a 100644
 --- a/src/app/state.rs
 +++ b/src/app/state.rs
-@@ -105,6 +105,20 @@
+@@ -71,6 +71,20 @@ pub struct Palette {
      pub teal: Color,
      /// Interrupted / warning states.
      pub peach: Color,
@@ -23,7 +25,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
  }
  
  impl Palette {
-@@ -130,6 +144,13 @@
+@@ -96,6 +110,13 @@ impl Palette {
              blue: Color::Rgb(137, 180, 250),
              teal: Color::Rgb(148, 226, 213),
              peach: Color::Rgb(250, 179, 135),
@@ -37,7 +39,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -155,6 +176,13 @@
+@@ -121,6 +142,13 @@ impl Palette {
              blue: Color::Rgb(30, 102, 245),
              teal: Color::Rgb(23, 146, 153),
              peach: Color::Rgb(254, 100, 11),
@@ -51,7 +53,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -180,6 +208,13 @@
+@@ -146,6 +174,13 @@ impl Palette {
              blue: Color::Blue,
              teal: Color::Cyan,
              peach: Color::Yellow,
@@ -65,7 +67,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -205,6 +240,13 @@
+@@ -171,6 +206,13 @@ impl Palette {
              blue: Color::Rgb(122, 162, 247),
              teal: Color::Rgb(125, 207, 255),
              peach: Color::Rgb(255, 158, 100),
@@ -79,7 +81,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -230,6 +272,13 @@
+@@ -196,6 +238,13 @@ impl Palette {
              blue: Color::Rgb(46, 125, 233),
              teal: Color::Rgb(17, 140, 116),
              peach: Color::Rgb(177, 92, 0),
@@ -93,7 +95,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -255,6 +304,13 @@
+@@ -221,6 +270,13 @@ impl Palette {
              blue: Color::Rgb(139, 233, 253), // cyan-ish
              teal: Color::Rgb(139, 233, 253),
              peach: Color::Rgb(255, 184, 108),
@@ -107,7 +109,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -280,6 +336,13 @@
+@@ -246,6 +302,13 @@ impl Palette {
              blue: Color::Rgb(129, 161, 193),
              teal: Color::Rgb(143, 188, 187),
              peach: Color::Rgb(208, 135, 112),
@@ -121,7 +123,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -305,6 +368,13 @@
+@@ -271,6 +334,13 @@ impl Palette {
              blue: Color::Rgb(131, 165, 152),
              teal: Color::Rgb(142, 192, 124),
              peach: Color::Rgb(254, 128, 25),
@@ -135,7 +137,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -330,6 +400,13 @@
+@@ -296,6 +366,13 @@ impl Palette {
              blue: Color::Rgb(7, 102, 120),
              teal: Color::Rgb(66, 123, 88),
              peach: Color::Rgb(175, 58, 3),
@@ -149,7 +151,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -355,6 +432,13 @@
+@@ -321,6 +398,13 @@ impl Palette {
              blue: Color::Rgb(97, 175, 239),
              teal: Color::Rgb(86, 182, 194),
              peach: Color::Rgb(209, 154, 102),
@@ -163,7 +165,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -380,6 +464,13 @@
+@@ -346,6 +430,13 @@ impl Palette {
              blue: Color::Rgb(64, 120, 242),
              teal: Color::Rgb(1, 132, 188),
              peach: Color::Rgb(152, 104, 1),
@@ -177,7 +179,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -405,6 +496,13 @@
+@@ -371,6 +462,13 @@ impl Palette {
              blue: Color::Rgb(38, 139, 210),
              teal: Color::Rgb(42, 161, 152),
              peach: Color::Rgb(203, 75, 22),
@@ -191,7 +193,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -430,6 +528,13 @@
+@@ -396,6 +494,13 @@ impl Palette {
              blue: Color::Rgb(38, 139, 210),
              teal: Color::Rgb(42, 161, 152),
              peach: Color::Rgb(203, 75, 22),
@@ -205,7 +207,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -455,6 +560,13 @@
+@@ -421,6 +526,13 @@ impl Palette {
              blue: Color::Rgb(126, 156, 216),
              teal: Color::Rgb(127, 180, 202),
              peach: Color::Rgb(255, 160, 102),
@@ -219,7 +221,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -480,6 +592,13 @@
+@@ -446,6 +558,13 @@ impl Palette {
              blue: Color::Rgb(77, 105, 155),
              teal: Color::Rgb(78, 140, 162),
              peach: Color::Rgb(204, 109, 0),
@@ -233,7 +235,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -505,6 +624,13 @@
+@@ -471,6 +590,13 @@ impl Palette {
              blue: Color::Rgb(49, 116, 143),    // pine
              teal: Color::Rgb(156, 207, 216),   // foam
              peach: Color::Rgb(234, 154, 151),  // rose
@@ -247,7 +249,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -530,6 +656,13 @@
+@@ -496,6 +622,13 @@ impl Palette {
              blue: Color::Rgb(40, 105, 131),
              teal: Color::Rgb(86, 148, 159),
              peach: Color::Rgb(215, 130, 126),
@@ -261,7 +263,7 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -555,6 +688,13 @@
+@@ -521,6 +654,13 @@ impl Palette {
              blue: Color::Rgb(176, 176, 176),
              teal: Color::Rgb(102, 221, 204),
              peach: Color::Rgb(255, 199, 153),
@@ -275,7 +277,35 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          }
      }
  
-@@ -643,6 +783,27 @@
+@@ -609,6 +749,27 @@ impl Palette {
+         if let Some(c) = &custom.peach {
+             self.peach = parse_color(c);
+         }
++        if let Some(c) = &custom.tab_active_bg {
++            self.tab_active_bg = Some(parse_color(c));
++        }
++        if let Some(c) = &custom.tab_active_fg {
++            self.tab_active_fg = Some(parse_color(c));
++        }
++        if let Some(c) = &custom.tab_inactive_bg {
++            self.tab_inactive_bg = Some(parse_color(c));
++        }
++        if let Some(c) = &custom.tab_inactive_fg {
++            self.tab_inactive_fg = Some(parse_color(c));
++        }
++        if let Some(c) = &custom.tab_bar_status_fg {
++            self.tab_bar_status_fg = Some(parse_color(c));
++        }
++        if let Some(c) = &custom.tab_bar_bg {
++            self.tab_bar_bg = Some(parse_color(c));
++        }
++        if let Some(c) = &custom.sidebar_border_fg {
++            self.sidebar_border_fg = Some(parse_color(c));
++        }
+         self
+     }
+ 
+@@ -671,6 +832,27 @@ impl Palette {
          if let Some(c) = &custom.peach {
              self.peach = parse_color(c);
          }
@@ -303,9 +333,128 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
          self
      }
  }
+diff --git a/src/client/shell/render.rs b/src/client/shell/render.rs
+index 8038701..72f1c0b 100644
+--- a/src/client/shell/render.rs
++++ b/src/client/shell/render.rs
+@@ -23,7 +23,7 @@ pub(in crate::client::shell) fn render_sidebar_background(
+     for y in area.y..area.bottom() {
+         if let Some(cell) = buffer.cell_mut((separator_x, y)) {
+             cell.set_symbol("│");
+-            cell.set_style(Style::default().fg(palette.surface_dim));
++            cell.set_style(Style::default().fg(palette.sidebar_border_fg.unwrap_or(palette.surface_dim)));
+         }
+     }
+ }
+diff --git a/src/client/shell/tabs.rs b/src/client/shell/tabs.rs
+index 3fdcf7d..2456a71 100644
+--- a/src/client/shell/tabs.rs
++++ b/src/client/shell/tabs.rs
+@@ -15,7 +15,7 @@ pub(crate) fn render_tab_bar(
+     hits: &mut ShellHitMap,
+ ) {
+     let palette = &config.palette;
+-    buffer.set_style(area, Style::default().bg(palette.panel_bg));
++    buffer.set_style(area, Style::default().bg(palette.tab_bar_bg.unwrap_or(palette.panel_bg)));
+     let tabs = snapshot
+         .tabs
+         .iter()
+@@ -79,7 +79,7 @@ pub(crate) fn render_tab_bar(
+                 } else {
+                     palette.overlay0
+                 })
+-                .bg(palette.surface0),
++                .bg(palette.tab_bar_bg.unwrap_or(palette.surface0)),
+         );
+         x = hits.tab_scroll_left.right();
+         content
+@@ -102,17 +102,21 @@ pub(crate) fn render_tab_bar(
+         let rect = Rect::new(x, area.y, width, 1);
+         let style = if tab.focused {
+             let base = Style::default()
+-                .fg(panel_contrast_fg(palette))
+-                .bg(palette.accent);
++                .fg(palette.tab_active_fg.unwrap_or_else(|| panel_contrast_fg(palette)))
++                .bg(palette.tab_active_bg.unwrap_or(palette.accent));
+             if tab.custom_label {
+                 base.add_modifier(Modifier::BOLD)
+             } else {
+                 base
+             }
+         } else if tab.custom_label {
+-            Style::default().fg(palette.overlay1).bg(palette.surface0)
++            Style::default()
++                .fg(palette.tab_inactive_fg.unwrap_or(palette.overlay1))
++                .bg(palette.tab_inactive_bg.unwrap_or(palette.surface0))
+         } else {
+-            Style::default().fg(palette.overlay0).bg(palette.surface0)
++            Style::default()
++                .fg(palette.tab_inactive_fg.unwrap_or(palette.overlay0))
++                .bg(palette.tab_inactive_bg.unwrap_or(palette.surface0))
+         };
+         let padding = width.saturating_sub(display_width(&name));
+         let left = padding / 2;
+@@ -147,7 +151,7 @@ pub(crate) fn render_tab_bar(
+                 } else {
+                     palette.overlay0
+                 })
+-                .bg(palette.surface0),
++                .bg(palette.tab_bar_bg.unwrap_or(palette.surface0)),
+         );
+         hits.new_tab = Rect::new(
+             hits.tab_scroll_right.right(),
+@@ -173,7 +177,9 @@ pub(crate) fn render_tab_bar(
+             area.y,
+             hits.new_tab.width,
+             " + ",
+-            Style::default().fg(palette.overlay1).bg(palette.panel_bg),
++            Style::default()
++                .fg(palette.overlay1)
++                .bg(palette.tab_bar_bg.unwrap_or(palette.panel_bg)),
+         );
+     }
+ 
+@@ -273,7 +279,9 @@ fn render_tab_bar_status(
+                 area.y,
+                 separator_width,
+                 &snapshot.tab_bar_right_separator,
+-                Style::default().fg(palette.overlay0).bg(palette.panel_bg),
++                Style::default()
++                    .fg(palette.overlay0)
++                    .bg(palette.tab_bar_bg.unwrap_or(palette.panel_bg)),
+             );
+             x = x.saturating_add(separator_width);
+         }
+@@ -284,7 +292,9 @@ fn render_tab_bar_status(
+                 .bg(palette.accent)
+                 .add_modifier(Modifier::BOLD)
+         } else {
+-            Style::default().fg(palette.overlay1).bg(palette.panel_bg)
++            Style::default()
++                .fg(palette.tab_bar_status_fg.unwrap_or(palette.overlay1))
++                .bg(palette.tab_bar_bg.unwrap_or(palette.panel_bg))
+         };
+         put_text(buffer, x, area.y, width, &segment.text, style);
+         x = x.saturating_add(width);
+diff --git a/src/config/theme.rs b/src/config/theme.rs
+index cb9e349..1da58b7 100644
 --- a/src/config/theme.rs
 +++ b/src/config/theme.rs
-@@ -119,6 +119,13 @@
+@@ -119,6 +119,13 @@ pub struct CustomThemeColors {
+     pub blue: Option<String>,
+     pub teal: Option<String>,
+     pub peach: Option<String>,
++    pub tab_active_bg: Option<String>,
++    pub tab_active_fg: Option<String>,
++    pub tab_inactive_bg: Option<String>,
++    pub tab_inactive_fg: Option<String>,
++    pub tab_bar_status_fg: Option<String>,
++    pub tab_bar_bg: Option<String>,
++    pub sidebar_border_fg: Option<String>,
+     /// Overrides applied when `auto_switch` selects a light appearance.
+     pub light: Option<ModeThemeColors>,
+     /// Overrides applied when `auto_switch` selects a dark appearance.
+@@ -148,6 +155,13 @@ pub struct ModeThemeColors {
      pub blue: Option<String>,
      pub teal: Option<String>,
      pub peach: Option<String>,
@@ -319,83 +468,3 @@ Add tab-bar and sidebar colour tokens so the tab bar and sidebar border can be s
  }
  
  /// Parse a color string into a ratatui Color.
---- a/src/ui/tabs.rs
-+++ b/src/ui/tabs.rs
-@@ -329,7 +329,8 @@
-     let p = &app.palette;
- 
-     frame.render_widget(
--        Paragraph::new(" ".repeat(area.width as usize)).style(Style::default().bg(p.panel_bg)),
-+        Paragraph::new(" ".repeat(area.width as usize))
-+            .style(Style::default().bg(p.tab_bar_bg.unwrap_or(p.panel_bg))),
-         area,
-     );
- 
-@@ -391,7 +392,9 @@
-         }
-         let active = idx == ws.active_tab;
-         let style = if active {
--            let base = Style::default().fg(panel_contrast_fg(p)).bg(p.accent);
-+            let base = Style::default()
-+                .fg(p.tab_active_fg.unwrap_or_else(|| panel_contrast_fg(p)))
-+                .bg(p.tab_active_bg.unwrap_or(p.accent));
-             if tab.is_auto_named() {
-                 base
-             } else {
-@@ -399,11 +402,13 @@
-             }
-         } else if tab.is_auto_named() {
-             Style::default()
--                .fg(p.overlay0)
--                .bg(p.surface0)
-+                .fg(p.tab_inactive_fg.unwrap_or(p.overlay0))
-+                .bg(p.tab_inactive_bg.unwrap_or(p.surface0))
-                 .add_modifier(Modifier::DIM)
-         } else {
--            Style::default().fg(p.overlay1).bg(p.surface0)
-+            Style::default()
-+                .fg(p.tab_inactive_fg.unwrap_or(p.overlay1))
-+                .bg(p.tab_inactive_bg.unwrap_or(p.surface0))
-         };
-         let width = rect.width as usize;
-         let name = tab_chrome_label(ws, idx);
-@@ -479,7 +484,7 @@
-                 let rect = Rect::new(x, area.y, separator_width, 1);
-                 frame.render_widget(
-                     Paragraph::new(app.tab_bar_right_separator.as_str())
--                        .style(Style::default().fg(p.overlay0).bg(p.panel_bg)),
-+                        .style(Style::default().fg(p.overlay0).bg(p.tab_bar_bg.unwrap_or(p.panel_bg))),
-                     rect,
-                 );
-                 x = x.saturating_add(separator_width);
-@@ -493,7 +498,9 @@
-                     .bg(p.accent)
-                     .add_modifier(Modifier::BOLD)
-             } else {
--                Style::default().fg(p.overlay1).bg(p.panel_bg)
-+                Style::default()
-+                    .fg(p.tab_bar_status_fg.unwrap_or(p.overlay1))
-+                    .bg(p.tab_bar_bg.unwrap_or(p.panel_bg))
-             };
-             frame.render_widget(Paragraph::new(segment.text).style(style), rect);
-             x = x.saturating_add(width);
---- a/src/ui/sidebar.rs
-+++ b/src/ui/sidebar.rs
-@@ -771,7 +771,7 @@
-     let sep_style = if is_navigating {
-         Style::default().fg(p.accent)
-     } else {
--        Style::default().fg(p.surface_dim)
-+        Style::default().fg(p.sidebar_border_fg.unwrap_or(p.surface_dim))
-     };
-     let sep_x = area.x + area.width.saturating_sub(1);
-     let buf = frame.buffer_mut();
-@@ -992,7 +992,7 @@
-     let sep_style = if is_navigating {
-         Style::default().fg(p.accent)
-     } else {
--        Style::default().fg(p.surface_dim)
-+        Style::default().fg(p.sidebar_border_fg.unwrap_or(p.surface_dim))
-     };
- 
-     let sep_x = area.x + area.width.saturating_sub(1);
