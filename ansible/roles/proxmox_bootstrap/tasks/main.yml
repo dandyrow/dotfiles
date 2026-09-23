@@ -14,7 +14,7 @@
     api_password: "{{ lookup('ansible.builtin.env', 'PROXMOX_PASSWORD') }}"
     userid: "{{ proxmox_bootstrap_user }}"
     tokens: []
-  when: proxmox_bootstrap_regenerate_token
+  when: proxmox_bootstrap_regenerate_token | bool
 
 - name: Create dedicated OpenTofu PVE user with provider token
   community.proxmox.proxmox_user:
