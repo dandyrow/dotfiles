@@ -46,7 +46,7 @@ access to the project.
 
 ```
 cd ansible
-export PROXMOX_HOST=https://pve.example.net:8006
+export PROXMOX_HOST=pve.example.net:8006
 export PROXMOX_USER=root@pam
 read -rs PROXMOX_PASSWORD   # silent read keeps the root password out of shell history
 export PROXMOX_PASSWORD
