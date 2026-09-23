@@ -29,18 +29,20 @@ Python libs. NixOS env that carries all three — `community.proxmox` ships
 bundled with the env's Ansible (`>= 2.0.0`, so nothing to install):
 
 ```
-nix shell --impure --expr 'let pkgs = import <nixpkgs> {}; in pkgs.python3.withPackages (ps: [ ps.ansible-core ps.proxmoxer ps.requests ])'
+export NIXPKGS_ALLOW_UNFREE=1   # bws carries an unfree license; --impure passes the flag through
+nix shell --impure --expr 'let pkgs = import <nixpkgs> {}; in [ pkgs.bws (pkgs.python3.withPackages (ps: [ ps.ansible-core ps.proxmoxer ps.requests ])) ]'
 ```
 
 Non-NixOS controllers: install `ansible-core`, `proxmoxer` and `requests`,
-then `ansible-galaxy collection install -r requirements.yml`.
+`bws`, then `ansible-galaxy collection install -r requirements.yml`.
 
 Auth comes from environment variables resolved via
 `lookup('ansible.builtin.env', ...)`; the collection marks `api_password`
 `no_log`, so the root password is masked in all output including `-vvv`. The
-BWS bootstrap store is read the same way: its access token and org/project
-identifiers come from env vars in the same style, and the token write is
-masked.
+BWS bootstrap store is written the same way: the access token and project id
+come from env vars in the same style, and the token write is masked via
+`no_log`. The machine account backing `BWS_ACCESS_TOKEN` must have write
+access to the project.
 
 ```
 cd ansible
@@ -49,6 +51,8 @@ export PROXMOX_USER=root@pam
 read -rs PROXMOX_PASSWORD   # silent read keeps the root password out of shell history
 export PROXMOX_PASSWORD
 export PROXMOX_VALIDATE_CERTS=false   # only needed if the node cert isn't trusted yet
+export BWS_ACCESS_TOKEN=<write-enabled machine account token>
+export BWS_PROJECT_ID=<homelab project id from bws project list>
 ansible-playbook proxmox.yml -e ansible_python_interpreter=$(which python3)
 ```
 
