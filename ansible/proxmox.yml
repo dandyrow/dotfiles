@@ -1,0 +1,6 @@
+---
+- name: Bootstrap least-privilege Proxmox user for OpenTofu
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: proxmox_bootstrap

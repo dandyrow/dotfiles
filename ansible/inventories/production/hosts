@@ -1,0 +1,2 @@
+# API-only bootstrap: community.proxmox modules authenticate via PROXMOX_* env vars, no SSH.
+localhost ansible_connection=local
