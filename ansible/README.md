@@ -37,7 +37,10 @@ then `ansible-galaxy collection install -r requirements.yml`.
 
 Auth comes from environment variables resolved via
 `lookup('ansible.builtin.env', ...)`; the collection marks `api_password`
-`no_log`, so the root password is masked in all output including `-vvv`.
+`no_log`, so the root password is masked in all output including `-vvv`. The
+BWS bootstrap store is read the same way: its access token and org/project
+identifiers come from env vars in the same style, and the token write is
+masked.
 
 ```
 cd ansible
@@ -49,15 +52,16 @@ export PROXMOX_VALIDATE_CERTS=false   # only needed if the node cert isn't trust
 ansible-playbook proxmox.yml -e ansible_python_interpreter=$(which python3)
 ```
 
-The first run prints the token secret once. Store it in a secret manager,
-never in this repo. Later runs are no-ops.
+The first run mints the token and auto-stores it into the BWS `bootstrap`
+project in the same invocation (see the ADR in `docs/adr/`), so nothing is
+captured or committed by hand. Later runs are no-ops.
 
 ### Rotating a lost secret
 
 If the secret is lost and the token still exists, force a fresh one with the
 same env vars as above plus the regenerate flag. The playbook drops the
 user's tokens (this user only ever has `provider`), then mints a new one and
-prints its secret.
+auto-stores the replacement in BWS the same way.
 
 ```
 cd ansible
