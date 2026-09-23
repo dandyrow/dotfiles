@@ -52,7 +52,7 @@ export PROXMOX_VALIDATE_CERTS=false   # only needed if the node cert isn't trust
 ansible-playbook proxmox.yml -e ansible_python_interpreter=$(which python3)
 ```
 
-The first run mints the token and auto-stores it into the BWS `bootstrap`
+The first run mints the token and auto-stores it into the BWS `homelab`
 project in the same invocation (see the ADR in `docs/adr/`), so nothing is
 captured or committed by hand. Later runs are no-ops.
 
