@@ -38,7 +38,36 @@
     type: user
     ugid: "{{ proxmox_bootstrap_user }}"
 
-- name: Show freshly-minted token secret (capture into your secret manager now)
-  ansible.builtin.debug:
-    var: proxmox_bootstrap_user_result.secrets
+- name: Read current secrets for the BWS homelab project
+  ansible.builtin.command:
+    cmd: bws secret list --project "{{ lookup('ansible.builtin.env', 'BWS_PROJECT_ID') }}"
+  environment:
+    BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
+  changed_when: false
+  no_log: true
+  register: proxmox_bootstrap_bws_list
   when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0
+
+- name: Resolve the stored secret id for the Proxmox token
+  ansible.builtin.set_fact:
+    proxmox_bootstrap_bws_secret_id: >-
+      {{ (proxmox_bootstrap_bws_list.stdout | from_json
+         | selectattr('key', 'equalto', proxmox_bootstrap_bws_secret_key) | list
+         | map(attribute='id') | first) | default('', true) }}
+  when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0
+
+- name: Create the Proxmox token secret in BWS
+  ansible.builtin.command:
+    cmd: bws secret create "{{ proxmox_bootstrap_bws_secret_key }}" "{{ proxmox_bootstrap_user_result.secrets[proxmox_bootstrap_token] }}" --project "{{ lookup('ansible.builtin.env', 'BWS_PROJECT_ID') }}"
+  environment:
+    BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
+  no_log: true
+  when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0 and proxmox_bootstrap_bws_secret_id == ''
+
+- name: Update the stored Proxmox token secret in BWS
+  ansible.builtin.command:
+    cmd: bws secret edit "{{ proxmox_bootstrap_bws_secret_id }}" "{{ proxmox_bootstrap_user_result.secrets[proxmox_bootstrap_token] }}"
+  environment:
+    BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
+  no_log: true
+  when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0 and proxmox_bootstrap_bws_secret_id != ''
