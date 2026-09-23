@@ -1,4 +1,14 @@
 ---
+- name: Assert the BWS store creds exist before any token rotation
+  ansible.builtin.assert:
+    that:
+      - lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') | length > 0
+      - lookup('ansible.builtin.env', 'BWS_PROJECT_ID') | length > 0
+    fail_msg: >-
+      The Proxmox token store needs BWS_ACCESS_TOKEN (write-enabled machine
+      account) and BWS_PROJECT_ID (homelab project id) exported first; a
+      rotated token with no working store is unrecoverable.
+
 - name: Create scoped Terraform role
   community.proxmox.proxmox_role:
     api_host: "{{ lookup('ansible.builtin.env', 'PROXMOX_HOST') }}"
@@ -38,52 +48,62 @@
     type: user
     ugid: "{{ proxmox_bootstrap_user }}"
 
-- name: Read current secrets for the BWS homelab project
-  ansible.builtin.shell:
-    cmd: bws secret list "$BWS_PROJECT_ID"
-  environment:
-    BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
-    BWS_PROJECT_ID: "{{ lookup('ansible.builtin.env', 'BWS_PROJECT_ID') }}"
-  changed_when: false
-  no_log: true
-  register: proxmox_bootstrap_bws_list
-  when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0
+- name: Store the minted token in BWS
+  block:
+    - name: Read current secrets for the BWS homelab project
+      ansible.builtin.shell:
+        cmd: bws secret list "$BWS_PROJECT_ID"
+      environment:
+        BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
+        BWS_PROJECT_ID: "{{ lookup('ansible.builtin.env', 'BWS_PROJECT_ID') }}"
+      changed_when: false
+      no_log: true
+      register: proxmox_bootstrap_bws_list
+      when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0
 
-- name: Resolve the stored secret id for the Proxmox token
-  ansible.builtin.set_fact:
-    proxmox_bootstrap_bws_secret_id: >-
-      {{ (proxmox_bootstrap_bws_list.stdout | from_json
-         | selectattr('key', 'equalto',
-            proxmox_bootstrap_bws_secret_key)
-         | list | map(attribute='id') | first) | default('', true) }}
-  when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0
+    - name: Resolve the stored secret id for the Proxmox token
+      ansible.builtin.set_fact:
+        proxmox_bootstrap_bws_secret_id: >-
+          {{ (proxmox_bootstrap_bws_list.stdout | from_json
+             | selectattr('key', 'equalto',
+                proxmox_bootstrap_bws_secret_key)
+             | list | map(attribute='id') | first) | default('', true) }}
+      when: proxmox_bootstrap_user_result.secrets | default({}) | length > 0
 
-- name: Create the Proxmox token secret in BWS
-  ansible.builtin.shell:
-    cmd: >-
-      bws secret create "$BWS_SECRET_KEY" "$PROXMOX_TOKEN" "$BWS_PROJECT_ID"
-  environment:
-    BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
-    BWS_PROJECT_ID: "{{ lookup('ansible.builtin.env', 'BWS_PROJECT_ID') }}"
-    BWS_SECRET_KEY: "{{ proxmox_bootstrap_bws_secret_key }}"
-    PROXMOX_TOKEN: >-
-      {{ proxmox_bootstrap_user_result.secrets[proxmox_bootstrap_token] }}
-  changed_when: true
-  no_log: true
-  when:
-    - proxmox_bootstrap_user_result.secrets | default({}) | length > 0
-    - proxmox_bootstrap_bws_secret_id == ''
+    - name: Create the Proxmox token secret in BWS
+      ansible.builtin.shell:
+        cmd: >-
+          bws secret create "$BWS_SECRET_KEY" "$PROXMOX_TOKEN" "$BWS_PROJECT_ID"
+      environment:
+        BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
+        BWS_PROJECT_ID: "{{ lookup('ansible.builtin.env', 'BWS_PROJECT_ID') }}"
+        BWS_SECRET_KEY: "{{ proxmox_bootstrap_bws_secret_key }}"
+        PROXMOX_TOKEN: >-
+          {{ proxmox_bootstrap_user_result.secrets[proxmox_bootstrap_token] }}
+      changed_when: true
+      no_log: true
+      when:
+        - proxmox_bootstrap_user_result.secrets | default({}) | length > 0
+        - proxmox_bootstrap_bws_secret_id == ''
 
-- name: Update the stored Proxmox token secret in BWS
-  ansible.builtin.shell:
-    cmd: bws secret edit --value "$PROXMOX_TOKEN" "$BWS_SECRET_ID"
-  environment:
-    BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
-    BWS_SECRET_ID: "{{ proxmox_bootstrap_bws_secret_id }}"
-    PROXMOX_TOKEN: >-
-      {{ proxmox_bootstrap_user_result.secrets[proxmox_bootstrap_token] }}
-  changed_when: true
-  no_log: true
-  when:
-    - proxmox_bootstrap_user_result.secrets | default({}) | length > 0
-    - proxmox_bootstrap_bws_secret_id != ''
+    - name: Update the stored Proxmox token secret in BWS
+      ansible.builtin.shell:
+        cmd: bws secret edit --value "$PROXMOX_TOKEN" "$BWS_SECRET_ID"
+      environment:
+        BWS_ACCESS_TOKEN: "{{ lookup('ansible.builtin.env', 'BWS_ACCESS_TOKEN') }}"
+        BWS_SECRET_ID: "{{ proxmox_bootstrap_bws_secret_id }}"
+        PROXMOX_TOKEN: >-
+          {{ proxmox_bootstrap_user_result.secrets[proxmox_bootstrap_token] }}
+      changed_when: true
+      no_log: true
+      when:
+        - proxmox_bootstrap_user_result.secrets | default({}) | length > 0
+        - proxmox_bootstrap_bws_secret_id != ''
+  rescue:
+    - name: Fail with the likely BWS store causes
+      ansible.builtin.fail:
+        msg: >-
+          BWS rejected the Proxmox token write. Verify the machine account
+          backing BWS_ACCESS_TOKEN has read and write access to the homelab
+          project, BWS_PROJECT_ID is that project's id, and the access token
+          hasn't been rotated.
