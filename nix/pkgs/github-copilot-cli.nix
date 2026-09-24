@@ -81,7 +81,9 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   postInstall = ''
+    # Exec'd node would swallow the copilot name; herdr name-detects agents from argv0.
     makeWrapper ${nodejs}/bin/node "$out"/bin/copilot \
+      --argv0 "$out"/bin/copilot \
       --add-flag "$out"/lib/github-copilot-cli/index.js \
       --add-flag --no-auto-update \
       --set-default NODE_NO_WARNINGS 1 \
