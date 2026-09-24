@@ -42,6 +42,9 @@
       allowUnfreePredicate =
         pkg:
         builtins.elem (lib.getName pkg) [
+          "nvidia-x11"
+          "nvidia-kernel-modules"
+          "nvidia-settings"
           "github-copilot-cli"
           "docker-sbx"
           "steam"

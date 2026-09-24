@@ -16,6 +16,13 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIForH9TNaNvQGNBzWXyPdtRGO5xiR2BYQeIKf8mzN2u9 dandyrow@Desktop"
   ];
 
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia = {
+    branch = "legacy_580";
+    open = false;
+    modesetting.enable = true;
+  };
+
   # Merged into the proxmox image build only; inert for normal evals.
   image.modules.proxmox = {
     proxmox.qemuConf.bios = "ovmf";
