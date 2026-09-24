@@ -25,12 +25,19 @@ provider will use.
 The controller needs `ansible-core`, the collection's Python runtime deps on
 the interpreter that executes the module (`proxmoxer >= 2.3`, `requests`), and
 the collection itself. The `ansible` metapackage alone does not provide those
-Python libs. NixOS env that carries all three — `community.proxmox` ships
-bundled with the env's Ansible (`>= 2.0.0`, so nothing to install):
+Python libs. The root flake's `ansible` devShell supplies all three plus `bws`
+— `community.proxmox` ships bundled with the env's Ansible (`>= 2.0.0`, so
+nothing to install):
 
 ```
-export NIXPKGS_ALLOW_UNFREE=1   # bws carries an unfree license; --impure passes the flag through
-nix shell --impure --expr 'let pkgs = import <nixpkgs> {}; in [ pkgs.bws (pkgs.python3.withPackages (ps: [ ps.ansible-core ps.proxmoxer ps.requests ])) ]'
+nix develop ..#ansible
+```
+
+`nix develop` spawns a nested bash subshell; pass your own shell to keep your
+normal zsh prompt and config instead:
+
+```
+nix develop ..#ansible -c "$SHELL"
 ```
 
 Non-NixOS controllers: install `ansible-core`, `proxmoxer` and `requests`,

@@ -48,6 +48,7 @@
           "steam-original"
           "steam-run"
           "steam-unwrapped"
+          "bws"
         ];
 
       overlays = [
@@ -145,6 +146,25 @@
 
       packages.${system}.wsl-tarball =
         inputs.self.nixosConfigurations.WSL.config.system.build.tarballBuilder;
+
+      devShells.${system}.ansible =
+        let
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            inherit overlays;
+            config = { inherit allowUnfreePredicate; };
+          };
+        in
+        pkgs.mkShell {
+          packages = [
+            pkgs.bws
+            (pkgs.python3.withPackages (ps: [
+              ps.ansible-core
+              ps.proxmoxer
+              ps.requests
+            ]))
+          ];
+        };
 
       homeConfigurations = {
         "dandyrow@x86_64-linux" = mkHome { hostSystem = "x86_64-linux"; };
