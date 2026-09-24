@@ -33,6 +33,19 @@ nothing to install):
 nix develop ..#ansible
 ```
 
+`nix develop` spawns a nested bash subshell; pass your own shell to keep your
+normal zsh prompt and config instead:
+
+```
+nix develop ..#ansible -c "$SHELL"
+```
+
+`$SHELL` is expanded by the outer shell before `nix develop` runs, so it
+execs your real zsh (`$0`), even though the `SHELL` env var inside the
+subshell is overwritten to stdenv bash. `bws`, the collection, and the
+playbook's Python deps are all injected via `PATH`, so your rc files still
+source cleanly.
+
 Non-NixOS controllers: install `ansible-core`, `proxmoxer` and `requests`,
 `bws`, then `ansible-galaxy collection install -r requirements.yml`.
 
