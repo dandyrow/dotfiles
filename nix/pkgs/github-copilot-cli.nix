@@ -20,19 +20,19 @@ let
   sources = {
     x86_64-linux = {
       suffix = "linux-x64";
-      hash = "sha256-2s6jYMgj3Vj3ENeoHDa76fZ3PfRYkIeqJctmumN8gig=";
+      hash = "sha256-w4YmnuG/RLrFFNorsMaypHVGYx8C4pT8Wowg0bG5kP8=";
     };
     aarch64-linux = {
       suffix = "linux-arm64";
-      hash = "sha256-TYgTS5IT+B9eMetc7noZH5FvVv9m4/s9Eh7sdspigJ4=";
+      hash = "sha256-OMULaI8oE9VwRsm8C0CHLSA9xhoJ9HbfyOW2w2anY4w=";
     };
     x86_64-darwin = {
       suffix = "darwin-x64";
-      hash = "sha256-mxqn3jGddO4eIglerqwyB6XNp42d8bzMM1AJfgSYWZg=";
+      hash = "sha256-pMQfH0gKJZ2y5NqVLV0uktGa5Urh1q+XFDNBtsSRiuo=";
     };
     aarch64-darwin = {
       suffix = "darwin-arm64";
-      hash = "sha256-HR4GBZ0LrHONzMND3rqXzQvw0XV1TsKfg6Ckc6osa0A=";
+      hash = "sha256-SfXKoFgpRaBMVhn46oFoCxyMJ2WIgpDPis+QPimFMVs=";
     };
   };
   source =
@@ -41,7 +41,7 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "github-copilot-cli";
-  version = "1.0.80";
+  version = "1.0.88";
 
   src = fetchurl {
     url = "https://github.com/github/copilot-cli/releases/download/v${finalAttrs.version}/github-copilot-${finalAttrs.version}-${source.suffix}.tgz";
@@ -81,7 +81,9 @@ stdenv.mkDerivation (finalAttrs: {
   '';
 
   postInstall = ''
+    # Exec'd node would swallow the copilot name; herdr name-detects agents from argv0.
     makeWrapper ${nodejs}/bin/node "$out"/bin/copilot \
+      --argv0 "$out"/bin/copilot \
       --add-flag "$out"/lib/github-copilot-cli/index.js \
       --add-flag --no-auto-update \
       --set-default NODE_NO_WARNINGS 1 \
