@@ -32,6 +32,7 @@
     environment.systemPackages = with pkgs.gnomeExtensions; [
       appindicator
       dash-to-dock
+      pip-on-top
       status-area-horizontal-spacing
     ];
 
@@ -46,6 +47,7 @@
           "org/gnome/shell".enabled-extensions = [
             "appindicatorsupport@rgcjonas.gmail.com"
             "dash-to-dock@micxgx.gmail.com"
+            "pip-on-top@rafostar.github.com"
             "status-area-horizontal-spacing@mathematical.coffee.gmail.com"
           ];
         };
