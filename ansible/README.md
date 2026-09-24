@@ -25,12 +25,12 @@ provider will use.
 The controller needs `ansible-core`, the collection's Python runtime deps on
 the interpreter that executes the module (`proxmoxer >= 2.3`, `requests`), and
 the collection itself. The `ansible` metapackage alone does not provide those
-Python libs. The nested flake's devShell supplies all three plus `bws` —
-`community.proxmox` ships bundled with the env's Ansible (`>= 2.0.0`, so
+Python libs. The root flake's `ansible` devShell supplies all three plus `bws`
+— `community.proxmox` ships bundled with the env's Ansible (`>= 2.0.0`, so
 nothing to install):
 
 ```
-nix develop
+nix develop ..#ansible
 ```
 
 Non-NixOS controllers: install `ansible-core`, `proxmoxer` and `requests`,
