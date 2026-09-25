@@ -1,5 +1,7 @@
-{ lib, ... }:
+{ config, lib, ... }:
 {
+  # Let the image module own the partition layout when baking a Proxmox template.
+  disko.enableConfig = lib.mkIf (config ? proxmox) false;
   disko.devices = {
     disk.main = {
       device = lib.mkDefault "/dev/vda";
