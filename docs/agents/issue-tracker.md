@@ -40,4 +40,23 @@ Both endpoints take the child's **database `id`** (integer), not its issue numbe
   `gh issue list --label wayfinder:research --label wayfinder:grilling --state open --json number,title,assignees`
   then check each with the `blocked_by` list command above.
 
-The map body's summary sections (Decisions-so-far, Not yet specified, Out of scope) are edited with `gh issue edit <map> --body-file <file>`. Claiming a ticket is `gh issue edit <n> --add-assignee @me`.
+Claiming a ticket is `gh issue edit <n> --add-assignee @me`.
+
+## Editing a map body
+
+Never write a map body with a bare `gh issue edit <map> --body-file <file>`. GitHub keeps no revision history for issue bodies, so an overwrite is unrecoverable, and the two obvious shell idioms both fail open:
+
+- `gh issue view <n> --json body > file` creates `file` before `gh` runs, so a failed fetch leaves a 0-byte file that a later `--body-file` happily publishes.
+- Fetch and publish in separate commands means nothing stops the publish from reading a stale or truncated file.
+
+Use `scripts/issue-body.sh`, which snapshots to XDG state, refuses an empty or headingless body, rejects a >50% length drop, shows a word diff, and asks before writing:
+
+```bash
+scripts/issue-body.sh fetch <map>              # prints the backup path
+# edit that file with the read/edit tools, not shell redirection
+scripts/issue-body.sh push <map> <file>        # snapshot, validate, diff, confirm, publish
+```
+
+`push` refuses to run if it cannot take a snapshot first. Pass `--allow-shrink` when a large deletion is intended, and `ASSUME_YES=1` to skip the prompt in automation.
+
+Prefer the `read`/`edit`/`write` tools over shell redirection when editing a fetched body: `edit` fails loudly on a missing anchor, where a redirect cannot fail at all.
