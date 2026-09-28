@@ -1,0 +1,57 @@
+---
+- name: Open an API ticket as the bootstrap user
+  ansible.builtin.uri:
+    url: "https://{{ proxmox_storage_host }}/api2/json/access/ticket"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ proxmox_storage_user }}"
+      password: "{{ proxmox_storage_password }}"
+    validate_certs: "{{ proxmox_storage_validate_certs }}"
+    status_code: 200
+  no_log: true
+  register: proxmox_storage_ticket
+
+- name: Read the local datastore
+  ansible.builtin.uri:
+    url: "https://{{ proxmox_storage_host }}/api2/json/storage/local"
+    method: GET
+    headers:
+      Authorization: "PVE{{ proxmox_storage_ticket.json.data.ticket }}"
+    validate_certs: "{{ proxmox_storage_validate_certs }}"
+    status_code: 200
+  register: proxmox_storage_current
+
+- name: Declare what the local datastore may hold
+  ansible.builtin.uri:
+    url: "https://{{ proxmox_storage_host }}/api2/json/storage/local"
+    method: PUT
+    body_format: form-urlencoded
+    body:
+      content: "{{ proxmox_storage_local_content | join(',') }}"
+      digest: "{{ proxmox_storage_current.json.data.digest }}"
+    headers:
+      Authorization: "PVE{{ proxmox_storage_ticket.json.data.ticket }}"
+      CSRFPreventionToken: "{{ proxmox_storage_ticket.json.data.CSRFPreventionToken }}"
+    validate_certs: "{{ proxmox_storage_validate_certs }}"
+    status_code: 200
+  when: proxmox_storage_current.json.data.content.split(',') | sort != proxmox_storage_local_content | sort
+  changed_when: true
+
+- name: Read the local datastore back
+  ansible.builtin.uri:
+    url: "https://{{ proxmox_storage_host }}/api2/json/storage/local"
+    method: GET
+    headers:
+      Authorization: "PVE{{ proxmox_storage_ticket.json.data.ticket }}"
+    validate_certs: "{{ proxmox_storage_validate_certs }}"
+    status_code: 200
+  register: proxmox_storage_verify
+
+# A rejected content type fails the PUT, so the read-back is what catches a silent partial apply.
+- name: Fail unless the datastore took the whole list
+  ansible.builtin.fail:
+    msg: >-
+      local holds '{{ proxmox_storage_verify.json.data.content }}',
+      expected '{{ proxmox_storage_local_content | join(',') }}'
+  when: proxmox_storage_verify.json.data.content.split(',') | sort != proxmox_storage_local_content | sort

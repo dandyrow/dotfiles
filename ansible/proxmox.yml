@@ -4,3 +4,4 @@
   gather_facts: false
   roles:
     - role: proxmox_bootstrap
+    - role: proxmox_storage

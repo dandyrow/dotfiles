@@ -1,7 +1,8 @@
 # Ansible
 
-Ansible content for this repo. `proxmox.yml` bootstraps the least-privilege
-Proxmox user OpenTofu uses to deploy VMs.
+Ansible content for this repo. `proxmox.yml` restores the Proxmox state the
+New-H0Ryzen deploy depends on: the least-privilege user OpenTofu authenticates
+as, and what the `local` datastore is allowed to hold.
 
 ## proxmox.yml bootstrap
 
@@ -19,6 +20,34 @@ more rights.
 The playbook has no SSH dependency: the `community.proxmox` modules drive the
 API from the controller, the same transport the steady-state OpenTofu/bpg
 provider will use.
+
+### local datastore content
+
+The deploy uploads the NixOS disk image as `content_type = "import"`, and Proxmox
+only accepts that on a datastore whose content list includes it. `local` is the
+only local datastore that can: `local-lvm` is a block-level `lvmthin` store whose
+allowed content set is `images` and `rootdir` only, with no `import` in it, so no
+amount of reconfiguring it gives the upload somewhere to land. The image is staged
+on `local` and the VM's live disk is created on `local-lvm` by the import.
+
+The list in `roles/proxmox_storage/defaults/main.yml` is `local`'s Proxmox default
+plus `import`. It replaces the datastore's whole content list rather than merging
+into it, so anything the node holds beyond what is declared is removed on the next
+run. If `local` needs to carry more, add it there rather than on the node, or the
+next total-loss recovery will drop it again.
+
+`community.proxmox` is not used for this. At `2.0.0` `proxmox_storage` only ever
+POSTs a new datastore, and one that already exists is reported as already present
+and left alone, so it cannot express "add `import` to the storage the installer
+already made". Update support is on the collection's `main` branch and not in a
+release. The role therefore opens an API ticket and PUTs `/storage/local` itself,
+sending the config digest so a concurrent edit fails rather than clobbers.
+
+Adding a content type does not necessarily leave a directory behind it. `import`
+maps to `/var/lib/vz/import` on `local`, and a host restored from a total loss may
+not have it, since nothing in this play creates directories on the node. The first
+image upload is where that surfaces; `mkdir -p /var/lib/vz/import` on the node if
+it fails on write.
 
 ### Run
 
@@ -87,5 +116,7 @@ ansible-playbook proxmox.yml -e proxmox_bootstrap_regenerate_token=true -e ansib
 | Role | `Terraform` |
 | ACL | `/` bound to `terraform@pve` with `Terraform` |
 | Token | `provider`, `privsep: false`, inheriting the scoped role |
+| Storage | `local` content set to `backup,import,iso,vztmpl` |
 
-Verify with `pveum user permissions terraform@pve` on the host.
+Verify with `pveum user permissions terraform@pve` on the host, and
+`pvesm status --content import` for the datastore, which must list `local`.

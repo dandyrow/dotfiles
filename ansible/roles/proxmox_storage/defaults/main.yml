@@ -1,0 +1,13 @@
+---
+# proxmox_storage 2.0.0 only creates a datastore, never updates one, so this goes over the REST API.
+proxmox_storage_host: "{{ lookup('ansible.builtin.env', 'PROXMOX_HOST') }}"
+proxmox_storage_user: "{{ lookup('ansible.builtin.env', 'PROXMOX_USER') }}"
+proxmox_storage_password: "{{ lookup('ansible.builtin.env', 'PROXMOX_PASSWORD') }}"
+# default(..., true) so an unset env var reads as true rather than as an empty string.
+proxmox_storage_validate_certs: "{{ lookup('ansible.builtin.env', 'PROXMOX_VALIDATE_CERTS') | default('true', true) | bool }}"
+# import is the staging type the disk image uploads as, and lvmthin cannot hold it.
+proxmox_storage_local_content:
+  - backup
+  - import
+  - iso
+  - vztmpl
