@@ -38,6 +38,15 @@ tofu apply
 Import before apply. Without the import, apply fails because the storage
 already exists.
 
+The `create_subdirs` argument cannot set up the import directory here. It runs
+when the provider creates a directory storage, and an import adopts an existing
+one, so `/var/lib/vz/import` has to come from the PVE installer. Confirm the
+node offers the content type before a deploy needs it:
+
+```sh
+pvesm status --content import
+```
+
 ## Total-loss recovery
 
 The live node decides what is true. The state file is only a cache and an import
