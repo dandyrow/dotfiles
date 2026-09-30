@@ -23,6 +23,12 @@ result
 result-*
 *.wsl
 
+# OpenTofu state — holds the cloud-init password hash. The live node is the source
+# of truth and an import re-derives this, so it is never committed. See infra/proxmox/README.md.
+*.tfstate
+*.tfstate.*
+.terraform/
+
 # Superpowers design/plan files — local use only, not for version control
 docs/superpowers/
 

@@ -1,6 +1,0 @@
-# State carries the cloud-init password hash, so it stays out of the repo.
-# The live node is the source of truth; an import re-derives this. See README.md.
-*.tfstate
-*.tfstate.*
-
-.terraform/
