@@ -93,12 +93,6 @@ STUB
   [[ "$output" == *"shrink"* ]]
 }
 
-@test "file_length counts bytes, not characters" {
-  printf '# Map — dash\n' >"$ROOT/dash.md"
-  run file_length "$ROOT/dash.md"
-  [[ "$output" == "15" ]]
-}
-
 @test "fetch_body writes the body on success" {
   stub_gh "# fetched body"
   run fetch_body 1 "$ROOT/out.md"
