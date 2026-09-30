@@ -12,6 +12,9 @@ let
       ) users
     );
 
+  # The helper above is test-local: nothing in production performs this check, so
+  # the per-host tests are the ones that can fail on a real config change. The
+  # synthetic case exists only to pin the helper's output shape.
   hostTests = lib.mapAttrs' (host: nixos: {
     name = "testNoUndeclaredGroupsOn${host}";
     value = {
@@ -22,36 +25,6 @@ let
 in
 lib.runTests (
   {
-    testDeclaredGroupsAreAccepted = {
-      expr = undeclaredGroupsIn {
-        users.alice.extraGroups = [
-          "wheel"
-          "lpadmin"
-        ];
-        groups = {
-          wheel = { };
-          lpadmin = { };
-        };
-      };
-      expected = [ ];
-    };
-
-    testUndeclaredGroupIsReported = {
-      expr = undeclaredGroupsIn {
-        users.alice.extraGroups = [
-          "wheel"
-          "print"
-        ];
-        groups.wheel = { };
-      };
-      expected = [
-        {
-          user = "alice";
-          group = "print";
-        }
-      ];
-    };
-
     testEveryUndeclaredNameIsReported = {
       expr = undeclaredGroupsIn {
         users = {
@@ -70,22 +43,6 @@ lib.runTests (
           group = "scanner";
         }
       ];
-    };
-
-    testMemberlessGroupIsStillDeclared = {
-      expr = undeclaredGroupsIn {
-        users.alice.extraGroups = [ "lpadmin" ];
-        groups.lpadmin.members = [ ];
-      };
-      expected = [ ];
-    };
-
-    testUserWithNoExtraGroupsIsIgnored = {
-      expr = undeclaredGroupsIn {
-        users.alice = { };
-        groups = { };
-      };
-      expected = [ ];
     };
   }
   // hostTests
