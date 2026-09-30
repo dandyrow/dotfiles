@@ -12,14 +12,17 @@ setup() {
 }
 
 # A stub gh on PATH; view and the snapshot fetch are the same command, so it dispatches on nothing but the subcommand.
+# $BASH, not /usr/bin/env: the nix build sandbox has no /usr/bin/env, and a shebang is a literal path to the kernel.
 stub_gh() {
   local body="$1"
-  cat >"$ROOT/gh" <<STUB
-#!/usr/bin/env bash
+  {
+    printf '#!%s\n' "$BASH"
+    cat <<STUB
 if [[ "\$2" == "view" ]]; then printf '%s' "\$STUB_BODY"
 elif [[ "\$2" == "edit" ]]; then printf 'edited %s\n' "\$3" >>"\$GH_LOG"
 fi
 STUB
+  } >"$ROOT/gh"
   chmod +x "$ROOT/gh"
   export PATH="$ROOT:$PATH"
   export STUB_BODY="$body"
@@ -89,7 +92,7 @@ STUB
 }
 
 @test "fetch_body fails when gh exits non-zero and creates no destination" {
-  printf '#!/usr/bin/env bash\nexit 1\n' >"$ROOT/gh"
+  printf '#!%s\nexit 1\n' "$BASH" >"$ROOT/gh"
   chmod +x "$ROOT/gh"
   export PATH="$ROOT:$PATH"
   run fetch_body 1 "$ROOT/out.md"
@@ -143,7 +146,7 @@ STUB
 @test "cmd_push aborts when no snapshot can be taken" {
   export GH_LOG="$ROOT/calls.log"
   : >"$GH_LOG"
-  printf '#!/usr/bin/env bash\nexit 1\n' >"$ROOT/gh"
+  printf '#!%s\nexit 1\n' "$BASH" >"$ROOT/gh"
   chmod +x "$ROOT/gh"
   export PATH="$ROOT:$PATH"
   run cmd_push 7 "$ROOT/good.md"
