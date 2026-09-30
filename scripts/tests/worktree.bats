@@ -11,13 +11,11 @@ setup() {
   [[ "${FORCE}" -eq 0 ]]
 }
 
-@test "parse_branch honors --force with --allow-force, flag after branch" {
+@test "parse_branch honors --force with --allow-force, flag on either side" {
   parse_branch --allow-force "feat/nix" --force
   [[ "${BRANCH}" == "feat/nix" ]]
   [[ "${FORCE}" -eq 1 ]]
-}
 
-@test "parse_branch honors --force with --allow-force, flag before branch" {
   parse_branch --allow-force --force "feat/nix"
   [[ "${BRANCH}" == "feat/nix" ]]
   [[ "${FORCE}" -eq 1 ]]
