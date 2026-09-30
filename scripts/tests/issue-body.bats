@@ -8,6 +8,9 @@ setup() {
   printf '# Map\n\nsome body text here\n' >"$ROOT/good.md"
   : >"$ROOT/empty.md"
   printf 'no heading at all\n' >"$ROOT/headingless.md"
+  printf '## Question\n\nsome body text here\n' >"$ROOT/wayfinder.md"
+  printf 'gh: Not Found (HTTP 404)\n' >"$ROOT/gh_error.md"
+  printf '{"body": "not a body"}\n' >"$ROOT/json.md"
   printf '# Map\n\n%s\n' "$(head -c 400 /dev/zero | tr '\0' 'x')" >"$ROOT/long.md"
 }
 
@@ -44,10 +47,25 @@ STUB
   [[ "$output" == *"no such file"* ]]
 }
 
-@test "validate_body rejects a body with no top-level heading" {
+@test "validate_body accepts a wayfinder ticket body" {
+  run validate_body "$ROOT/wayfinder.md"
+  [[ "$status" -eq 0 ]]
+}
+
+@test "validate_body rejects a body with no heading" {
   run validate_body "$ROOT/headingless.md"
   [[ "$status" -eq 1 ]]
-  [[ "$output" == *"no top-level"* ]]
+  [[ "$output" == *"neither '# ' nor '## '"* ]]
+}
+
+@test "validate_body rejects a gh error as a body" {
+  run validate_body "$ROOT/gh_error.md"
+  [[ "$status" -eq 1 ]]
+}
+
+@test "validate_body rejects JSON as a body" {
+  run validate_body "$ROOT/json.md"
+  [[ "$status" -eq 1 ]]
 }
 
 @test "check_shrink passes a same-size body and reports the new length" {

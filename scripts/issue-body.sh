@@ -46,8 +46,9 @@ validate_body() {
     echo "Error: $file is empty; refusing to publish" >&2
     return 1
   fi
-  if ! head -n 1 "$file" | grep -q '^# '; then
-    echo "Error: $file has no top-level '# ' heading; refusing to publish" >&2
+  # Maps open with an H1 and wayfinder tickets with "## Question"; both are deliberate bodies.
+  if ! head -n 1 "$file" | grep -qE '^#{1,2} '; then
+    echo "Error: $file starts with neither '# ' nor '## '; refusing to publish" >&2
     return 1
   fi
 }

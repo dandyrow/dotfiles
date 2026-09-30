@@ -49,7 +49,7 @@ Never write a map body with a bare `gh issue edit <map> --body-file <file>`. Git
 - `gh issue view <n> --json body > file` creates `file` before `gh` runs, so a failed fetch leaves a 0-byte file that a later `--body-file` happily publishes.
 - Fetch and publish in separate commands means nothing stops the publish from reading a stale or truncated file.
 
-Use `scripts/issue-body.sh`, which snapshots to XDG state, refuses an empty or headingless body, rejects a >50% length drop, shows a word diff, and asks before writing:
+Use `scripts/issue-body.sh` for any issue body, map or ticket. It snapshots to XDG state, refuses an empty or headingless body, rejects a >50% length drop, shows a word diff, and asks before writing. A body must open with `# ` (a map) or `## ` (a wayfinder ticket, whose first section is `## Question`); anything else is treated as a non-body, which is what stops a stray `gh` error or a JSON blob being published:
 
 ```bash
 scripts/issue-body.sh fetch <map>              # prints the backup path
