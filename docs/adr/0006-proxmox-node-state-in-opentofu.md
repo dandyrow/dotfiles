@@ -1,61 +1,46 @@
-# The Proxmox node's declarative state lives in OpenTofu, not the Ansible bootstrap
+# The Proxmox node's configuration is declared in OpenTofu
 
-The Proxmox node's configuration is declared in OpenTofu, starting with the
-`local` datastore. The Ansible bootstrap keeps the job it already does well,
-standing up the host and delivering the token, and shrinks rather than grows.
+Proxmox configuration that the API and the bpg provider can express is declared
+in OpenTofu, under `infra/proxmox/`, and not in the Ansible bootstrap. The
+bootstrap keeps what only it can do: install the host, mint the `terraform@pve`
+user and its token, and grant the role. It should shrink, not grow a second
+mechanism for the same node state.
 
-`import` is the one addition to `local`. The New-H0Ryzen deploy uploads its disk
-image with `content_type = "import"`, and Proxmox accepts that only on a
-datastore whose content list includes it. The PVE default for `local` is
-`iso,vztmpl,backup` and leaves it out, so the default rejects the disk the deploy
-depends on. `local` is also the only local datastore that can take it, since a
-`lvmthin` store carries `images` and `rootdir` and nothing else.
-
-The content list is written out in full rather than patched. Proxmox replaces the
-list instead of merging it, which makes the declaration the list: any type added
-to the node by hand and left out here is removed on the next apply. `snippets` is
-the one people reach for, and it is not declared.
+Reaching for OpenTofu is the default for a new resource. Hand-setting something
+on the node leaves nothing in the repo recording the requirement, and a reinstall
+is exactly when that gets forgotten. The bootstrap is for what OpenTofu cannot
+reach, such as minting the credential the provider token format depends on.
 
 State stays local and out of the repo, and the live node is the source of truth.
 `terraform.tfstate` holds the cloud-init password hash, and an import rebuilds
-the state from the node anyway, so there is nothing in it worth the risk of
-committing or the ceremony of backing up. After a total loss the VM is
-recreated from its declaration rather than imported, because an import adopts
-whatever the node holds as the new baseline, drift included. The one import that
-does exist adopts `local` itself, so apply does not try to create a datastore the
-installer already made. Where the state file eventually lives is
-[#247](https://github.com/dandyrow/dotfiles/issues/247).
+state from the node, so there is nothing in it worth committing and no backup
+worth keeping. After a total loss, recreate a resource from its declaration
+rather than importing it, because an import adopts whatever the node holds as
+the new baseline, drift included. The one import that persists is for
+installer-created storage, which cannot be recreated at all. Where the state file
+eventually lives is [#247](https://github.com/dandyrow/dotfiles/issues/247).
+
+The datastore content list is the first resource. Its specifics and the reasoning
+behind them are in `infra/proxmox/README.md`, and they stay there: it is a settled
+decision, so a pointer beats a second copy that can drift.
 
 ## Considered Options
 
-**An Ansible role managing the datastore.** Built first and closed in
-[#245](https://github.com/dandyrow/dotfiles/pull/245). The bpg provider ships a
-resource for this, and the decision here is to hand node state to OpenTofu, so
-writing the same resource in Ansible establishes a second mechanism to unwind
-later. The attempt did settle a fact worth keeping: `community.proxmox` 2.0.0
-cannot update an existing datastore. `proxmox_storage` only creates, and reports
-an existing datastore as already present without touching it, so the role needed
-a raw REST call for the one operation it existed to perform. `update` and
-`dir_options` exist on unreleased `main` only, so pinning to the released module
-would not have helped.
+**An Ansible role for the same configuration.** Built once, then closed in
+[#245](https://github.com/dandyrow/dotfiles/pull/245). The bpg provider ships
+resources for this, so an Ansible role means writing the same thing twice and
+later unwinding one of them. It also hit a wall worth keeping: `community.proxmox`
+2.0.0 cannot update an existing datastore. `proxmox_storage` only creates one and
+reports an existing as already present, so the role needed a raw REST call for the
+operation it existed to perform. `update` and `dir_options` are on unreleased
+`main`.
 
-**Declaring the VM in the same step.** Rejected as scope. Storage is the first
-resource because it is the first thing the deploy needs that the node's own
-defaults get wrong. The VM is a separate piece of work.
-
-**Adding `import` to `local-lvm` instead.** Rejected on the PVE side, not the
-Terraform side. `lvmthin` accepts `images` and `rootdir`, so the content type
-would have to go on a different datastore than the one the installer creates, and
-the disk upload would target a store the deploy did not otherwise provision.
-
-**Leaving the content list alone.** Rejected because it does not work. The
-default is the reason the disk upload fails in the first place.
+**Declaring only what has no module equivalent.** Rejected. That rule would keep
+Ansible as the default and make OpenTofu the exception, which is the arrangement
+this decision exists to end.
 
 ## Not decided here
 
-Whether the VM itself is declared in OpenTofu, and which resources follow the
-datastore, are open. So is the state backend, tracked in
+Which resources follow, the VM in particular. So is the state backend, tracked in
 [#247](https://github.com/dandyrow/dotfiles/issues/247); this ADR only fixes that
-state is not committed and that the node decides what is true. The
-`create_subdirs` argument is left unset on purpose, since an import adopts an
-existing datastore and never creates one.
+state is not committed and that the node decides what is true.

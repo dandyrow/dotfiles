@@ -49,25 +49,20 @@ pvesm status --content import
 
 ## Total-loss recovery
 
-The live node decides what is true. The state file is only a cache and an import
-rebuilds it, so recovery does not need a state backup.
+The live node decides what is true, so recovery does not need a state backup.
+[ADR 0006](../../docs/adr/0006-proxmox-node-state-in-opentofu.md) covers why.
 
 1. Install Proxmox. `local` comes back with the installer's defaults.
 2. Run the Ansible bootstrap. It recreates `terraform@pve`, the role, the ACL
    and the token, then stores the token in BWS. See `ansible/README.md`.
 3. `tofu init`, then the one import above, then `tofu apply`.
 
-Once the VM is declared, state will remember a resource that the fresh node does
-not have. Recreate it from the declaration instead of importing it. An import
-copies whatever the node happens to hold, including settings that have since left
-this repo, and those become the new baseline.
+Once a resource is declared, state will remember something the fresh node does
+not have. Recreate it from the declaration instead of importing it.
 
-## State
-
-Local and gitignored. `terraform.tfstate` holds the cloud-init password hash, so
-it does not belong in the repo even though the repo is private.
-
-Move to a self-hosted backend once the state outgrows a single controller:
+State is local and gitignored, since `terraform.tfstate` holds the cloud-init
+password hash. Move to a self-hosted backend once it outgrows a single
+controller:
 
 ```sh
 tofu init -migrate-state
