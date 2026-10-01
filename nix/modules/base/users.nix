@@ -14,16 +14,38 @@
     '';
   };
 
-  config.users.users.${config.dandyrow.primaryUser} = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "kvm"
-    ];
-    shell = pkgs.zsh;
-    # Hash is injected at install time via nixos-anywhere --extra-files.
-    # Never committed in plaintext — see README for the install procedure.
-    # Named for the role, not the occupant, so a rename never moves the secret.
-    hashedPasswordFile = "/etc/secrets/primary-user-password";
+  config = {
+    users.users.${config.dandyrow.primaryUser} = {
+      isNormalUser = true;
+      extraGroups = [
+        "wheel"
+        "kvm"
+      ];
+      shell = pkgs.zsh;
+      # Hash is injected at install time via nixos-anywhere --extra-files.
+      hashedPasswordFile = "/etc/secrets/primary-user-password";
+    };
+
+    warnings =
+      let
+        usersWithInvalidGroups = lib.filter (listEntry: listEntry != null) (
+          lib.mapAttrsToList (
+            username: user:
+            let
+              invalidGroups = lib.filter (group: !(config.users.groups ? ${group})) user.extraGroups;
+            in
+            if invalidGroups != [ ] then "${username}: ${lib.concatStringsSep ", " invalidGroups}" else null
+          ) config.users.users
+        );
+      in
+      if usersWithInvalidGroups != [ ] then
+        [
+          ''
+            Users declared with groups in extraGroups that don't exist in users.groups:
+            ${lib.concatStringsSep "\n" usersWithInvalidGroups}
+          ''
+        ]
+      else
+        [ ];
   };
 }
