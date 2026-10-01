@@ -58,7 +58,10 @@ in
     };
   };
 
-  environment.systemPackages = [ pkgs.docker-sbx ];
+  environment.systemPackages = with pkgs; [
+    docker-sbx
+    awscli2
+  ];
 
   virtualisation.docker.enable = true;
 
