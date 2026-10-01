@@ -1,10 +1,15 @@
 # Proxmox OpenTofu
 
-Declarative state for the Proxmox node. It starts with the `local` datastore,
+The `local` datastore is declared here rather than left to the installer,
 because the New-H0Ryzen deploy uploads its disk image as
 `content_type = "import"` and Proxmox accepts that only on a datastore whose
-content list includes it. `local` is the only local datastore that qualifies: a
-`lvmthin` store takes `images` and `rootdir` and nothing else.
+content list includes it. The installer's `local` does not, so the upload has
+nowhere to go. A `lvmthin` store is no help; it takes `images` and `rootdir` and
+nothing else.
+
+Proxmox replaces the content list whole rather than merging it, which is why
+`storage.tf` names `backup`, `iso` and `vztmpl` next to `import`. Dropping them
+would silently cost the node its defaults.
 
 Credentials come from the environment and appear nowhere in this directory. The
 provider block is left out because the bpg provider reads them natively, and an
@@ -71,8 +76,3 @@ tofu init -migrate-state
 If that backend is lost too, redo the recovery steps above and push the rebuilt
 state back to it. `.terraform.lock.hcl` is committed, so the provider version is
 pinned either way.
-
-## Not here yet
-
-The New-H0Ryzen VM, its hardware mappings, and the pool. Those are the deploy
-tickets on the map at #187.
