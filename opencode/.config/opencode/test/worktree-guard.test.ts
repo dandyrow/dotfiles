@@ -184,12 +184,36 @@ EOF`, MAIN);
     blocked(`rm "notes file.md"`, MAIN);
   });
 
+  it("checks commands run through a shell, wrapper or find -exec", () => {
+    blocked(`sh -c "cd /tmp; rm ~/.dotfiles/flake.nix"`);
+    blocked(`bash -c 'touch notes.md'`, MAIN);
+    blocked(`bash <<'EOF'
+rm ~/.dotfiles/flake.nix
+EOF`);
+    blocked("sudo -u root rm ~/.dotfiles/flake.nix");
+    blocked("timeout 5 rm ~/.dotfiles/flake.nix");
+    blocked("nice -n 10 rm ~/.dotfiles/flake.nix");
+    blocked("xargs -0 rm ~/.dotfiles/flake.nix");
+    blocked("find /tmp -name x -exec rm ~/.dotfiles/flake.nix \\;");
+    allowed(`sh -c "rm /tmp/x"`, MAIN);
+    allowed("find . -name '*.orig' -exec rm {} +", WORKTREE);
+  });
+
+  it("follows pushd and git -C to the directory they target", () => {
+    blocked("pushd ~/.dotfiles && rm ./flake.nix", WORKTREE);
+    blocked("git -C ~/.dotfiles rm flake.nix", WORKTREE);
+    allowed(`git -C ${WORKTREE} rm flake.nix`, MAIN);
+  });
+
   it("checks only the destination of cp and ln", () => {
     allowed("cp README.md /tmp/x", MAIN);
     allowed("cp -r nix /tmp/backup", MAIN);
     allowed("ln -s ~/.dotfiles/flake.nix /tmp/link");
     blocked("cp /tmp/x notes.md", MAIN);
     blocked("cp -t ~/.dotfiles/nix /tmp/a");
+    blocked("cp -rt ~/.dotfiles/nix /tmp/a");
+    blocked("ln -st ~/.dotfiles/nix /tmp/a");
+    blocked("cp --target-directory=nix /tmp/a", MAIN);
     blocked("ln -s /tmp/target", MAIN);
     blocked("mv ~/.dotfiles/flake.nix /tmp/x");
   });

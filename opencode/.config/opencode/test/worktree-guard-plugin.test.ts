@@ -29,4 +29,12 @@ describe("WorktreeGuardPlugin bash hook", () => {
   it("falls back to the session directory without a workdir", async () => {
     await assert.rejects(runBash(MAIN, { command: "rm .github/workflows/bats.yml" }), /Blocked/);
   });
+
+  it("checks a worktree session whose workdir points into main", async () => {
+    await assert.rejects(runBash(WORKTREE, { command: "rm flake.nix", workdir: MAIN }), /Blocked/);
+  });
+
+  it("leaves sessions and workdirs outside main unchecked", async () => {
+    await runBash("/tmp", { command: "rm flake.nix", workdir: WORKTREE });
+  });
 });

@@ -11,10 +11,10 @@ export const WorktreeGuardPlugin: Plugin = async ({ directory }) => {
   return {
     "tool.execute.before": async (input, output) => {
       if (input.tool === "bash" && typeof output.args?.command === "string") {
-        // Shell text is too free-form to extract the touched paths, so gate on the session cwd instead.
-        if (isMainCheckout(directory)) {
-          const workdir = output.args.workdir;
-          const cwd = typeof workdir === "string" ? path.resolve(directory, workdir) : directory;
+        const workdir = output.args.workdir;
+        const cwd = typeof workdir === "string" ? path.resolve(directory, workdir) : directory;
+        // Shell parsing is best-effort, so only sessions that can reach main pay for its false positives.
+        if (isMainCheckout(directory) || isMainCheckout(cwd)) {
           const result = canCommandMutate(output.args.command, cwd);
           if (result.protected) throw new Error(result.reason);
         }
