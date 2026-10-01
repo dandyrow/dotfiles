@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  nixosConfigurations,
   homeConfigurations,
 }:
 let
@@ -19,8 +18,6 @@ in
   dotfiles-linking = mkTest "dotfiles-linking" (import ./dotfiles-linking.nix { inherit lib; });
   nvim-tools = mkTest "nvim-tools" (import ./nvim-tools.nix { inherit lib pkgs; });
   work-identity = mkTest "work-identity" (import ./work-identity.nix { inherit lib; });
-  config-eval = mkTest "config-eval" (
-    import ./config-eval.nix { inherit lib homeConfigurations nixosConfigurations; }
-  );
+  config-eval = mkTest "config-eval" (import ./config-eval.nix { inherit lib homeConfigurations; });
   worktree-scripts = import ./worktree-scripts.nix { inherit pkgs; };
 }

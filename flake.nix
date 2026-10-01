@@ -192,7 +192,7 @@
       checks.${system} = import ./nix/tests {
         inherit lib;
         pkgs = import inputs.nixpkgs { inherit system; };
-        inherit (inputs.self) nixosConfigurations homeConfigurations;
+        inherit (inputs.self) homeConfigurations;
       };
     };
 }

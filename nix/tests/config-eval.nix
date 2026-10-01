@@ -1,14 +1,11 @@
-# NixOS host builds never evaluate the standalone home configs (its clone step only runs when isStandalone), so force those and the NixOS clone scripts to evaluate here instead.
+# flake.cc force-evaluates nixosConfigurations but treats homeConfigurations as unchecked, so nothing else forces these.
 {
   lib,
   homeConfigurations,
-  nixosConfigurations,
 }:
 let
-  allActivations =
-    (map (hc: hc.config.home.activationPackage.drvPath) (lib.attrValues homeConfigurations))
-    ++ (map (sys: sys.config.system.activationScripts.cloneDotfiles.text) (
-      lib.attrValues nixosConfigurations
-    ));
+  allActivations = map (hc: hc.config.home.activationPackage.drvPath) (
+    lib.attrValues homeConfigurations
+  );
 in
 builtins.seq (builtins.toJSON allActivations) [ ]
