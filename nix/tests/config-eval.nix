@@ -1,14 +1,17 @@
-# NixOS host builds never evaluate the standalone home configs (its clone step only runs when isStandalone), so force those and the NixOS clone scripts to evaluate here instead.
+# Home configs never import the NixOS modules and host builds skip the standalone ones, so nothing else forces these to evaluate.
 {
   lib,
   homeConfigurations,
   nixosConfigurations,
 }:
 let
-  allActivations =
-    (map (hc: hc.config.home.activationPackage.drvPath) (lib.attrValues homeConfigurations))
-    ++ (map (sys: sys.config.system.activationScripts.cloneDotfiles.text) (
-      lib.attrValues nixosConfigurations
-    ));
+  forced =
+    (import ../lib/config-eval.nix { inherit lib; }).forcedAttrPaths homeConfigurations
+      nixosConfigurations;
+
+  force = paths: configurations: map (path: lib.getAttrFromPath path configurations) paths;
 in
-builtins.seq (builtins.toJSON allActivations) [ ]
+builtins.seq (builtins.toJSON (
+  force forced.homeConfigurations homeConfigurations
+  ++ force forced.nixosConfigurations nixosConfigurations
+)) [ ]

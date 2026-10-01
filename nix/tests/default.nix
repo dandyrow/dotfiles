@@ -22,5 +22,8 @@ in
   config-eval = mkTest "config-eval" (
     import ./config-eval.nix { inherit lib homeConfigurations nixosConfigurations; }
   );
+  config-eval-coverage = mkTest "config-eval-coverage" (
+    import ./config-eval-coverage.nix { inherit lib homeConfigurations nixosConfigurations; }
+  );
   worktree-scripts = import ./worktree-scripts.nix { inherit pkgs; };
 }
