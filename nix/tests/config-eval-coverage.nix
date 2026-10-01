@@ -5,55 +5,63 @@
   nixosConfigurations,
 }:
 let
-  coverage = (import ../lib/config-eval.nix { inherit lib; }).forcedAttrPaths;
+  coverage = import ../lib/config-eval.nix { inherit lib; };
 
-  forced = coverage homeConfigurations nixosConfigurations;
+  forced = coverage.forcedAttrPaths homeConfigurations nixosConfigurations;
 
-  forcedNames = paths: map lib.head paths;
+  unforced = paths: names: lib.filter (name: !(lib.hasAttr name paths)) names;
 
-  uncovered = paths: names: lib.filter (name: !(lib.elem name (forcedNames paths))) names;
+  configuration = config: { inherit config; };
 in
 lib.runTests {
-  # Derived from the flake's own host set, so a host added later needs no test edit.
+  # Poisoned fixtures prove the forcing reaches the value; the coverage assertions below cannot.
+  testHostToplevelIsForced = {
+    expr =
+      (builtins.tryEval (
+        coverage.force { } {
+          BrokenHost = configuration { system.build.toplevel.drvPath = throw "unforced"; };
+        }
+      )).success;
+    expected = false;
+  };
+
+  testHomeActivationPackageIsForced = {
+    expr =
+      (builtins.tryEval (
+        coverage.force {
+          BrokenHome = configuration { home.activationPackage.drvPath = throw "unforced"; };
+        } { }
+      )).success;
+    expected = false;
+  };
+
+  # Without this the two above would pass just as happily against a force that always throws.
+  testHealthyConfigurationsForce = {
+    expr =
+      (builtins.tryEval (
+        coverage.force {
+          TestHome = configuration { home.activationPackage.drvPath = "/nix/store/fake.drv"; };
+        } { TestHost = configuration { system.build.toplevel.drvPath = "/nix/store/fake.drv"; }; }
+      )).success;
+    expected = true;
+  };
+
+  # Read off the flake's own host set, so a host added later needs no test edit.
   testEveryNixosHostIsForced = {
-    expr = uncovered forced.nixosConfigurations (builtins.attrNames nixosConfigurations);
+    expr = unforced forced.nixosConfigurations (builtins.attrNames nixosConfigurations);
     expected = [ ];
   };
 
   testEveryHomeConfigIsForced = {
-    expr = uncovered forced.homeConfigurations (builtins.attrNames homeConfigurations);
+    expr = unforced forced.homeConfigurations (builtins.attrNames homeConfigurations);
     expected = [ ];
   };
 
   # A hard-coded host list would go stale the moment a host is renamed or added.
   testCoverageIsNotHardCoded = {
-    expr = forcedNames (coverage { } { HostAddedLater = null; }).nixosConfigurations;
+    expr =
+      builtins.attrNames
+        (coverage.forcedAttrPaths { } { HostAddedLater = null; }).nixosConfigurations;
     expected = [ "HostAddedLater" ];
-  };
-
-  # Only forcing the toplevel derivation trips a failing NixOS `assertions` entry.
-  testNixosForcesToplevelDerivation = {
-    expr = lib.unique (map lib.tail forced.nixosConfigurations);
-    expected = [
-      [
-        "config"
-        "system"
-        "build"
-        "toplevel"
-        "drvPath"
-      ]
-    ];
-  };
-
-  testHomeForcesActivationPackageDerivation = {
-    expr = lib.unique (map lib.tail forced.homeConfigurations);
-    expected = [
-      [
-        "config"
-        "home"
-        "activationPackage"
-        "drvPath"
-      ]
-    ];
   };
 }
