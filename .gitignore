@@ -23,6 +23,11 @@ result
 result-*
 *.wsl
 
+# OpenTofu / Terraform state
+*.tfstate
+*.tfstate.*
+.terraform/
+
 # Superpowers design/plan files — local use only, not for version control
 docs/superpowers/
 

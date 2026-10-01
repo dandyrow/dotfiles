@@ -150,7 +150,7 @@
       packages.${system}.wsl-tarball =
         inputs.self.nixosConfigurations.WSL.config.system.build.tarballBuilder;
 
-      devShells.${system}.ansible =
+      devShells.${system} =
         let
           pkgs = import inputs.nixpkgs {
             inherit system;
@@ -158,15 +158,25 @@
             config = { inherit allowUnfreePredicate; };
           };
         in
-        pkgs.mkShell {
-          packages = [
-            pkgs.bws
-            (pkgs.python3.withPackages (ps: [
-              ps.ansible-core
-              ps.proxmoxer
-              ps.requests
-            ]))
-          ];
+        {
+          ansible = pkgs.mkShell {
+            packages = [
+              pkgs.bws
+              (pkgs.python3.withPackages (ps: [
+                ps.ansible-core
+                ps.proxmoxer
+                ps.requests
+              ]))
+            ];
+          };
+
+          proxmox = pkgs.mkShell {
+            packages = [
+              pkgs.bws
+              pkgs.jq
+              pkgs.opentofu
+            ];
+          };
         };
 
       homeConfigurations = {
