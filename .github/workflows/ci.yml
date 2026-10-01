@@ -5,14 +5,18 @@ on:
     branches: [main]
     paths:
       - 'nix/**'
+      - 'scripts/**'
       - 'flake.nix'
       - 'flake.lock'
+      - '.github/workflows/**'
   pull_request:
     branches: [main]
     paths:
       - 'nix/**'
+      - 'scripts/**'
       - 'flake.nix'
       - 'flake.lock'
+      - '.github/workflows/**'
 
 jobs:
   flake-check:
