@@ -18,8 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          # The three-dot diff needs base history, which a PR checkout omits by default.
-          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
+          # Quoted, because GitHub treats a bare 0 as falsy and the fallback branch wins.
+          fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
       - id: nix
         env:
           BASE_REF: ${{ github.base_ref }}
