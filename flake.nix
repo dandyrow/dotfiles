@@ -142,6 +142,30 @@
           };
         };
 
+      ciBuilds =
+        let
+          pkgs = import inputs.nixpkgs {
+            inherit system overlays;
+            config = { inherit allowUnfreePredicate; };
+          };
+          # prev is the un-overlaid set so the keys extract exactly as the overlay would really apply.
+          base = import inputs.nixpkgs {
+            inherit system;
+            config = { inherit allowUnfreePredicate; };
+          };
+          # Keys come from the overlay, not a list, so a newly vendored package joins ciBuilds automatically.
+          overlayNames = lib.attrNames (lib.foldl' (acc: overlay: acc // overlay pkgs base) { } overlays);
+          nvidia = inputs.self.nixosConfigurations.New-H0Ryzen.config.hardware.nvidia;
+        in
+        pkgs.linkFarm "ci-builds" (
+          lib.genAttrs overlayNames (name: pkgs.${name})
+          // {
+            nvidia-driver = nvidia.package;
+            # Mirrors the open-vs-mod choice nvidia.nix makes for extraModulePackages.
+            nvidia-kernel-module = if nvidia.open then nvidia.package.open else nvidia.package.mod;
+          }
+        );
+
       hostDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./nix/hosts);
     in
     {
@@ -149,6 +173,8 @@
 
       packages.${system}.wsl-tarball =
         inputs.self.nixosConfigurations.WSL.config.system.build.tarballBuilder;
+
+      legacyPackages.${system}.ciBuilds = ciBuilds;
 
       devShells.${system} =
         let
@@ -193,6 +219,7 @@
         inherit lib;
         pkgs = import inputs.nixpkgs { inherit system; };
         inherit (inputs.self) homeConfigurations;
+        inherit ciBuilds;
       };
     };
 }
