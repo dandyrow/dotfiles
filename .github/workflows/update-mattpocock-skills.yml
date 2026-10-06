@@ -30,17 +30,21 @@ jobs:
           latest=$(gh api repos/mattpocock/skills/releases/latest --jq .tag_name)
           url=$(grep -oE 'github:mattpocock/skills/[^"]+' flake.nix | head -n1)
           pinned=${url##*/}
+          branch="update/mattpocock-skills-$latest"
           bump=false
           if [[ "$latest" != "$pinned" ]] \
             && [[ "$(printf '%s\n%s\n' "$pinned" "$latest" | sort -V | tail -n1)" == "$latest" ]]; then
-            open=$(gh pr list --head "update/mattpocock-skills-$latest" --json number --jq length)
+            open=$(gh pr list --head "$branch" --json number --jq length)
             if [[ "$open" == 0 ]]; then
               bump=true
             fi
           fi
-          echo "pinned=$pinned latest=$latest bump=$bump"
-          echo "latest=$latest" >>"$GITHUB_OUTPUT"
-          echo "bump=$bump" >>"$GITHUB_OUTPUT"
+          echo "pinned=$pinned latest=$latest branch=$branch bump=$bump"
+          {
+            echo "latest=$latest"
+            echo "branch=$branch"
+            echo "bump=$bump"
+          } >>"$GITHUB_OUTPUT"
 
       - name: Install Nix
         if: steps.check.outputs.bump == 'true'
@@ -60,18 +64,18 @@ jobs:
         if: steps.check.outputs.bump == 'true'
         env:
           LATEST: ${{ steps.check.outputs.latest }}
+          BRANCH: ${{ steps.check.outputs.branch }}
         run: |
-          branch="update/mattpocock-skills-${LATEST}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$branch"
+          git switch -c "$BRANCH"
           git add flake.nix flake.lock
           git commit -m "⬆️ chore(nix): bump mattpocock-skills to ${LATEST}"
-          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
             # Left over from a closed PR; a plain push would be rejected, and force-push is never used.
-            git push origin --delete "$branch"
+            git push origin --delete "$BRANCH"
           fi
-          git push origin "$branch"
+          git push origin "$BRANCH"
 
       - name: Open the PR
         if: steps.check.outputs.bump == 'true'
@@ -79,14 +83,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LATEST: ${{ steps.check.outputs.latest }}
+          BRANCH: ${{ steps.check.outputs.branch }}
         run: |
-          notes="https://github.com/mattpocock/skills/releases/tag/${LATEST}"
+          release_url="https://github.com/mattpocock/skills/releases/tag/${LATEST}"
           pr_url=$(gh pr create \
-            --head "update/mattpocock-skills-${LATEST}" \
+            --head "$BRANCH" \
             --title "⬆️ chore(nix): bump mattpocock-skills to ${LATEST}" \
-            --body "Bumps the \`mattpocock-skills\` flake input to [${LATEST}](${notes}).
+            --body "Bumps the \`mattpocock-skills\` flake input to [${LATEST}](${release_url}).
 
-          Release notes: ${notes}")
+          Release notes: ${release_url}")
           echo "number=${pr_url##*/}" >>"$GITHUB_OUTPUT"
 
       # A GITHUB_TOKEN PR fires no pull_request run; a dispatch does, and ci-ok lands on its head commit.
@@ -94,21 +99,20 @@ jobs:
         if: steps.check.outputs.bump == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LATEST: ${{ steps.check.outputs.latest }}
-        run: gh workflow run ci.yml --ref "update/mattpocock-skills-${LATEST}"
+          BRANCH: ${{ steps.check.outputs.branch }}
+        run: gh workflow run ci.yml --ref "$BRANCH"
 
       - name: Close superseded updater PRs
         if: steps.check.outputs.bump == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LATEST: ${{ steps.check.outputs.latest }}
+          BRANCH: ${{ steps.check.outputs.branch }}
           NEW: ${{ steps.pr.outputs.number }}
         run: |
-          current="update/mattpocock-skills-${LATEST}"
           stale=$(gh pr list --state open --limit 100 --json number,headRefName \
             --jq '.[] | select(.headRefName | startswith("update/mattpocock-skills-")) | "\(.headRefName) \(.number)"')
           while read -r headref number; do
-            if [[ -n "$headref" && "$headref" != "$current" ]]; then
+            if [[ -n "$headref" && "$headref" != "$BRANCH" ]]; then
               gh pr close "$number" --comment "Superseded by #${NEW}" --delete-branch
             fi
           done <<<"$stale"
