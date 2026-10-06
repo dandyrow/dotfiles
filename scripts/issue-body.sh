@@ -46,8 +46,10 @@ validate_body() {
     echo "Error: $file is empty; refusing to publish" >&2
     return 1
   fi
-  # Maps open with an H1 and wayfinder tickets with "## Question"; both are deliberate bodies.
-  if ! head -n 1 "$file" | grep -qE '^#{1,2} '; then
+  # A triage banner may lead, so look at the first real line; the heading still rejects stray gh output and JSON blobs.
+  local first
+  first="$(grep -v -E '^[[:space:]]*$|^>' "$file" | head -n 1)"
+  if [[ "$first" != "# "* && "$first" != "## "* ]]; then
     echo "Error: $file starts with neither '# ' nor '## '; refusing to publish" >&2
     return 1
   fi
