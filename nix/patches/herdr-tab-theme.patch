@@ -7,7 +7,7 @@ index 892ec5e..fad785a 100644
 @@ -71,6 +71,20 @@ pub struct Palette {
      pub teal: Color,
      /// Interrupted / warning states.
-     pub peach: Color,
+     pub peach: ColorBroken,
 +    /// Active tab background. `None` uses the accent color.
 +    pub tab_active_bg: Option<Color>,
 +    /// Active tab text. `None` uses the panel-contrast foreground.
