@@ -31,8 +31,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           latest=$(gh api repos/mattpocock/skills/releases/latest --jq .tag_name)
-          url=$(grep -oE 'github:mattpocock/skills/[^"]+' flake.nix | head -n1)
-          pinned=${url##*/}
+          pinned=$(sed -nE 's|.*github:mattpocock/skills/([^"]+)".*|\1|p' flake.nix | head -n1)
           branch="update/mattpocock-skills-$latest"
           bump=false
           if [[ "$latest" != "$pinned" ]] \
