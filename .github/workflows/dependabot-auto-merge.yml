@@ -1,0 +1,28 @@
+name: Dependabot auto-merge
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  auto-merge:
+    name: Auto-merge flake-inputs PR
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    # Dependabot runs start read-only; these two writes are all enabling auto-merge needs.
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+      - name: Enable auto-merge
+        # Only the grouped flake-input PRs; Actions bumps and other ecosystems never match.
+        if: >-
+          steps.metadata.outputs.package-ecosystem == 'nix' &&
+          steps.metadata.outputs.dependency-group == 'flake-inputs'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR_URL"
