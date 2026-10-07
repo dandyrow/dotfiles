@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Nightly, because merges made with GITHUB_TOKEN skip push workflows and would let main's cache go cold.
+    - cron: "47 3 * * *"
 
 jobs:
   changes:
@@ -51,11 +54,28 @@ jobs:
       - name: nix flake check
         run: nix flake check
 
+  # push and nightly runs always build to keep main's cache warm; PRs build only when the Nix area changed.
+  ci-builds:
+    name: nix build ciBuilds
+    needs: changes
+    if: github.event_name != 'pull_request' || needs.changes.outputs.nix == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: DeterminateSystems/magic-nix-cache-action@v15
+      - name: nix build ciBuilds
+        run: nix build .#ciBuilds --no-link --print-build-logs
+
   # A skipped matrix job reports as the bare job name, so per-job required checks hang.
   ci-ok:
     name: ci-ok
     runs-on: ubuntu-latest
-    needs: [changes, flake-check]
+    needs: [changes, flake-check, ci-builds]
     if: always()
     permissions: {}
     steps:

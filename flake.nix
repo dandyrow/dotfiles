@@ -142,13 +142,34 @@
           };
         };
 
+      ciPkgs = import inputs.nixpkgs {
+        inherit system overlays;
+        config = { inherit allowUnfreePredicate; };
+      };
+
+      # The packages CI must keep working.
+      ciPackages =
+        let
+          nvidia = inputs.self.nixosConfigurations.New-H0Ryzen.config.hardware.nvidia;
+          # Names read from the overlays, so a newly vendored package joins with no edit here.
+          overlayNames = lib.concatMap (overlay: lib.attrNames (overlay ciPkgs ciPkgs)) overlays;
+        in
+        lib.genAttrs overlayNames (name: ciPkgs.${name})
+        // {
+          nvidia-driver = nvidia.package;
+          nvidia-kernel-module = if nvidia.open then nvidia.package.open else nvidia.package.mod;
+        };
+
       hostDirs = lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./nix/hosts);
     in
     {
       nixosConfigurations = lib.mapAttrs (host: _: mkSystem host) hostDirs;
 
-      packages.${system}.wsl-tarball =
-        inputs.self.nixosConfigurations.WSL.config.system.build.tarballBuilder;
+      packages.${system} = ciPackages // {
+        wsl-tarball = inputs.self.nixosConfigurations.WSL.config.system.build.tarballBuilder;
+      };
+
+      legacyPackages.${system}.ciBuilds = ciPkgs.linkFarm "ci-builds" ciPackages;
 
       devShells.${system} =
         let
