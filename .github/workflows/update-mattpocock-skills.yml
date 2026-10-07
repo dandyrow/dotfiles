@@ -1,0 +1,120 @@
+name: Update mattpocock-skills
+
+on:
+  schedule:
+    # Weekly, off the top of the hour where scheduled runs queue up.
+    - cron: "43 7 * * 1"
+  workflow_dispatch:
+
+# Overlapping runs could race the same branch and open the PR twice.
+concurrency:
+  group: update-mattpocock-skills
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Open updater PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Branch the bump from the default branch even when the dispatch targets another ref.
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Compare pin with latest release
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          latest=$(gh api repos/mattpocock/skills/releases/latest --jq .tag_name)
+          pinned=$(sed -nE 's|.*github:mattpocock/skills/([^"]+)".*|\1|p' flake.nix | head -n1)
+          branch="update/mattpocock-skills-$latest"
+          bump=false
+          if [[ "$latest" != "$pinned" ]] \
+            && [[ "$(printf '%s\n%s\n' "$pinned" "$latest" | sort -V | tail -n1)" == "$latest" ]]; then
+            open=$(gh pr list --head "$branch" --json number --jq length)
+            if [[ "$open" == 0 ]]; then
+              bump=true
+            fi
+          fi
+          echo "pinned=$pinned latest=$latest branch=$branch bump=$bump"
+          {
+            echo "latest=$latest"
+            echo "branch=$branch"
+            echo "bump=$bump"
+          } >>"$GITHUB_OUTPUT"
+
+      - name: Install Nix
+        if: steps.check.outputs.bump == 'true'
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Re-lock the input
+        if: steps.check.outputs.bump == 'true'
+        env:
+          LATEST: ${{ steps.check.outputs.latest }}
+        run: |
+          sed -i "s|github:mattpocock/skills/[A-Za-z0-9._-]*|github:mattpocock/skills/${LATEST}|" flake.nix
+          nix flake update mattpocock-skills
+
+      - name: Push the update branch
+        if: steps.check.outputs.bump == 'true'
+        env:
+          LATEST: ${{ steps.check.outputs.latest }}
+          BRANCH: ${{ steps.check.outputs.branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add flake.nix flake.lock
+          git commit -m "⬆️ chore(nix): bump mattpocock-skills to ${LATEST}"
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+            # Left over from a closed PR; a plain push would be rejected, and force-push is never used.
+            git push origin --delete "$BRANCH"
+          fi
+          git push origin "$BRANCH"
+
+      - name: Open the PR
+        if: steps.check.outputs.bump == 'true'
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LATEST: ${{ steps.check.outputs.latest }}
+          BRANCH: ${{ steps.check.outputs.branch }}
+        run: |
+          release_url="https://github.com/mattpocock/skills/releases/tag/${LATEST}"
+          pr_url=$(gh pr create \
+            --head "$BRANCH" \
+            --title "⬆️ chore(nix): bump mattpocock-skills to ${LATEST}" \
+            --body "Bumps the \`mattpocock-skills\` flake input to [${LATEST}](${release_url}).
+
+          Release notes: ${release_url}")
+          echo "number=${pr_url##*/}" >>"$GITHUB_OUTPUT"
+
+      # A GITHUB_TOKEN PR fires no pull_request run; a dispatch does, and ci-ok lands on its head commit.
+      - name: Run CI on the PR branch
+        if: steps.check.outputs.bump == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.check.outputs.branch }}
+        run: gh workflow run ci.yml --ref "$BRANCH"
+
+      - name: Close superseded updater PRs
+        if: steps.check.outputs.bump == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.check.outputs.branch }}
+          NEW: ${{ steps.pr.outputs.number }}
+        run: |
+          stale=$(gh pr list --state open --limit 100 --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("update/mattpocock-skills-")) | "\(.headRefName) \(.number)"')
+          while read -r headref number; do
+            if [[ -n "$headref" && "$headref" != "$BRANCH" ]]; then
+              gh pr close "$number" --comment "Superseded by #${NEW}" --delete-branch
+            fi
+          done <<<"$stale"
