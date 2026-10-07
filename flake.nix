@@ -151,14 +151,11 @@
       ciPackages =
         let
           nvidia = inputs.self.nixosConfigurations.New-H0Ryzen.config.hardware.nvidia;
+          # Names read from the overlays, so a newly vendored package joins with no edit here.
+          overlayNames = lib.concatMap (overlay: lib.attrNames (overlay ciPkgs ciPkgs)) overlays;
         in
-        {
-          inherit (ciPkgs)
-            herdr
-            herdr-navigator
-            herdr-automatic-rename
-            github-copilot-cli
-            ;
+        lib.genAttrs overlayNames (name: ciPkgs.${name})
+        // {
           nvidia-driver = nvidia.package;
           nvidia-kernel-module = if nvidia.open then nvidia.package.open else nvidia.package.mod;
         };
