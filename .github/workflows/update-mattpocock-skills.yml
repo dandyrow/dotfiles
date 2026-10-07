@@ -18,7 +18,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      actions: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -96,14 +95,6 @@ jobs:
 
           Release notes: ${release_url}")
           echo "number=${pr_url##*/}" >>"$GITHUB_OUTPUT"
-
-      # #260 asked for this dispatch even though the PAT-created PR starts its own pull_request CI.
-      - name: Run CI on the PR branch
-        if: steps.check.outputs.bump == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: ${{ steps.check.outputs.branch }}
-        run: gh workflow run ci.yml --ref "$BRANCH"
 
       - name: Close superseded updater PRs
         if: steps.check.outputs.bump == 'true'
