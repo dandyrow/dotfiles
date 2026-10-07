@@ -18,6 +18,7 @@ jobs:
       contents: read
     outputs:
       nix: ${{ steps.nix.outputs.changed }}
+      lock: ${{ steps.nix.outputs.lock }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -36,6 +37,11 @@ jobs:
             echo "changed=true" >>"$GITHUB_OUTPUT"
           else
             echo "changed=false" >>"$GITHUB_OUTPUT"
+          fi
+          if grep -qxF 'flake.lock' <<<"$files"; then
+            echo "lock=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "lock=false" >>"$GITHUB_OUTPUT"
           fi
 
   flake-check:
@@ -71,11 +77,51 @@ jobs:
       - name: nix build ciBuilds
         run: nix build .#ciBuilds --no-link --print-build-logs
 
+  hosts:
+    name: List NixOS hosts
+    needs: changes
+    # push and nightly runs count every file as changed, so the event gate keeps them out; dispatch stays in to run every job by hand.
+    if: needs.changes.outputs.lock == 'true' && github.event_name != 'push' && github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      hosts: ${{ steps.list.outputs.hosts }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - id: list
+        run: echo "hosts=$(nix eval --json .#nixosConfigurations --apply builtins.attrNames)" >>"$GITHUB_OUTPUT"
+
+  # No magic-nix-cache: a full toplevel closure overflows the 10 GB Actions cache and would evict the risky-derivation cache.
+  host-toplevel:
+    name: build ${{ matrix.host }}
+    needs: hosts
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    strategy:
+      # Build every host even after one fails, so the run reports each host's status.
+      fail-fast: false
+      matrix:
+        host: ${{ fromJSON(needs.hosts.outputs.hosts) }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jlumbroso/free-disk-space@v2
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: build toplevel
+        run: nix build --no-link --print-build-logs ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+
   # A skipped matrix job reports as the bare job name, so per-job required checks hang.
   ci-ok:
     name: ci-ok
     runs-on: ubuntu-latest
-    needs: [changes, flake-check, ci-builds]
+    needs: [changes, flake-check, ci-builds, hosts, host-toplevel]
     if: always()
     permissions: {}
     steps:
