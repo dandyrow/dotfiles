@@ -18,7 +18,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      actions: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -79,11 +78,12 @@ jobs:
           fi
           git push origin "$BRANCH"
 
+      # A GITHUB_TOKEN PR gates its pull_request CI behind manual approval; a PAT starts it unattended.
       - name: Open the PR
         if: steps.check.outputs.bump == 'true'
         id: pr
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.UPDATER_PR_PAT }}
           LATEST: ${{ steps.check.outputs.latest }}
           BRANCH: ${{ steps.check.outputs.branch }}
         run: |
@@ -95,14 +95,6 @@ jobs:
 
           Release notes: ${release_url}")
           echo "number=${pr_url##*/}" >>"$GITHUB_OUTPUT"
-
-      # A GITHUB_TOKEN PR fires no pull_request run; a dispatch does, and ci-ok lands on its head commit.
-      - name: Run CI on the PR branch
-        if: steps.check.outputs.bump == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: ${{ steps.check.outputs.branch }}
-        run: gh workflow run ci.yml --ref "$BRANCH"
 
       - name: Close superseded updater PRs
         if: steps.check.outputs.bump == 'true'
