@@ -80,7 +80,7 @@ jobs:
   hosts:
     name: List NixOS hosts
     needs: changes
-    # push and nightly runs count every file as changed, so the event gate keeps them out of the slow build.
+    # push and nightly runs count every file as changed, so the event gate keeps them out; dispatch stays in to run every job by hand.
     if: needs.changes.outputs.lock == 'true' && github.event_name != 'push' && github.event_name != 'schedule'
     runs-on: ubuntu-latest
     permissions:
