@@ -17,7 +17,8 @@ parse_branch "$@"
 
 # --- configurable AI co-author trailer (override via env vars) ---
 AI_COAUTHOR_NAME="${AI_COAUTHOR_NAME:-Copilot}"
-AI_COAUTHOR_EMAIL="${AI_COAUTHOR_EMAIL:-copilot@github.com}"
+# copilot@github.com links to no account; this noreply address resolves to the Copilot bot.
+AI_COAUTHOR_EMAIL="${AI_COAUTHOR_EMAIL:-198982749+Copilot@users.noreply.github.com}"
 AI_TRAILER="Co-authored-by: ${AI_COAUTHOR_NAME} <${AI_COAUTHOR_EMAIL}>"
 
 resolve_root
