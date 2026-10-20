@@ -19,6 +19,7 @@
     [
       bubblewrap
       socat
+      slirp4netns
     ]
   );
 }
