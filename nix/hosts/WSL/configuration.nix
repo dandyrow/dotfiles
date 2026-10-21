@@ -14,6 +14,11 @@ in
 
     # Enable systemd under WSL2 (requires Windows 11 / WSL 0.67.6+).
     useWindowsDriver = true;
+
+    # Allow VS Code Agents Window to work
+    extraBin = [
+      { src = "${pkgs.coreutils}/bin/uname"; }
+    ];
   };
 
   # WSL provides its own boot path; conflicts with common/systemd-boot.nix.
