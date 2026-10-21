@@ -1,0 +1,17 @@
+{
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "update.mode": "none",
+  "chat.agent.sandbox.enabled": "on",
+  "chat.agent.sandbox.fileSystem.userConfiguredPaths": {
+    "readwritePaths": ["__WSL_HOME__/.cache/nix"],
+    "readonlyPaths": [
+      "/nix/store",
+      "/etc/profiles",
+      "/run/current-system",
+      "/nix/var/nix/profiles",
+      "/nix/var/nix/daemon-socket"
+    ],
+    "deniedPaths": []
+  }
+}

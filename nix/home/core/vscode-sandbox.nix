@@ -9,7 +9,7 @@
     type = lib.types.bool;
     default = false;
     description = ''
-      Whether to install the VS Code sandbox tooling (bubblewrap, socat).
+      Whether to provision VS Code remote configuration and sandbox tooling.
       Off by default; WSL enables it explicitly.
     '';
   };

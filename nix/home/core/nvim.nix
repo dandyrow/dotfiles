@@ -17,8 +17,6 @@ in
       neovim
       fd
       gcc
-      gh
-      github-copilot-cli
       gnumake
       python3
       ripgrep

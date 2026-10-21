@@ -1,0 +1,16 @@
+{
+  "vscode": {
+    "version": "1.143.0",
+    "commit": "2d0b7506a36c1d6db9a466440131a8e01eab2289",
+    "url": "https://update.code.visualstudio.com/commit:2d0b7506a36c1d6db9a466440131a8e01eab2289/win32-x64-archive/stable",
+    "sha256": "459280b4adffd4a17174c6881289f97b005f645a9c79d50274b8ff9bc237e699"
+  },
+  "extensions": [
+    {
+      "id": "ms-vscode-remote.remote-wsl",
+      "version": "0.104.4",
+      "url": "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-vscode-remote/vsextensions/remote-wsl/0.104.4/vspackage",
+      "sha256": "25acdc5674c864293ef37ead315292bccdd0e6e7e50690eb08707a765c5601a5"
+    }
+  ]
+}

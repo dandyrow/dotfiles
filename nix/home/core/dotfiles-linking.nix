@@ -14,7 +14,6 @@ let
     "agents"
     "bat"
     "btop"
-    "copilot"
     "eza"
     "fastfetch"
     "git"

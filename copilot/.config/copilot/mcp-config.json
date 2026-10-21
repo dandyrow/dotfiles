@@ -15,11 +15,14 @@
       ]
     },
     "canvas-kit-mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@workday/canvas-kit-mcp"
-      ]
+      "type": "stdio",
+      "command": "canvas-kit-mcp",
+      "args": []
+    },
+    "wdx": {
+      "type": "stdio",
+      "command": "wdx",
+      "args": ["mcp"]
     }
   }
 }

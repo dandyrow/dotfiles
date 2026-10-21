@@ -62,11 +62,12 @@ This directory is `.gitignore`d and must never be committed.
 #### 2. Place the corporate certificate
 
 If building on a machine behind the corporate proxy, copy the corporate CA
-certificate to the repo root before building (it is gitignored and never
-committed):
+certificate to `/etc/nixos/corp.pem` on the build machine before building
+(never commit it):
 
 ```bash
-cp /path/to/corp.pem ./corp.pem
+sudo mkdir -p /etc/nixos
+sudo cp /path/to/corp.pem /etc/nixos/corp.pem
 ```
 
 If the certificate is not present, the build will succeed but the resulting
@@ -74,7 +75,7 @@ NixOS system will not trust the corporate proxy's TLS certificates.
 
 #### 3. Build the NixOS-WSL tarball
 
-The WSL configuration reads `corp.pem` from outside the Nix store, so
+The WSL configuration reads `/etc/nixos/corp.pem` from outside the Nix store, so
 `--impure` is required. This flag is only needed for the WSL build — other
 hosts do not require it.
 
@@ -91,7 +92,7 @@ sudo ./result/bin/nixos-wsl-tarball-builder --extra-files ./secrets nixos.wsl
 This produces `nixos.wsl` — a compressed archive ready to import into WSL,
 with the hashed password baked in at `/etc/secrets/primary-user-password`.
 
-#### 3. Import the tarball into WSL
+#### 4. Import the tarball into WSL
 
 From PowerShell or Command Prompt on Windows:
 
@@ -103,7 +104,7 @@ The 2nd argument is the installation directory for the WSL distro (e.g. `C:\User
 This is where the virtual hard disk will be stored. The directory above NixOS needs to exist (e.g. 
 `C:\Users\$env:USERNAME\WSL`).
 
-#### 4. Start NixOS
+#### 5. Start NixOS
 
 ```powershell
 wsl -d NixOS
@@ -127,6 +128,12 @@ Make sure `/etc/nixos/corp.pem` is present before rebuilding:
 ```bash
 doas cp /path/to/corp.pem /etc/nixos/corp.pem
 ```
+
+#### 6. Restore the development environment
+
+See [WSL development environment](docs/wsl-development.md) for the pinned Windows
+VS Code bootstrap, shared Copilot CLI / VS Code MCP configuration, private WDX
+checkout restoration, authentication and verification steps.
 
 #### Differences from bare-metal hosts
 
