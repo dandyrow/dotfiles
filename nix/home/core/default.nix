@@ -1,6 +1,6 @@
 {
   imports = [
-    ./agents.nix
+    ./copilot-cli.nix
     ./clone-dotfiles.nix
     ./dotfiles-linking.nix
     ./gnupg-home.nix
