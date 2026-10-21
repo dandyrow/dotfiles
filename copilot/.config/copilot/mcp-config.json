@@ -12,8 +12,8 @@
     },
     "canvas-kit-mcp": {
       "type": "stdio",
-      "command": "canvas-kit-mcp",
-      "args": []
+      "command": "npx",
+      "args": ["-y", "@workday/canvas-kit-mcp@16.2.3"]
     },
     "wdx": {
       "type": "stdio",

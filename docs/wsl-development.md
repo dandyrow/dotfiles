@@ -10,7 +10,7 @@ install software on Windows or restore private repositories and credentials.
 | Component | Source of truth |
 | --- | --- |
 | NixOS, Node, Copilot CLI, GitHub CLI | `flake.lock` and the Nix modules |
-| Canvas Kit MCP, including transitive dependencies | `nix/pkgs/canvas-kit-mcp/` and its Nix dependency hash |
+| Canvas Kit MCP version | `npx` version pin in both MCP configs, cached by npm under `~/.cache/npm` on first start |
 | Copilot CLI MCP definitions | Symlinked `copilot/.config/copilot/mcp-config.json` |
 | VS Code MCP definitions and server environment | Symlinked files under `vscode/.vscode-server/` |
 | Windows VS Code and WSL extension | `vscode/windows-lock.json`, including archive SHA256 hashes |
@@ -164,7 +164,6 @@ printf '%s\n' "$COPILOT_HOME"
 copilot --version
 copilot mcp list
 wdx --help
-node scripts/tests/mcp-smoke.mjs "$(command -v wdx)" mcp
 ```
 
 Expect Copilot's state home at `~/.config/copilot`, the built-in GitHub server,

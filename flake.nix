@@ -56,7 +56,6 @@
 
       overlays = [
         (final: prev: {
-          canvas-kit-mcp = final.callPackage ./nix/pkgs/canvas-kit-mcp.nix { };
           # Track a newer upstream than nixos-unstable currently ships; drop
           # this override when nixpkgs catches up.
           github-copilot-cli = final.callPackage ./nix/pkgs/github-copilot-cli.nix { };

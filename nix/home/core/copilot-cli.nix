@@ -32,7 +32,7 @@ in
     home.packages = [
       pkgs.gh
       pkgs.github-copilot-cli
-      pkgs.canvas-kit-mcp
+      pkgs.nodejs
       wdx
     ];
 

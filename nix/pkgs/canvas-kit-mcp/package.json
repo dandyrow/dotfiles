@@ -1,8 +1,0 @@
-{
-  "name": "canvas-kit-mcp-runtime",
-  "version": "16.2.3",
-  "private": true,
-  "dependencies": {
-    "@workday/canvas-kit-mcp": "16.2.3"
-  }
-}

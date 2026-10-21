@@ -13,7 +13,6 @@ let
       throw "test-${name} failed:\n${lib.generators.toPretty { } failures}";
 in
 {
-  mcp-servers = import ./mcp-servers.nix { inherit lib pkgs; };
   windows-bootstrap = pkgs.runCommand "test-windows-bootstrap" { } ''
     ${lib.getExe pkgs.powershell} -NoProfile -File ${../..}/scripts/tests/bootstrap-vscode.ps1
     touch "$out"
