@@ -15,7 +15,7 @@
   "hooks": {
     "SessionStart": [
       {
-        "bash": "bash '/home/dandyrow/.config/copilot/hooks/herdr-agent-state.sh'",
+        "bash": "bash \"$COPILOT_HOME/hooks/herdr-agent-state.sh\"",
         "timeoutSec": 10,
         "type": "command"
       }

@@ -13,12 +13,11 @@ let
       throw "test-${name} failed:\n${lib.generators.toPretty { } failures}";
 in
 {
-  agent-runtime = import ./agent-runtime.nix { inherit lib pkgs homeConfigurations; };
+  mcp-servers = import ./mcp-servers.nix { inherit lib pkgs; };
   windows-bootstrap = pkgs.runCommand "test-windows-bootstrap" { } ''
     ${lib.getExe pkgs.powershell} -NoProfile -File ${../..}/scripts/tests/bootstrap-vscode.ps1
     touch "$out"
   '';
-  agents = mkTest "agents" (import ./agents.nix { inherit lib homeConfigurations; });
   facts = mkTest "facts" (import ./facts.nix { inherit lib; });
   clone-dotfiles = mkTest "clone-dotfiles" (import ./clone-dotfiles.nix { inherit lib; });
   dotfiles-linking = mkTest "dotfiles-linking" (import ./dotfiles-linking.nix { inherit lib; });

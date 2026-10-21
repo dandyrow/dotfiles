@@ -18,11 +18,6 @@
       "type": "stdio",
       "command": "canvas-kit-mcp",
       "args": []
-    },
-    "wdx": {
-      "type": "stdio",
-      "command": "wdx",
-      "args": ["mcp"]
     }
   }
 }

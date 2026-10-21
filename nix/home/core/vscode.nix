@@ -4,38 +4,23 @@
   pkgs,
   ...
 }:
-let
-  servers = lib.mapAttrs (
-    _: server: builtins.removeAttrs server [ "tools" ]
-  ) config.dandyrow.mcpServers;
-in
 {
+  options.dandyrow.enableVscodeSandbox = lib.mkOption {
+    type = lib.types.bool;
+    default = false;
+    description = "Whether to install VS Code remote sandbox support on this host.";
+  };
+
   config = lib.mkIf config.dandyrow.enableVscodeSandbox {
-    home.file = {
-      ".vscode-server/data/User/mcp.json".text = builtins.toJSON {
-        servers = servers // {
-          github = {
-            type = "http";
-            url = "https://api.githubcopilot.com/mcp/";
-          };
-        };
-      };
-      ".vscode-server/server-env-setup".text = ''
-        export XDG_CONFIG_HOME=${lib.escapeShellArg config.xdg.configHome}
-        export XDG_CACHE_HOME=${lib.escapeShellArg config.xdg.cacheHome}
-        export XDG_DATA_HOME=${lib.escapeShellArg config.xdg.dataHome}
-        export XDG_STATE_HOME=${lib.escapeShellArg config.xdg.stateHome}
-        export COPILOT_HOME=${lib.escapeShellArg config.home.sessionVariables.COPILOT_HOME}
-        export COPILOT_SKILLS_DIRS=${lib.escapeShellArg config.home.sessionVariables.COPILOT_SKILLS_DIRS}
-        export NODE_EXTRA_CA_CERTS=${lib.escapeShellArg config.home.sessionVariables.NODE_EXTRA_CA_CERTS}
-        export PATH="${
-          lib.makeBinPath [
-            pkgs.github-copilot-cli
-            pkgs.gh
-            pkgs.nodejs
-          ]
-        }:/run/current-system/sw/bin:$PATH"
-      '';
-    };
+    home.packages = with pkgs; [
+      bubblewrap
+      socat
+      slirp4netns
+    ];
+
+    home.file.".vscode-server/data/User/mcp.json".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/vscode/.vscode-server/data/User/mcp.json";
+    home.file.".vscode-server/server-env-setup".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/vscode/.vscode-server/server-env-setup";
   };
 }

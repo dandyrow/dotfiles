@@ -1,6 +1,7 @@
 # WSL development environment
 
-NixOS owns the Linux packages and Home Manager owns the MCP configuration.
+NixOS installs the Linux packages. Home Manager symlinks the MCP configuration
+from the dotfiles.
 Windows runs a separate, pinned VS Code installation. Rebuilding NixOS does not
 install software on Windows or restore private repositories and credentials.
 
@@ -10,7 +11,9 @@ install software on Windows or restore private repositories and credentials.
 | --- | --- |
 | NixOS, Node, Copilot CLI, GitHub CLI | `flake.lock` and the Nix modules |
 | Canvas Kit MCP, including transitive dependencies | `nix/pkgs/canvas-kit-mcp/` and its Nix dependency hash |
-| MCP definitions for both clients | `copilot/.config/copilot/mcp-config.json`, adapted by Home Manager |
+| Copilot CLI MCP definitions | Symlinked `copilot/.config/copilot/mcp-config.json` |
+| Work Copilot MCP definitions | Symlinked `copilot/.config/copilot-work/mcp-config.json` |
+| VS Code MCP definitions and server environment | Symlinked files under `vscode/.vscode-server/` |
 | Windows VS Code and WSL extension | `vscode/windows-lock.json`, including archive SHA256 hashes |
 | Windows editor settings and Nix sandbox access | `vscode/windows-settings.json` |
 | WDX runtime | Nix Node wrapper around your separately restored private checkout |
@@ -133,24 +136,17 @@ required for the headless MCP server.
 
 ## Configuration and runtime state
 
-Home Manager generates immutable files under `~/.config/copilot-managed`.
-`COPILOT_HOME` is `~/.local/state/copilot`, with links to those files and writable
-runtime state beside them. Do not use `/mcp add` to change the managed file;
-edit the source definition and rebuild.
-The old `~/.config/copilot` path becomes a compatibility link to the state
-directory, not the dotfiles checkout, so existing plugin cache paths still work.
+`COPILOT_HOME` stays `~/.config/copilot`. Home Manager symlinks that directory
+to the common or work-specific Copilot configuration in the dotfiles checkout.
+Copilot runtime files remain there, as they do now. `.gitignore` excludes
+runtime state and keeps the managed configuration. Back up sessions and sign-in
+state separately when moving machines. Edit the selected `mcp-config.json`
+instead of using `/mcp add`.
 
-The first activation copies existing runtime state from the old dotfiles-linked
-Copilot directory if it exists. Existing destination state wins with a warning.
-The source is retained, not deleted. Stop agent sessions before switching and
-back up private state first; running sessions can otherwise keep writing to the
-old directory. Remove obsolete runtime copies only after checking the migration.
-
-VS Code remote MCP configuration is
-`~/.vscode-server/data/User/mcp.json`. Its environment comes from the managed
-`~/.vscode-server/server-env-setup`, without relying on an interactive terminal
-to export `COPILOT_HOME` or establish the package PATH. These VS Code paths are
-upstream defaults, not XDG-configurable paths.
+VS Code remote MCP configuration is symlinked from
+`vscode/.vscode-server/data/User/mcp.json`. Its environment setup script is also
+symlinked from the dotfiles and adds Nix profile paths before the remote agent
+starts. These VS Code paths are upstream defaults, not XDG-configurable.
 
 ## Verification
 
@@ -173,7 +169,7 @@ wdx --help
 node scripts/tests/mcp-smoke.mjs "$(command -v wdx)" mcp
 ```
 
-Expect Copilot's state home under `~/.local/state`, the built-in GitHub server,
+Expect Copilot's state home at `~/.config/copilot`, the built-in GitHub server,
 Atlassian, Context7, Canvas Kit and WDX. In VS Code, use
 **MCP: Open Remote User Configuration** and **MCP: List Servers**. Authorize and
 start each server, then exercise a documentation lookup and a read-only WDX

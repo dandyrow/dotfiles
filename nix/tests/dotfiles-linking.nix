@@ -8,6 +8,7 @@ let
       config = {
         lib.file.mkOutOfStoreSymlink = p: p;
         home.homeDirectory = "/home/dandyrow";
+        dandyrow.isWork = true;
       };
       pkgs = { };
       lib.mkMerge = x: x;
@@ -22,11 +23,18 @@ let
   missing = lib.filter (t: !builtins.pathExists (repoRoot + "/" + t)) (
     map (lib.removePrefix (dotfilesDir + "/")) targets
   );
+  copilotConfigsExist =
+    builtins.pathExists (repoRoot + "/copilot/.config/copilot/mcp-config.json")
+    && builtins.pathExists (repoRoot + "/copilot/.config/copilot-work/mcp-config.json");
 in
 lib.runTests {
   # A dead symlink is invisible until activation, so fail here instead.
   testAllConfigLinkTargetsExist = {
     expr = missing;
     expected = [ ];
+  };
+  testPersonalAndWorkCopilotConfigsExist = {
+    expr = copilotConfigsExist;
+    expected = true;
   };
 }

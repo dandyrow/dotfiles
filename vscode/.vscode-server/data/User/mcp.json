@@ -1,0 +1,26 @@
+{
+  "servers": {
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "atlassian": {
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v1/mcp/authv2"
+    },
+    "canvas-kit-mcp": {
+      "type": "stdio",
+      "command": "canvas-kit-mcp",
+      "args": []
+    },
+    "wdx": {
+      "type": "stdio",
+      "command": "wdx",
+      "args": ["mcp"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}

@@ -57,6 +57,12 @@ try {
     if ($settings.'chat.agent.sandbox.enabled' -ne 'on') {
         throw 'The bootstrap must keep sandboxing enabled.'
     }
+    $readonlyPaths = $settings.'chat.agent.sandbox.fileSystem.userConfiguredPaths'.readonlyPaths
+    foreach ($path in @('/nix/store', '/etc/profiles', '/run/current-system', '/nix/var/nix/profiles', '/nix/var/nix/daemon-socket')) {
+        if ($readonlyPaths -notcontains $path) {
+            throw "The sandbox must include read-only Nix access to $path."
+        }
+    }
     Write-Host 'Bootstrap syntax, download integrity, artifact pins and settings passed.'
 }
 finally {
