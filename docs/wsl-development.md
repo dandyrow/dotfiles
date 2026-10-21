@@ -12,7 +12,6 @@ install software on Windows or restore private repositories and credentials.
 | NixOS, Node, Copilot CLI, GitHub CLI | `flake.lock` and the Nix modules |
 | Canvas Kit MCP, including transitive dependencies | `nix/pkgs/canvas-kit-mcp/` and its Nix dependency hash |
 | Copilot CLI MCP definitions | Symlinked `copilot/.config/copilot/mcp-config.json` |
-| Work Copilot MCP definitions | Symlinked `copilot/.config/copilot-work/mcp-config.json` |
 | VS Code MCP definitions and server environment | Symlinked files under `vscode/.vscode-server/` |
 | Windows VS Code and WSL extension | `vscode/windows-lock.json`, including archive SHA256 hashes |
 | Windows editor settings and Nix sandbox access | `vscode/windows-settings.json` |
@@ -137,11 +136,10 @@ required for the headless MCP server.
 ## Configuration and runtime state
 
 `COPILOT_HOME` stays `~/.config/copilot`. Home Manager symlinks that directory
-to the common or work-specific Copilot configuration in the dotfiles checkout.
-Copilot runtime files remain there, as they do now. `.gitignore` excludes
-runtime state and keeps the managed configuration. Back up sessions and sign-in
-state separately when moving machines. Edit the selected `mcp-config.json`
-instead of using `/mcp add`.
+to `copilot/.config/copilot` in the dotfiles checkout. Copilot runtime files
+remain there, as they do now. `.gitignore` excludes runtime state and keeps the
+managed configuration. Back up sessions and sign-in state separately when moving
+machines. Edit `mcp-config.json` instead of using `/mcp add`.
 
 VS Code remote MCP configuration is symlinked from
 `vscode/.vscode-server/data/User/mcp.json`. Its environment setup script is also

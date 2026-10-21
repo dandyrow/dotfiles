@@ -14,6 +14,7 @@ let
     "agents"
     "bat"
     "btop"
+    "copilot"
     "eza"
     "fastfetch"
     "git"
@@ -31,13 +32,6 @@ in
   home.file = lib.mkMerge (
     # Symlinked from the ~/.dotfiles clone created by the clone-dotfiles adapters.
     map mkConfigLink configLinks
-    ++ [
-      {
-        ".config/copilot".source = mkLink (
-          if config.dandyrow.isWork then "copilot/.config/copilot-work" else "copilot/.config/copilot"
-        );
-      }
-    ]
     ++ [
       # Per-file, not whole-dir: gpg needs 700 on the dir and keeps runtime files (sockets, keyrings) there.
       {

@@ -33,8 +33,8 @@ in
       pkgs.gh
       pkgs.github-copilot-cli
       pkgs.canvas-kit-mcp
-    ]
-    ++ lib.optional cfg.isWork wdx;
+      wdx
+    ];
 
     home.sessionVariables = {
       NODE_EXTRA_CA_CERTS =
