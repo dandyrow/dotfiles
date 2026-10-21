@@ -164,6 +164,7 @@ printf '%s\n' "$COPILOT_HOME"
 copilot --version
 copilot mcp list
 wdx --help
+node scripts/tests/mcp-smoke.mjs "$(command -v wdx)" mcp
 ```
 
 Expect Copilot's state home at `~/.config/copilot`, the built-in GitHub server,
