@@ -1,0 +1,10 @@
+#!/bin/sh
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export COPILOT_HOME="$HOME/.config/copilot"
+export COPILOT_SKILLS_DIRS="$HOME/.local/share/agents/skills"
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
+export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+export PATH="/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$XDG_STATE_HOME/nix/profile/bin:$HOME/.nix-profile/bin:$PATH"

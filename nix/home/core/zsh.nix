@@ -12,6 +12,7 @@
       bat
       fastfetch
       fzf
+      gh
       starship
       zoxide
     ]);
