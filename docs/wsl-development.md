@@ -12,7 +12,7 @@ install software on Windows or restore private repositories and credentials.
 | NixOS, Node, Copilot CLI, GitHub CLI | `flake.lock` and the Nix modules |
 | Canvas Kit MCP version | `npx` version pin in both MCP configs, cached by npm under `~/.cache/npm` on first start |
 | Copilot CLI MCP definitions | Symlinked `copilot/.config/copilot/mcp-config.json` |
-| VS Code MCP definitions and server environment | Symlinked files under `vscode/` |
+| VS Code MCP definitions and server environment | Symlinked files under `vscode/.vscode-server/` |
 | Windows VS Code and WSL extension | Manually installed on Windows, not pinned by this repository |
 | Windows editor settings and Nix sandbox access | `vscode/windows-settings.json` |
 | WDX runtime | Nix Node wrapper around your separately restored private checkout |
@@ -140,32 +140,12 @@ remain there, as they do now. `.gitignore` excludes runtime state and keeps the
 managed configuration. Back up sessions and sign-in state separately when moving
 machines. Edit `mcp-config.json` instead of using `/mcp add`.
 
-The VS Code server keeps its data and extensions in
-`~/.local/share/vscode-server`. `server-env-setup` sets `VSCODE_AGENT_FOLDER` to
-that path and adds the Nix profile paths before the server starts. The WSL
-extension hardcodes `~/.vscode-server` for the server binaries and for
-`server-env-setup` itself, so that directory still exists but holds only
-downloads you can delete and reinstall.
-
-Home Manager symlinks the remote MCP configuration from
-`vscode/.local/share/vscode-server/data/User/mcp.json` and `server-env-setup`
-from `vscode/.vscode-server/server-env-setup`.
-
-### Move existing VS Code server data
-
-Machines that ran VS Code before this change have their remote settings,
-extensions and chat history in `~/.vscode-server`. Move them once after the
-rebuild. Run **WSL: Kill VS Code Server** in VS Code and close every VS Code
-window, then run this from a WSL terminal that VS Code did not open:
-
-```bash
-mkdir -p ~/.local/share/vscode-server
-cp -a --update=none ~/.vscode-server/data ~/.vscode-server/extensions ~/.local/share/vscode-server/
-```
-
-`--update=none` keeps the `mcp.json` link Home Manager already created. Once VS Code
-reconnects with your settings and extensions, delete the old copies with
-`rm -rf ~/.vscode-server/data ~/.vscode-server/extensions`.
+VS Code remote MCP configuration is symlinked from
+`vscode/.vscode-server/data/User/mcp.json`. Its environment setup script is also
+symlinked from the dotfiles and adds Nix profile paths before the remote agent
+starts. The server can move its data with `VSCODE_AGENT_FOLDER`, but the WSL
+extension hardcodes `~/.vscode-server` for the binaries and this script, so
+everything stays in that one directory.
 
 ## Verification
 
@@ -176,21 +156,19 @@ nix flake check
 nix eval .#nixosConfigurations.WSL.config.system.build.toplevel.drvPath --impure
 ```
 
-After an approved rebuild, move existing VS Code server data as described
-above. Then reconnect to the NixOS distro in VS Code and open a fresh WSL
-terminal:
+After an approved rebuild, stop the existing WSL VS Code server through
+**WSL: Kill VS Code Server**, reconnect to the NixOS distro in VS Code, and
+open a fresh WSL terminal:
 
 ```bash
 printf '%s\n' "$COPILOT_HOME"
 copilot --version
 copilot mcp list
 wdx --help
-ls ~/.local/share/vscode-server
 ```
 
 Expect Copilot's state home at `~/.config/copilot`, the built-in GitHub server,
-Atlassian, Context7, Canvas Kit and WDX, and VS Code's `data` and `extensions`
-directories under `~/.local/share/vscode-server`. In VS Code, use
+Atlassian, Context7, Canvas Kit and WDX. In VS Code, use
 **MCP: Open Remote User Configuration** and **MCP: List Servers**. Authorize and
 start each server, then exercise a documentation lookup and a read-only WDX
 reference tool. Verify remote execution in a WSL workspace, not a Windows folder.

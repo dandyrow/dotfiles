@@ -3,8 +3,6 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
-# WSL extension hardcodes ~/.vscode-server for binaries; the server honours this for data and extensions.
-export VSCODE_AGENT_FOLDER="$XDG_DATA_HOME/vscode-server"
 export COPILOT_HOME="$HOME/.config/copilot"
 export COPILOT_SKILLS_DIRS="$HOME/.local/share/agents/skills"
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
