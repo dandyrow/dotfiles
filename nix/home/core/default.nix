@@ -7,6 +7,7 @@
     ./herdr.nix
     ./nvim.nix
     ./sbx-identity.nix
+    ./sbx-mcp.nix
     ./vscode.nix
     ./work-identity.nix
     ./zsh.nix

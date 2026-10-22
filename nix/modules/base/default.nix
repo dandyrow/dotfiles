@@ -15,6 +15,7 @@ in
     ./agents.nix
     ./sbx.nix
     ./sbx-kits.nix
+    ./sbx-mcp.nix
   ];
 
   nix.settings = {
