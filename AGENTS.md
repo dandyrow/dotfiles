@@ -29,7 +29,7 @@ The following rules describe how you should use git:
 - Use `git commit --no-gpg-sign` when committing. The flag is per-invocation and for agents only. GPG signing stays on normally, so never run `git config` to lower `commit.gpgSign` at repo or global scope, or unset a signing key. If signing blocks an automation step, pass `-c commit.gpgSign=false` for that command alone.
 - Before staging, re-read the diff: every added comment must be a single line explaining a non-obvious *why*. Trim any that are not.
 - **Commit messages must use gitmoji + conventional commits format.**
-- **Every commit body must include `Co-authored-by: Copilot <198982749+Copilot@users.noreply.github.com>`**, auto-appended by the worktree hook.
+- **Every commit body must include `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>`**, auto-appended by the worktree hook, which replaces any other Copilot co-author line.
 - After a clean commit on a feature branch, push to `origin` and open a PR in the same turn.
 - Keep PRs small and reviewable. Prefer multiple atomic commits.
 - After a PR is confirmed merged, run `./scripts/agent-cleanup.sh <branch>` then `git pull` on `main`.

@@ -17,8 +17,8 @@ parse_branch "$@"
 
 # --- configurable AI co-author trailer (override via env vars) ---
 AI_COAUTHOR_NAME="${AI_COAUTHOR_NAME:-Copilot}"
-# copilot@github.com links to no account; this noreply address resolves to the Copilot bot.
-AI_COAUTHOR_EMAIL="${AI_COAUTHOR_EMAIL:-198982749+Copilot@users.noreply.github.com}"
+# This address links the trailer to the Copilot CLI bot account.
+AI_COAUTHOR_EMAIL="${AI_COAUTHOR_EMAIL:-223556219+Copilot@users.noreply.github.com}"
 AI_TRAILER="Co-authored-by: ${AI_COAUTHOR_NAME} <${AI_COAUTHOR_EMAIL}>"
 
 resolve_root
@@ -56,7 +56,7 @@ EOF
 
   mkdir -p .githooks
 
-  # Append the trailer only when absent
+  # Agents add their own Copilot trailers, so swap any of them for the configured one
   cat > .githooks/commit-msg <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -69,10 +69,13 @@ if [[ ! -f "$TRAILER_FILE" ]]; then
 fi
 
 TRAILER="$(cat "$TRAILER_FILE")"
+STRIPPED="$(mktemp)"
 
-if ! grep -Fq "$TRAILER" "$MSG_FILE"; then
-  printf "\n%s\n" "$TRAILER" >> "$MSG_FILE"
-fi
+grep -v -i -E '^co-authored-by:[[:space:]]*copilot[[:space:]]*<' "$MSG_FILE" > "$STRIPPED" || true
+cat "$STRIPPED" > "$MSG_FILE"
+rm -f "$STRIPPED"
+
+git interpret-trailers --in-place --trailer "$TRAILER" "$MSG_FILE"
 EOF
   chmod +x .githooks/commit-msg
 
