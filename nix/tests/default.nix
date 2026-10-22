@@ -20,6 +20,7 @@ in
   work-identity = mkTest "work-identity" (import ./work-identity.nix { inherit lib; });
   sbx-module = mkTest "sbx-module" (import ./sbx-module.nix { inherit lib; });
   sbx-identity = mkTest "sbx-identity" (import ./sbx-identity.nix { inherit lib pkgs; });
+  sbx-kits = import ./sbx-kits.nix { inherit lib pkgs; };
   config-eval = mkTest "config-eval" (import ./config-eval.nix { inherit lib homeConfigurations; });
   worktree-scripts = import ./worktree-scripts.nix { inherit pkgs; };
 }
