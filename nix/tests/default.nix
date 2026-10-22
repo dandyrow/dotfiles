@@ -21,6 +21,7 @@ in
   sbx-module = mkTest "sbx-module" (import ./sbx-module.nix { inherit lib; });
   sbx-identity = mkTest "sbx-identity" (import ./sbx-identity.nix { inherit lib pkgs; });
   sbx-kits = import ./sbx-kits.nix { inherit lib pkgs; };
+  sbx-gate = import ./sbx-gate.nix { inherit pkgs; };
   sbx-mcp = import ./sbx-mcp.nix { inherit lib pkgs; };
   config-eval = mkTest "config-eval" (import ./config-eval.nix { inherit lib homeConfigurations; });
   worktree-scripts = import ./worktree-scripts.nix { inherit pkgs; };
