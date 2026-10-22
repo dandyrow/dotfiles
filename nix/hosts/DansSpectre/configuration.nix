@@ -6,6 +6,8 @@
 
   gnome.enable = true;
 
+  sbx.enable = true;
+
   # Coincides with the other hosts by install date, not by sharing — do not consolidate.
   system.stateVersion = "25.11";
 }
