@@ -13,6 +13,7 @@ in
     ./gnupg.nix
     ./zsh.nix
     ./agents.nix
+    ./sbx.nix
   ];
 
   nix.settings = {
