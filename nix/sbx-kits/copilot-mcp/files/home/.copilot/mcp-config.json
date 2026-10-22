@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "mcp-gateway": {
+      "type": "http",
+      "url": "http://mcp-gateway.docker.internal/mcp",
+      "headers": {
+        "Authorization": "Bearer proxy-managed"
+      },
+      "tools": [
+        "*"
+      ]
+    }
+  }
+}

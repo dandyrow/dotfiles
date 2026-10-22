@@ -14,6 +14,7 @@ in
     ./zsh.nix
     ./agents.nix
     ./sbx.nix
+    ./sbx-mcp.nix
   ];
 
   nix.settings = {
