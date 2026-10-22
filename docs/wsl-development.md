@@ -2,7 +2,7 @@
 
 NixOS installs the Linux packages. Home Manager symlinks the MCP configuration
 from the dotfiles.
-Windows runs a separate, pinned VS Code installation. Rebuilding NixOS does not
+Windows runs a separately installed VS Code editor. Rebuilding NixOS does not
 install software on Windows or restore private repositories and credentials.
 
 ## What is reproducible
@@ -13,7 +13,7 @@ install software on Windows or restore private repositories and credentials.
 | Canvas Kit MCP version | `npx` version pin in both MCP configs, cached by npm under `~/.cache/npm` on first start |
 | Copilot CLI MCP definitions | Symlinked `copilot/.config/copilot/mcp-config.json` |
 | VS Code MCP definitions and server environment | Symlinked files under `vscode/.vscode-server/` |
-| Windows VS Code and WSL extension | `vscode/windows-lock.json`, including archive SHA256 hashes |
+| Windows VS Code and WSL extension | Manually installed on Windows, not pinned by this repository |
 | Windows editor settings and Nix sandbox access | `vscode/windows-settings.json` |
 | WDX runtime | Nix Node wrapper around your separately restored private checkout |
 
@@ -70,42 +70,41 @@ use another location. The wrapper reports a missing checkout explicitly.
 Restore `~/Projects/work/EDM-AI/wd-product-ai` separately if you want the private
 skills referenced by the existing Copilot settings.
 
-### 3. Bootstrap the Windows editor
+### 3. Set up VS Code on Windows
 
-From Windows PowerShell, run the script from the same dotfiles revision:
+1. Install [VS Code for Windows](https://code.visualstudio.com/download).
+   No Linux desktop editor is needed.
+2. In the Windows editor, install Microsoft's **WSL** extension,
+   `ms-vscode-remote.remote-wsl`.
+3. Sign in to GitHub and enable GitHub Copilot chat. If your VS Code release
+   offers Copilot through an extension, install the GitHub Copilot extension
+   recommended by the editor. Your account must have Copilot access.
+4. Open **Preferences: Open User Settings (JSON)** in the Windows editor.
+   Merge the settings from [`vscode/windows-settings.json`](../vscode/windows-settings.json)
+   into your existing settings. Replace every `__WSL_HOME__` with your Linux
+   home, normally `/home/dandyrow`. Preserve any existing sandbox path grants.
+   The template disables automatic editor and extension updates; keep those
+   settings only if you intend to manage updates manually.
+5. Run **WSL: Connect to WSL using Distro**, select your NixOS distro, then
+   open your workspace inside its Linux filesystem.
 
-```powershell
-& '\\wsl.localhost\NixOS\home\dandyrow\.dotfiles\scripts\bootstrap-vscode.ps1' -Launch
-```
+The default Windows User settings file is
+`%APPDATA%\Code\User\settings.json`. Use the command above for the active
+profile rather than assuming that path applies to every profile.
+Windows VS Code and extension versions are managed manually, outside Nix.
+Record their versions in your machine backup if you need to reinstall the same
+releases, and apply security updates deliberately.
 
-Use `-LinuxUser` and `-Distro` if those names differ. The bootstrap requires
-Windows x64, PowerShell 5.1 or newer, and HTTPS access to the VS Code update
-service and Visual Studio Marketplace. Corporate Windows certificate trust is
-a Windows prerequisite, separate from the WSL CA.
-
-The script verifies download hashes, installs the locked WSL extension, disables
-automatic editor/extension updates, and writes settings in its own user-data
-directory. Copilot support is built into the pinned VS Code release.
-It does not install a Linux desktop editor, require administrator privileges,
-or overwrite your existing VS Code installation.
-
-Use the generated launcher for subsequent sessions:
-
-```powershell
-& "$env:LOCALAPPDATA\Programs\dotfiles-vscode\code-wsl.cmd"
-```
-
-Its settings are at `%APPDATA%\dotfiles-vscode\User\settings.json` and are
-replaced on bootstrap reruns. Other editor profiles are untouched. Manual
-extension installs can still change this profile; avoid them for exact
-restoration. Update the lock and verified hashes deliberately to receive
-security fixes.
+HTTPS access to VS Code services, the Visual Studio Marketplace and the MCP
+endpoints is required. Corporate Windows certificate trust is a Windows
+prerequisite, separate from the WSL CA.
 
 Sandbox settings must be in the **Windows User settings of the launching
 editor** for this agent-host setup. Putting the same settings only in WSL
 Remote Settings did not affect the effective policy during testing.
-The bootstrap grants read access to the Nix store/profile trees and daemon
-socket, plus write access to the user's Nix cache. It leaves sandboxing on.
+The settings template grants read access to the Nix store/profile trees and
+daemon socket, plus write access to the user's Nix and npm caches. npm needs
+its cache for Canvas Kit's pinned `npx` command. It leaves sandboxing on.
 Daemon access permits Nix to fetch and build packages.
 
 Run `/sandbox policy` in a new agent session to confirm the grants. A successful
@@ -114,7 +113,7 @@ policy report alone does not prove that commands can start.
 ### 4. Sign in and authorize MCP
 
 - Run `copilot login` and `gh auth login` inside WSL.
-- Sign in to GitHub/Copilot in the managed Windows VS Code window.
+- Sign in to GitHub/Copilot in the Windows VS Code window connected to WSL.
 - Authorize Atlassian, Context7 if requested, and GitHub separately in each
   client. OAuth state is not copied into Nix or shared between clients.
 - Supply any required `WDX_DEV_*` / `WDX_TENANT_*` credentials through your
@@ -156,7 +155,7 @@ nix eval .#nixosConfigurations.WSL.config.system.build.toplevel.drvPath --impure
 ```
 
 After an approved rebuild, stop the existing WSL VS Code server through
-**WSL: Kill VS Code Server**, reconnect with the managed Windows launcher, and
+**WSL: Kill VS Code Server**, reconnect to the NixOS distro in VS Code, and
 open a fresh WSL terminal:
 
 ```bash
@@ -164,7 +163,6 @@ printf '%s\n' "$COPILOT_HOME"
 copilot --version
 copilot mcp list
 wdx --help
-node scripts/tests/mcp-smoke.mjs "$(command -v wdx)" mcp
 ```
 
 Expect Copilot's state home at `~/.config/copilot`, the built-in GitHub server,
@@ -175,4 +173,4 @@ reference tool. Verify remote execution in a WSL workspace, not a Windows folder
 
 Authenticated HTTP calls, Windows installation, OAuth callbacks and the
 post-switch editor environment must be checked on the actual clients. Nix
-evaluation and the local stdio smoke tests cannot prove those steps work.
+evaluation cannot prove those steps work.

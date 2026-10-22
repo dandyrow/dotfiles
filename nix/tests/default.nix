@@ -13,10 +13,6 @@ let
       throw "test-${name} failed:\n${lib.generators.toPretty { } failures}";
 in
 {
-  windows-bootstrap = pkgs.runCommand "test-windows-bootstrap" { } ''
-    ${lib.getExe pkgs.powershell} -NoProfile -File ${../..}/scripts/tests/bootstrap-vscode.ps1
-    touch "$out"
-  '';
   facts = mkTest "facts" (import ./facts.nix { inherit lib; });
   clone-dotfiles = mkTest "clone-dotfiles" (import ./clone-dotfiles.nix { inherit lib; });
   dotfiles-linking = mkTest "dotfiles-linking" (import ./dotfiles-linking.nix { inherit lib; });

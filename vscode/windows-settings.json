@@ -4,7 +4,7 @@
   "update.mode": "none",
   "chat.agent.sandbox.enabled": "on",
   "chat.agent.sandbox.fileSystem.userConfiguredPaths": {
-    "readwritePaths": ["__WSL_HOME__/.cache/nix"],
+    "readwritePaths": ["__WSL_HOME__/.cache/nix", "__WSL_HOME__/.cache/npm"],
     "readonlyPaths": [
       "/nix/store",
       "/etc/profiles",
