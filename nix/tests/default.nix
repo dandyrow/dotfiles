@@ -23,6 +23,7 @@ in
   sbx-kits = import ./sbx-kits.nix { inherit lib pkgs; };
   sbx-gate = import ./sbx-gate.nix { inherit pkgs; };
   sbx-mcp = import ./sbx-mcp.nix { inherit lib pkgs; };
+  sbx-launcher = import ./sbx-launcher.nix { inherit lib pkgs; };
   config-eval = mkTest "config-eval" (import ./config-eval.nix { inherit lib homeConfigurations; });
   worktree-scripts = import ./worktree-scripts.nix { inherit pkgs; };
 }
