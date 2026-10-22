@@ -53,6 +53,8 @@ let
   agentGateCheck = checkZip "agent-gate" hostKits.agent-gate ''
     test -x unpack/files/home/agent-gate/betterleaks
     test -x unpack/files/home/agent-gate/pre-push
+    test -f unpack/files/home/agent-gate/betterleaks-default.toml
+    yq -e '.setup.install[0].command | contains("betterleaks-default.toml")' unpack/spec.yaml >/dev/null
     yq -e '.setup.install[0].command | contains("core.hooksPath")' unpack/spec.yaml >/dev/null
     yq -e '.setup.install[0].user == "0"' unpack/spec.yaml >/dev/null
   '';

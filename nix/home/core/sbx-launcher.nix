@@ -91,39 +91,31 @@ let
 
       kit_list=${lib.escapeShellArg (builtins.toJSON kitList)}
 
+      add_kit() {
+        local kit="$1" required="$2"
+        if printf '%s' "$kit_list" | jq -e --arg kit "$kit" 'index($kit)' >/dev/null; then
+          flags+=(--kit "/etc/sbx-kits/$kit.zip")
+        elif [ "$required" -eq 1 ]; then
+          die "agent-sbx: $kit kit required for $agent on this host"
+        fi
+      }
+
       if [ "$exists" -eq 0 ]; then
         flags+=(--clone)
-
-        if printf '%s' "$kit_list" | jq -e 'index("agent-gate")' >/dev/null 2>&1; then
-          flags+=(--kit /etc/sbx-kits/agent-gate.zip)
-        else
-          die "agent-sbx: agent-gate kit not available on this host"
-        fi
-
+        add_kit agent-gate 1
         if [ "$is_wsl" -eq 1 ]; then
-          if printf '%s' "$kit_list" | jq -e 'index("corp-ca")' >/dev/null 2>&1; then
-            flags+=(--kit /etc/sbx-kits/corp-ca.zip)
-          fi
+          add_kit corp-ca 0
           if [ "$agent" = "opencode" ]; then
-            if printf '%s' "$kit_list" | jq -e 'index("opencode-copilot")' >/dev/null 2>&1; then
-              flags+=(--kit /etc/sbx-kits/opencode-copilot.zip)
-            else
-              die "agent-sbx: opencode-copilot kit required on WSL for opencode"
-            fi
+            add_kit opencode-copilot 1
           fi
         fi
-
         if [ "$agent" = "copilot" ]; then
-          if printf '%s' "$kit_list" | jq -e 'index("copilot-mcp")' >/dev/null 2>&1; then
-            flags+=(--kit /etc/sbx-kits/copilot-mcp.zip)
-          else
-            die "agent-sbx: copilot-mcp kit required for copilot"
-          fi
+          add_kit copilot-mcp 1
         fi
 
         mcp_list_json="$(sbx mcp ls --json 2>&1)" || die "agent-sbx: failed to run 'sbx mcp ls --json': $mcp_list_json"
         static_mcp="$(printf '%s' "$mcp_list_json" | jq -r '[.servers[]?.name] | join(",")' 2>&1)" || die "agent-sbx: failed to parse mcp list"
-        if [ -n "$static_mcp" ] && [ "$static_mcp" != "null" ] && [ "$static_mcp" != "" ]; then
+        if [ -n "$static_mcp" ]; then
           flags+=(--static-mcp "$static_mcp")
         fi
 

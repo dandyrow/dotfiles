@@ -13,7 +13,11 @@ pkgs.runCommand "test-sbx-gate"
   ''
     set -uo pipefail
 
-    hook=${../sbx-kits/agent-gate/pre-push}
+    mkdir -p "$TMPDIR/hooks"
+    cp ${../sbx-kits/agent-gate/pre-push} "$TMPDIR/hooks/pre-push"
+    cp ${../sbx-kits/agent-gate/betterleaks-default.toml} "$TMPDIR/hooks/betterleaks-default.toml"
+    chmod +x "$TMPDIR/hooks/pre-push"
+    hook="$TMPDIR/hooks/pre-push"
     work="$TMPDIR/work"
     zero=0000000000000000000000000000000000000000
     failures=0
@@ -71,6 +75,38 @@ pkgs.runCommand "test-sbx-gate"
       invoke refs/heads/feat/x refs/heads/feat/x
     }
 
+    repo_config() {
+      printf '[extend]\nuseDefault = false\n' >.betterleaks.toml
+      echo "token = \"$(fake_token)\"" >cfg.toml
+      git add .betterleaks.toml cfg.toml
+      git commit -qm config
+      invoke refs/heads/feat/x refs/heads/feat/x
+    }
+
+    delete_feature() {
+      git push -q --no-verify -u origin feat/x
+      printf '%s %s %s %s\n' '(delete)' "$zero" refs/heads/feat/x "$zero" \
+        | bash "$hook" origin
+    }
+
+    delete_default() {
+      git switch -q main
+      git push -q --no-verify -u origin main
+      printf '%s %s %s %s\n' '(delete)' "$zero" refs/heads/main "$zero" \
+        | bash "$hook" origin
+    }
+
+    default_branch() {
+      git switch -qc develop
+      echo change >>README
+      git commit -qam change
+      git push -q --no-verify -u origin develop
+      git remote set-head origin develop >/dev/null
+      echo change2 >>README
+      git commit -qam change2
+      invoke refs/heads/develop refs/heads/develop
+    }
+
     to_main() {
       git switch -q main
       echo x >>README
@@ -122,7 +158,11 @@ pkgs.runCommand "test-sbx-gate"
     }
 
     run_case "clean feature branch" allowed clean
+    run_case "deleting a feature branch" allowed delete_feature
     run_case "push to refs/heads/main" blocked to_main
+    run_case "deleting refs/heads/main" blocked delete_default
+    run_case "push to the remote default branch" blocked default_branch
+    run_case "repository betterleaks config cannot disable defaults" blocked repo_config
     run_case "secret in a new commit" blocked secret
     run_case "secret added then removed in a later commit" blocked secret_fixed
     run_case "BETTERLEAKS_CONFIG points at an empty config" blocked env_override

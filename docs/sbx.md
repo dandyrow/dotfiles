@@ -51,7 +51,7 @@ agent-sbx <agent>
 | `opencode-copilot` | WSL | opencode | Copilot models through the host token |
 | `copilot-mcp` | all | copilot | MCP client configuration |
 
-The launcher reads these Home Manager options from
+The launcher and the identity scripts read these Home Manager options from
 `nix/home/core/sbx-identity.nix`:
 
 | Option | Meaning |
@@ -147,6 +147,12 @@ token in `~/.config/gh/hosts.yml`.
 sbx picks its backend itself. It tries Secret Service over D-Bus first and falls
 back to the file store when no keyring owns `org.freedesktop.secrets`. Keep the
 CLI and the daemon in the same session and the same `XDG_CONFIG_HOME`.
+
+sbx has no systemd unit. The CLI starts the daemon on first use, and the daemon
+keeps the environment of that user session: D-Bus, GNOME Keyring, and
+`XDG_CONFIG_HOME`. Start sbx from a terminal in the desktop session. After a
+reboot, the first `sbx` or `agent-sbx` command starts the daemon again. A daemon
+started over SSH or in another session may not see the keyring.
 
 ### Git identity
 
@@ -529,13 +535,14 @@ For each ref git is about to push, the hook:
    removed in a later commit is still found.
 3. Runs `./.agents/gate` from the repo root when it is executable.
 
-It unsets `BETTERLEAKS_CONFIG` and the related `GITLEAKS_*` variables first, so
-the sandbox environment cannot swap in a weaker ruleset.
+It unsets `BETTERLEAKS_CONFIG` and the related `GITLEAKS_*` variables, then
+passes a bundled config that enables the built-in rules, so neither the
+environment nor a repository config can swap in a weaker ruleset.
 
 The gate blocks a normal `git push`. It cannot stop `git push --no-verify`, an
 agent that edits the hook after `sudo`, or a local `core.hooksPath` override.
-Assume a mistaken agent, not a hostile one. CI runs the same `betterleaks` scan
-on every change, and the `main` ruleset requires `ci-ok`.
+Assume a mistaken agent, not a hostile one. CI runs `betterleaks` with its
+default ruleset on every change, and the `main` ruleset requires `ci-ok`.
 
 ### Validate the kit
 

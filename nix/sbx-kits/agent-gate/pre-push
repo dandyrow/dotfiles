@@ -11,7 +11,7 @@ unset BETTERLEAKS_CONFIG GITLEAKS_CONFIG BETTERLEAKS_CONFIG_TOML GITLEAKS_CONFIG
 
 fail() {
   printf '\nagent-gate: push blocked: %s\n' "$1" >&2
-  printf 'agent-gate: fix the cause and push again. Do not use --no-verify: CI re-runs this gate before main.\n' >&2
+  printf 'agent-gate: fix the cause and push again. Do not use --no-verify: CI scans every change before main.\n' >&2
   exit 1
 }
 
@@ -22,11 +22,13 @@ protected_refs() {
     | sed "s#^refs/remotes/$remote/#refs/heads/#" || true
 }
 
+default_config="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/betterleaks-default.toml"
+[[ -r "$default_config" ]] || fail "missing $default_config"
+
 # The only betterleaks call, so the v2 flag changes land in one place.
 scan_secrets() {
-  local log_opts="$1" config=()
-  [[ -f "$top/.betterleaks.toml" ]] && config=(--config "$top/.betterleaks.toml")
-  betterleaks git "${config[@]}" --log-opts="$log_opts" --verbose --redact --no-banner --no-color \
+  local log_opts="$1"
+  betterleaks git --config "$default_config" --log-opts="$log_opts" --verbose --redact --no-banner --no-color \
     --log-level warn --exit-code 1 "$top"
 }
 

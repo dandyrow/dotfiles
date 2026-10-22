@@ -1,7 +1,7 @@
 { lib, pkgs }:
 let
   eval =
-    { osConfig }:
+    { osConfig, extraConfig ? { } }:
     (lib.evalModules {
       specialArgs = { inherit osConfig pkgs; };
       modules = [
@@ -19,10 +19,12 @@ let
             };
           };
         }
+        { config = extraConfig; }
       ];
     }).config;
 
   identity = osConfig: (eval { inherit osConfig; }).dandyrow.sbxIdentity;
+  identityWith = osConfig: extraConfig: (eval { inherit osConfig extraConfig; }).dandyrow.sbxIdentity;
   packageNames =
     osConfig: lib.sort (a: b: a < b) (map (p: p.name or "") (eval { inherit osConfig; }).home.packages);
 
@@ -62,7 +64,7 @@ lib.runTests {
     expected = true;
   };
 
-  testGdmHostIsNotWsl = {
+  testNonWslHostIsNotWsl = {
     expr = (identity enabledHost).isWsl;
     expected = false;
   };
@@ -80,7 +82,7 @@ lib.runTests {
     };
   };
 
-  testGdmGitIdentity = {
+  testNonWslGitIdentity = {
     expr = (identity enabledHost).gitIdentity;
     expected = {
       name = "opencode-agent[bot]";
@@ -93,7 +95,7 @@ lib.runTests {
     expected = "file";
   };
 
-  testGdmUsesKeyringBackend = {
+  testNonWslUsesKeyringBackend = {
     expr = (identity enabledHost).github.backend;
     expected = "keyring";
   };
@@ -103,7 +105,7 @@ lib.runTests {
     expected = "dandyrow-agent-wsl";
   };
 
-  testGdmAppName = {
+  testNonWslAppName = {
     expr = (identity enabledHost).github.appName;
     expected = "dandyrow-agent-dansspectre";
   };
@@ -114,6 +116,14 @@ lib.runTests {
       "sbx-github-app-register"
       "sbx-github-mint"
     ];
+  };
+
+  testHostNameOverrideFlowsToAppName = {
+    expr =
+      (identityWith enabledHost {
+        dandyrow.sbxIdentity.hostName = "custom";
+      }).github.appName;
+    expected = "dandyrow-agent-custom";
   };
 
   testDisabledHostInstallsNoScripts = {

@@ -5,10 +5,8 @@
   ...
 }:
 let
-  copilotMcpKit = pkgs.runCommand "copilot-mcp.zip" { nativeBuildInputs = [ pkgs.zip ]; } ''
-    cd ${../../sbx-kits/copilot-mcp}
-    zip -qrX $out spec.yaml files
-  '';
+  mkKit = import ./mk-kit.nix { inherit pkgs; };
+  copilotMcpKit = mkKit "copilot-mcp" ../../sbx-kits/copilot-mcp;
 in
 {
   config = lib.mkIf config.sbx.enable {

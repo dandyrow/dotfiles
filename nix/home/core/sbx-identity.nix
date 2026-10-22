@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.dandyrow;
+  identity = config.dandyrow.sbxIdentity;
 
   enabled = osConfig != null && !cfg.isStandalone && (osConfig.sbx.enable or false);
   isWsl = osConfig != null && !cfg.isStandalone && (osConfig.wsl.enable or false);
@@ -16,13 +17,11 @@ let
     else
       (osConfig.networking.hostName or "unknown");
 
-  appName = "dandyrow-agent-${lib.toLower hostName}";
   owner = "dandyrow";
-  backend = if isWsl then "file" else "keyring";
   keyringService = "sbx-github-app";
 
   mintBackend =
-    if backend == "file" then
+    if identity.github.backend == "file" then
       ''
         config_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/sbx"
         app_id_file="$config_dir/github-app-id"
@@ -34,17 +33,17 @@ let
       ''
     else
       ''
-        app_id="$(secret-tool lookup service ${lib.escapeShellArg keyringService} host ${lib.escapeShellArg hostName} kind app-id)" \
-          || die "GitHub App ID not found in GNOME Keyring (service ${keyringService}, host ${hostName}). Run sbx-github-app-register on this host."
-        key="$(secret-tool lookup service ${lib.escapeShellArg keyringService} host ${lib.escapeShellArg hostName} kind private-key)" \
-          || die "GitHub App private key not found in GNOME Keyring (service ${keyringService}, host ${hostName}). Unlock the keyring and run sbx-github-app-register."
+        app_id="$(secret-tool lookup service ${lib.escapeShellArg identity.github.keyring.service} host ${lib.escapeShellArg identity.hostName} kind app-id)" \
+          || die "GitHub App ID not found in GNOME Keyring (service ${identity.github.keyring.service}, host ${identity.hostName}). Run sbx-github-app-register on this host."
+        key="$(secret-tool lookup service ${lib.escapeShellArg identity.github.keyring.service} host ${lib.escapeShellArg identity.hostName} kind private-key)" \
+          || die "GitHub App private key not found in GNOME Keyring (service ${identity.github.keyring.service}, host ${identity.hostName}). Unlock the keyring and run sbx-github-app-register."
         printf '%s' "$key" > "$tmp_dir/github-app.pem"
         key_file="$tmp_dir/github-app.pem"
-        key_source="GNOME Keyring (service ${keyringService}, host ${hostName})"
+        key_source="GNOME Keyring (service ${identity.github.keyring.service}, host ${identity.hostName})"
       '';
 
   storeBackend =
-    if backend == "file" then
+    if identity.github.backend == "file" then
       ''
         config_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/sbx"
         id_path="$config_dir/github-app-id"
@@ -59,21 +58,21 @@ let
       ''
     else
       ''
-        if [ "$force" -eq 0 ] && secret-tool lookup service ${lib.escapeShellArg keyringService} host ${lib.escapeShellArg hostName} kind app-id >/dev/null 2>&1; then
-          die "Credentials already exist in GNOME Keyring (service ${keyringService}, host ${hostName}). Re-run with --force to replace them."
+        if [ "$force" -eq 0 ] && secret-tool lookup service ${lib.escapeShellArg identity.github.keyring.service} host ${lib.escapeShellArg identity.hostName} kind app-id >/dev/null 2>&1; then
+          die "Credentials already exist in GNOME Keyring (service ${identity.github.keyring.service}, host ${identity.hostName}). Re-run with --force to replace them."
         fi
         if [ "$force" -eq 1 ]; then
-          secret-tool clear service ${lib.escapeShellArg keyringService} host ${lib.escapeShellArg hostName} kind app-id || true
-          secret-tool clear service ${lib.escapeShellArg keyringService} host ${lib.escapeShellArg hostName} kind private-key || true
+          secret-tool clear service ${lib.escapeShellArg identity.github.keyring.service} host ${lib.escapeShellArg identity.hostName} kind app-id || true
+          secret-tool clear service ${lib.escapeShellArg identity.github.keyring.service} host ${lib.escapeShellArg identity.hostName} kind private-key || true
         fi
-        printf '%s' "$app_id" | secret-tool store --label="sbx GitHub App ID (${hostName})" service ${lib.escapeShellArg keyringService} host ${lib.escapeShellArg hostName} kind app-id \
+        printf '%s' "$app_id" | secret-tool store --label="sbx GitHub App ID (${identity.hostName})" service ${lib.escapeShellArg identity.github.keyring.service} host ${lib.escapeShellArg identity.hostName} kind app-id \
           || die "Could not store the App ID in GNOME Keyring. Unlock the keyring and retry."
-        printf '%s' "$pem" | secret-tool store --label="sbx GitHub App key (${hostName})" service ${lib.escapeShellArg keyringService} host ${lib.escapeShellArg hostName} kind private-key \
+        printf '%s' "$pem" | secret-tool store --label="sbx GitHub App key (${identity.hostName})" service ${lib.escapeShellArg identity.github.keyring.service} host ${lib.escapeShellArg identity.hostName} kind private-key \
           || die "Could not store the private key in GNOME Keyring. Unlock the keyring and retry."
       '';
 
   registerNextSteps =
-    if backend == "file" then
+    if identity.github.backend == "file" then
       ''
         printf '%s\n' \
           "Personal-repo sandboxes on this host use the App token per sandbox:" \
@@ -96,7 +95,7 @@ let
         jq
         openssl
       ]
-      ++ lib.optionals (backend == "keyring") [ pkgs.libsecret ];
+      ++ lib.optionals (identity.github.backend == "keyring") [ pkgs.libsecret ];
     text = ''
       die() {
         printf 'sbx-github-mint: %s\n' "$*" >&2
@@ -153,7 +152,7 @@ let
       installation_id="$(printf '%s' "$installations" | jq -r 'if type == "array" and length > 0 then .[0].id else empty end')" \
         || die "Could not parse the installation list from GitHub."
       if [ -z "$installation_id" ]; then
-        die "App $app_id is not installed. Install it at https://github.com/apps/${appName}/installations/new, then retry."
+        die "App $app_id is not installed. Install it at https://github.com/apps/${identity.github.appName}/installations/new, then retry."
       fi
 
       if ! response="$(api -X POST "https://api.github.com/app/installations/$installation_id/access_tokens")"; then
@@ -179,15 +178,15 @@ let
         openssl
         python3
       ]
-      ++ lib.optionals (backend == "keyring") [ pkgs.libsecret ];
+      ++ lib.optionals (identity.github.backend == "keyring") [ pkgs.libsecret ];
     text = ''
             die() {
               printf 'sbx-github-app-register: %s\n' "$*" >&2
               exit 1
             }
 
-            app_name=${lib.escapeShellArg appName}
-            owner=${lib.escapeShellArg owner}
+            app_name=${lib.escapeShellArg identity.github.appName}
+            owner=${lib.escapeShellArg identity.github.owner}
       default_port=${lib.escapeShellArg "47831"}
       port="$default_port"
             code=""
@@ -352,7 +351,7 @@ let
       PY
 
               python3 "$server" "$port" "$manifest" "$state" "$tmp_dir/code" "$app_name" "${
-                if isWsl then "0.0.0.0" else "127.0.0.1"
+                if identity.isWsl then "0.0.0.0" else "127.0.0.1"
               }" &
               server_pid=$!
               sleep 0.5
@@ -432,14 +431,14 @@ in
     gitIdentity = {
       name = lib.mkOption {
         type = lib.types.str;
-        default = if isWsl then "Copilot" else "opencode-agent[bot]";
+        default = if identity.isWsl then "Copilot" else "opencode-agent[bot]";
         description = "Git author and committer name for sandboxed agents.";
       };
 
       email = lib.mkOption {
         type = lib.types.str;
         default =
-          if isWsl then
+          if identity.isWsl then
             "198982749+Copilot@users.noreply.github.com"
           else
             "219766164+opencode-agent[bot]@users.noreply.github.com";
@@ -456,7 +455,7 @@ in
 
       appName = lib.mkOption {
         type = lib.types.str;
-        default = appName;
+        default = "dandyrow-agent-${lib.toLower identity.hostName}";
         description = "GitHub App name for this host.";
       };
 
@@ -465,7 +464,7 @@ in
           "file"
           "keyring"
         ];
-        default = backend;
+        default = if identity.isWsl then "file" else "keyring";
         description = "Where this host stores the App ID and private key.";
       };
 
@@ -473,12 +472,6 @@ in
         type = lib.types.str;
         default = "sbx-github-mint";
         description = "Command that prints a GitHub App installation token to stdout.";
-      };
-
-      registerCommand = lib.mkOption {
-        type = lib.types.str;
-        default = "sbx-github-app-register";
-        description = "Command that registers this host's GitHub App.";
       };
 
       keyring = {
@@ -490,14 +483,14 @@ in
 
         host = lib.mkOption {
           type = lib.types.str;
-          default = hostName;
+          default = identity.hostName;
           description = "GNOME Keyring host attribute for App credentials.";
         };
       };
     };
   };
 
-  config = lib.mkIf enabled {
+  config = lib.mkIf identity.enable {
     home.packages = [
       mint
       register
