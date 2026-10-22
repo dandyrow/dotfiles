@@ -131,9 +131,8 @@ doas cp /path/to/corp.pem /etc/nixos/corp.pem
 
 #### 6. Restore the development environment
 
-See [WSL development environment](docs/wsl-development.md) for the pinned Windows
-VS Code bootstrap, shared Copilot CLI / VS Code MCP configuration, private WDX
-checkout restoration, authentication and verification steps.
+See [WSL development setup](docs/wsl-development.md) for the manual Windows VS
+Code, WDX checkout and sign-in steps.
 
 #### Differences from bare-metal hosts
 
