@@ -1,0 +1,18 @@
+schemaVersion: "2"
+kind: mixin
+name: opencode-copilot
+description: Copilot models for opencode, using opencode's own token instead of the github PAT
+requires:
+  agent: opencode
+permissions:
+  network:
+    allow:
+      - api.githubcopilot.com
+credentials:
+  - service: opencode-copilot
+    description: opencode's GitHub Copilot OAuth token
+    apiKey:
+      name: ""
+      inject:
+        - domain: api.githubcopilot.com
+          scheme: bearer
