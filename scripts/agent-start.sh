@@ -17,7 +17,7 @@ parse_branch "$@"
 
 # --- configurable AI co-author trailer (override via env vars) ---
 AI_COAUTHOR_NAME="${AI_COAUTHOR_NAME:-Copilot}"
-# github-copilot-cli[bot]; 198982749 is the cloud coding agent, which doesn't author these commits.
+# This address links the trailer to the Copilot CLI bot account.
 AI_COAUTHOR_EMAIL="${AI_COAUTHOR_EMAIL:-223556219+Copilot@users.noreply.github.com}"
 AI_TRAILER="Co-authored-by: ${AI_COAUTHOR_NAME} <${AI_COAUTHOR_EMAIL}>"
 
