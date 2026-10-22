@@ -30,7 +30,6 @@ in
 
   config = {
     home.packages = [
-      pkgs.gh
       pkgs.github-copilot-cli
       pkgs.nodejs
       wdx
