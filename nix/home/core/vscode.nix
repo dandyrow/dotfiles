@@ -18,8 +18,8 @@
       slirp4netns
     ];
 
-    home.file.".vscode-server/data/User/mcp.json".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/vscode/.vscode-server/data/User/mcp.json";
+    xdg.dataFile."vscode-server/data/User/mcp.json".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/vscode/.local/share/vscode-server/data/User/mcp.json";
     home.file.".vscode-server/server-env-setup".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/vscode/.vscode-server/server-env-setup";
   };
