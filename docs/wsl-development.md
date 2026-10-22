@@ -1,164 +1,81 @@
-# WSL development environment
+# WSL development setup
 
-NixOS installs the Linux packages. Home Manager symlinks the MCP configuration
-from the dotfiles.
-Windows runs a separately installed VS Code editor. Rebuilding NixOS does not
-install software on Windows or restore private repositories and credentials.
-
-## What is reproducible
-
-| Component | Source of truth |
-| --- | --- |
-| NixOS, Node, Copilot CLI, GitHub CLI | `flake.lock` and the Nix modules |
-| Canvas Kit MCP version | `npx` version pin in both MCP configs, cached by npm under `~/.cache/npm` on first start |
-| Copilot CLI MCP definitions | Symlinked `copilot/.config/copilot/mcp-config.json` |
-| VS Code MCP definitions and server environment | Symlinked files under `vscode/.vscode-server/` |
-| Windows VS Code and WSL extension | Manually installed on Windows, not pinned by this repository |
-| Windows editor settings and Nix sandbox access | `vscode/windows-settings.json` |
-| WDX runtime | Nix Node wrapper around your separately restored private checkout |
-
-The HTTP services are hosted by Atlassian, GitHub and Context7. Their URLs and
-client configuration are declarative, but their server implementations cannot
-be pinned by this repository. OAuth grants, subscriptions, enterprise policies
-and service availability remain external requirements.
-
-WDX deliberately uses a mutable private checkout rather than putting company
-source in this repository or a public binary cache. Changing that checkout
-changes WDX without a Nix rebuild. Copilot's existing marketplace plugins and
-the private `wd-product-ai` skill checkout are also not pinned by this setup.
+Nix and Home Manager configure Linux. Windows VS Code, private checkouts and
+credentials need separate setup.
 
 ## Restore a machine
 
-### 1. Install NixOS-WSL
+1. **Build NixOS-WSL.** Follow the root README. Use a recorded dotfiles commit
+   and its `flake.lock` for repeatable builds. Before evaluating WSL with
+   `--impure`, place the corporate CA at `/etc/nixos/corp.pem` on the build
+   machine. For a tarball build, include it in the private `--extra-files`
+   directory too. Never commit certificates or credentials.
 
-Follow the WSL installation steps in the root README. Build from a recorded
-dotfiles commit and its committed `flake.lock`; do not update the lock during
-restoration. Keep the checkout at that revision for an exact restoration,
-because other dotfiles still use out-of-store links.
+2. **Restore private tools.** Restore Workday-Extend-Tools at
+   `~/Projects/work/EDM-AI/Workday-Extend-Tools`. The reviewed revision was
+   `1608bbd835ff23cac72a56433136edacebc9c451`; record later revisions in your
+   private backup. Run `npm ci` in `vscode-extension` and follow that
+   repository's build instructions if shared assets are missing. Override
+   `dandyrow.wdxCheckout` in Home Manager if you use another path.
 
-The corporate CA must be at `/etc/nixos/corp.pem` on the **build machine**
-before evaluating WSL with `--impure`. If building a tarball elsewhere, also
-include `etc/nixos/corp.pem` in the private `--extra-files` directory so future
-rebuilds in the imported distro can find it. Never commit the certificate,
-password hashes or credentials. Node processes use the NixOS CA bundle.
+   Restore `~/Projects/work/EDM-AI/wd-product-ai` separately if you use its
+   private Copilot skills.
 
-### 2. Restore WDX separately
+3. **Set up VS Code on Windows.** Install
+   [VS Code](https://code.visualstudio.com/download) and Microsoft's WSL
+   extension (`ms-vscode-remote.remote-wsl`). Sign in to GitHub and enable
+   Copilot.
 
-Restore the private Workday-Extend-Tools repository at:
+   In the Windows editor, open **Preferences: Open User Settings (JSON)** and
+   merge [`vscode/windows-settings.json`](../vscode/windows-settings.json) into
+   your settings. Replace `__WSL_HOME__` with your WSL home, usually
+   `/home/dandyrow`. Keep existing sandbox grants. These settings must be in
+   Windows User settings; WSL Remote settings did not affect the agent sandbox.
+   The template disables automatic updates, so remove those entries if you
+   prefer VS Code to update itself.
 
-```text
-~/Projects/work/EDM-AI/Workday-Extend-Tools
-```
+   Connect with **WSL: Connect to WSL using Distro**, choose NixOS, and open a
+   workspace from the Linux filesystem. Allow HTTPS access to VS Code, the
+   Marketplace and MCP endpoints. Corporate Windows certificate trust is
+   separate from the WSL CA.
 
-For repeatable restoration, record the revision in your private backup. The
-revision inspected during this review was
-`1608bbd835ff23cac72a56433136edacebc9c451`.
-Use its committed npm lockfile:
+4. **Sign in and authorize servers.** In WSL, run `copilot login` and
+   `gh auth login`. Sign in to GitHub/Copilot in VS Code too, then authorize
+   Atlassian, Context7 and GitHub in each client as prompted. Each client keeps
+   its own OAuth state.
 
-```bash
-cd ~/Projects/work/EDM-AI/Workday-Extend-Tools
-git checkout <your-recorded-revision>
-cd vscode-extension
-npm ci
-```
+   Provide required `WDX_DEV_*` or `WDX_TENANT_*` credentials through your
+   approved secret manager. A VS Code-launched WSL server does not inherit
+   variables from an unrelated terminal.
 
-The repository's normal preparation step must also have generated its shared
-assets. Consult its own build instructions if they are missing. No global npm
-installation is needed. Override `dandyrow.wdxCheckout` in Home Manager if you
-use another location. The wrapper reports a missing checkout explicitly.
+## Where configuration lives
 
-Restore `~/Projects/work/EDM-AI/wd-product-ai` separately if you want the private
-skills referenced by the existing Copilot settings.
+- Copilot CLI reads `~/.config/copilot`, symlinked to
+  `copilot/.config/copilot` in the dotfiles. Runtime state is ignored by Git;
+  back up sessions and sign-in state separately. Edit `mcp-config.json` to
+  change server entries.
+- VS Code's MCP config and `server-env-setup` are symlinked from
+  `vscode/.vscode-server/`. The WSL extension uses `~/.vscode-server` for its
+  binaries and setup script.
+- Canvas Kit runs with `npx -y @workday/canvas-kit-mcp@16.2.3`. Its first start
+  needs network access and writes to `~/.cache/npm`, which the Windows sandbox
+  settings allow.
+- Copilot CLI provides GitHub MCP after login. VS Code has a separate HTTP
+  GitHub MCP entry. Do not add a second GitHub entry to Copilot CLI.
+- WDX uses the private checkout and retains its own permission gates. It is not
+  read-only, and credentials may enable deploy operations.
 
-### 3. Set up VS Code on Windows
-
-1. Install [VS Code for Windows](https://code.visualstudio.com/download).
-   No Linux desktop editor is needed.
-2. In the Windows editor, install Microsoft's **WSL** extension,
-   `ms-vscode-remote.remote-wsl`.
-3. Sign in to GitHub and enable GitHub Copilot chat. If your VS Code release
-   offers Copilot through an extension, install the GitHub Copilot extension
-   recommended by the editor. Your account must have Copilot access.
-4. Open **Preferences: Open User Settings (JSON)** in the Windows editor.
-   Merge the settings from [`vscode/windows-settings.json`](../vscode/windows-settings.json)
-   into your existing settings. Replace every `__WSL_HOME__` with your Linux
-   home, normally `/home/dandyrow`. Preserve any existing sandbox path grants.
-   The template disables automatic editor and extension updates; keep those
-   settings only if you intend to manage updates manually.
-5. Run **WSL: Connect to WSL using Distro**, select your NixOS distro, then
-   open your workspace inside its Linux filesystem.
-
-The default Windows User settings file is
-`%APPDATA%\Code\User\settings.json`. Use the command above for the active
-profile rather than assuming that path applies to every profile.
-Windows VS Code and extension versions are managed manually, outside Nix.
-Record their versions in your machine backup if you need to reinstall the same
-releases, and apply security updates deliberately.
-
-HTTPS access to VS Code services, the Visual Studio Marketplace and the MCP
-endpoints is required. Corporate Windows certificate trust is a Windows
-prerequisite, separate from the WSL CA.
-
-Sandbox settings must be in the **Windows User settings of the launching
-editor** for this agent-host setup. Putting the same settings only in WSL
-Remote Settings did not affect the effective policy during testing.
-The settings template grants read access to the Nix store/profile trees and
-daemon socket, plus write access to the user's Nix and npm caches. npm needs
-its cache for Canvas Kit's pinned `npx` command. It leaves sandboxing on.
-Daemon access permits Nix to fetch and build packages.
-
-Run `/sandbox policy` in a new agent session to confirm the grants. A successful
-policy report alone does not prove that commands can start.
-
-### 4. Sign in and authorize MCP
-
-- Run `copilot login` and `gh auth login` inside WSL.
-- Sign in to GitHub/Copilot in the Windows VS Code window connected to WSL.
-- Authorize Atlassian, Context7 if requested, and GitHub separately in each
-  client. OAuth state is not copied into Nix or shared between clients.
-- Supply any required `WDX_DEV_*` / `WDX_TENANT_*` credentials through your
-  approved secret manager. Never put them in Nix, MCP JSON or source control.
-  A Windows-launched WSL server does not inherit variables exported only in an
-  unrelated terminal.
-
-Copilot CLI already supplies `github-mcp-server` after login. Adding a second
-GitHub entry would duplicate it. VS Code instead gets an explicit HTTP GitHub
-entry in its remote user MCP configuration. The CLI's built-in GitHub server
-has fewer default tools; use `gh` for the rest or explicitly enable additional
-GitHub toolsets.
-
-WDX uses `wdx mcp` without tenant-write override flags. Its own permission gates
-still apply; this is not read-only mode, and personal-app deploys may be
-available with credentials. The optional Workday editor extension is not
-required for the headless MCP server.
-
-## Configuration and runtime state
-
-`COPILOT_HOME` stays `~/.config/copilot`. Home Manager symlinks that directory
-to `copilot/.config/copilot` in the dotfiles checkout. Copilot runtime files
-remain there, as they do now. `.gitignore` excludes runtime state and keeps the
-managed configuration. Back up sessions and sign-in state separately when moving
-machines. Edit `mcp-config.json` instead of using `/mcp add`.
-
-VS Code remote MCP configuration is symlinked from
-`vscode/.vscode-server/data/User/mcp.json`. Its environment setup script is also
-symlinked from the dotfiles and adds Nix profile paths before the remote agent
-starts. The server can move its data with `VSCODE_AGENT_FOLDER`, but the WSL
-extension hardcodes `~/.vscode-server` for the binaries and this script, so
-everything stays in that one directory.
-
-## Verification
+## Verify
 
 Before switching:
 
 ```bash
 nix flake check
-nix eval .#nixosConfigurations.WSL.config.system.build.toplevel.drvPath --impure
+nix eval --impure .#nixosConfigurations.WSL.config.system.build.toplevel.drvPath
 ```
 
-After an approved rebuild, stop the existing WSL VS Code server through
-**WSL: Kill VS Code Server**, reconnect to the NixOS distro in VS Code, and
-open a fresh WSL terminal:
+After an approved rebuild, run **WSL: Kill VS Code Server**, reconnect to NixOS,
+and open a fresh WSL terminal:
 
 ```bash
 printf '%s\n' "$COPILOT_HOME"
@@ -167,12 +84,8 @@ copilot mcp list
 wdx --help
 ```
 
-Expect Copilot's state home at `~/.config/copilot`, the built-in GitHub server,
-Atlassian, Context7, Canvas Kit and WDX. In VS Code, use
-**MCP: Open Remote User Configuration** and **MCP: List Servers**. Authorize and
-start each server, then exercise a documentation lookup and a read-only WDX
-reference tool. Verify remote execution in a WSL workspace, not a Windows folder.
-
-Authenticated HTTP calls, Windows installation, OAuth callbacks and the
-post-switch editor environment must be checked on the actual clients. Nix
-evaluation cannot prove those steps work.
+Copilot should use `~/.config/copilot` and list GitHub, Atlassian, Context7,
+Canvas Kit and WDX. In VS Code, run **MCP: Open Remote User Configuration** and
+**MCP: List Servers**, authorize and start the servers, then try a documentation
+lookup and a read-only WDX reference tool. Check the actual clients; Nix
+evaluation cannot verify sign-in or authenticated requests.
