@@ -1,0 +1,9 @@
+schemaVersion: "2"
+kind: mixin
+name: agent-gate
+description: Pre-push secret scan and repo gate for every git repo in the sandbox
+setup:
+  install:
+    - command: "install -D -m 0755 /home/agent/agent-gate/betterleaks /usr/local/bin/betterleaks && install -D -m 0755 /home/agent/agent-gate/pre-push /usr/local/lib/agent-gate/hooks/pre-push && install -D -m 0644 /home/agent/agent-gate/betterleaks-default.toml /usr/local/lib/agent-gate/hooks/betterleaks-default.toml && rm -rf /home/agent/agent-gate && git config --system core.hooksPath /usr/local/lib/agent-gate/hooks"
+      user: "0"
+      description: Install betterleaks and the pre-push gate root-owned, then point every repo at it
