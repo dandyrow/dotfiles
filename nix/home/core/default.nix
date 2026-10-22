@@ -3,7 +3,6 @@
     ./copilot-cli.nix
     ./clone-dotfiles.nix
     ./dotfiles-linking.nix
-    ./gh.nix
     ./gnupg-home.nix
     ./herdr.nix
     ./nvim.nix
