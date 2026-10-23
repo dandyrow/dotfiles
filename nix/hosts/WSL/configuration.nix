@@ -35,7 +35,11 @@ in
   systemd.services.nix-daemon.environment.NIX_SSL_CERT_FILE =
     lib.mkIf (builtins.pathExists /etc/nixos/corp.pem) "/etc/ssl/certs/ca-certificates.crt";
 
-  users.users.${primaryUser}.extraGroups = [ "docker" ];
+  users.users.${primaryUser} = {
+    extraGroups = [ "docker" ];
+    # WSL can start without a login session, so linger must create /run/user/1000 for VS Code IPC.
+    linger = true;
+  };
 
   # Runs VS Code Server's dynamically-linked node; its generic-linux build needs the stub loader.
   programs.nix-ld = {
