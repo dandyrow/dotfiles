@@ -153,6 +153,11 @@ nix run nixpkgs#home-manager -- switch --flake github:dandyrow/dotfiles#dandyrow
 
 > **Note:** `ttf-dejavu-nerd` must be installed manually on non-NixOS systems.
 
+### Sandboxed agents
+
+See [sandboxed agents](docs/sbx.md) for the docker-sbx launcher, the per-host
+one-time checklist, and end-to-end verification.
+
 ---
 
 This README also lists any requirements and instructions required for the dotfiles to be installed
