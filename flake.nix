@@ -27,7 +27,7 @@
     catppuccin.url = "github:catppuccin/nix";
 
     mattpocock-skills = {
-      url = "github:mattpocock/skills/v1.3.1";
+      url = "github:mattpocock/skills/v1.3.2";
       flake = false;
     };
   };
