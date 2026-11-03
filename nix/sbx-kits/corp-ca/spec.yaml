@@ -1,0 +1,9 @@
+schemaVersion: "2"
+kind: mixin
+name: corp-ca
+description: Trust corporate TLS certificates in the sandbox
+setup:
+  install:
+    - command: "cp /home/agent/corp-ca/*.crt /usr/local/share/ca-certificates/ && update-ca-certificates"
+      user: "0"
+      description: Install corporate CA certificates into the system trust store

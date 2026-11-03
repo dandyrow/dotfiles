@@ -18,6 +18,12 @@ in
   dotfiles-linking = mkTest "dotfiles-linking" (import ./dotfiles-linking.nix { inherit lib; });
   nvim-tools = mkTest "nvim-tools" (import ./nvim-tools.nix { inherit lib pkgs; });
   work-identity = mkTest "work-identity" (import ./work-identity.nix { inherit lib; });
+  sbx-module = mkTest "sbx-module" (import ./sbx-module.nix { inherit lib; });
+  sbx-identity = mkTest "sbx-identity" (import ./sbx-identity.nix { inherit lib pkgs; });
+  sbx-kits = import ./sbx-kits.nix { inherit lib pkgs; };
+  sbx-gate = import ./sbx-gate.nix { inherit pkgs; };
+  sbx-mcp = import ./sbx-mcp.nix { inherit lib pkgs; };
+  sbx-launcher = import ./sbx-launcher.nix { inherit lib pkgs; };
   config-eval = mkTest "config-eval" (import ./config-eval.nix { inherit lib homeConfigurations; });
   worktree-scripts = import ./worktree-scripts.nix { inherit pkgs; };
 }

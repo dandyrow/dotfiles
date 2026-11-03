@@ -26,9 +26,12 @@
   # Merged into the proxmox image build only; inert for normal evals.
   image.modules.proxmox = {
     proxmox.qemuConf.bios = "ovmf";
+    proxmox.qemuExtraConf.cpu = "host";
   };
 
   gnome.enable = true;
+
+  sbx.enable = true;
 
   # Coincides with the other hosts by install date, not by sharing — do not consolidate.
   system.stateVersion = "25.11";
