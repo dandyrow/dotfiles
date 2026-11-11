@@ -1,0 +1,6 @@
+schemaVersion: "2"
+kind: mixin
+name: copilot-mcp
+description: Point Copilot CLI at the host sbx MCP gateway
+requires:
+  agent: copilot

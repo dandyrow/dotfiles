@@ -41,6 +41,8 @@ in
     linger = true;
   };
 
+  sbx.enable = true;
+
   # Runs VS Code Server's dynamically-linked node; its generic-linux build needs the stub loader.
   programs.nix-ld = {
     enable = true;
@@ -53,22 +55,7 @@ in
     ];
   };
 
-  systemd.services.sbx-daemon = {
-    description = "Docker Sandboxes daemon (sbx)";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
-    serviceConfig = {
-      Type = "simple";
-      User = primaryUser;
-      ExecStart = "${pkgs.docker-sbx}/bin/sbx daemon start";
-      ExecStop = "${pkgs.docker-sbx}/bin/sbx daemon stop";
-      Restart = "on-failure";
-      RestartSec = "5s";
-    };
-  };
-
   environment.systemPackages = with pkgs; [
-    docker-sbx
     awscli2
   ];
 

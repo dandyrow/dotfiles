@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# In-sandbox feedback gate; CI is the authority.
+set -euo pipefail
+
+remote="$1"
+zero=0000000000000000000000000000000000000000
+top="$(git rev-parse --show-toplevel)"
+
+unset BETTERLEAKS_CONFIG GITLEAKS_CONFIG BETTERLEAKS_CONFIG_TOML GITLEAKS_CONFIG_TOML \
+  BETTERLEAKS_VALIDATE BETTERLEAKS_ANALYZE
+
+fail() {
+  printf '\nagent-gate: push blocked: %s\n' "$1" >&2
+  printf 'agent-gate: fix the cause and push again. Do not use --no-verify: CI scans every change before main.\n' >&2
+  exit 1
+}
+
+# Not grep -q: an early exit SIGPIPEs sed and pipefail would read that as "not protected".
+protected_refs() {
+  echo refs/heads/main
+  git symbolic-ref --quiet "refs/remotes/$remote/HEAD" 2>/dev/null \
+    | sed "s#^refs/remotes/$remote/#refs/heads/#" || true
+}
+
+default_config="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/betterleaks-default.toml"
+[[ -r "$default_config" ]] || fail "missing $default_config"
+
+# The only betterleaks call, so the v2 flag changes land in one place.
+scan_secrets() {
+  local log_opts="$1"
+  betterleaks git --config "$default_config" --log-opts="$log_opts" --verbose --redact --no-banner --no-color \
+    --log-level warn --exit-code 1 "$top"
+}
+
+while read -r local_ref local_sha remote_ref _remote_sha; do
+  if protected_refs | grep -xF "$remote_ref" >/dev/null; then
+    fail "$remote_ref is protected. Push a feature branch and open a PR."
+  fi
+  [[ "$local_sha" == "$zero" ]] && continue
+
+  echo "agent-gate: scanning commits in $local_ref not yet on $remote for secrets" >&2
+  scan_secrets "$local_sha --not --remotes=$remote" \
+    || fail "betterleaks found a secret in the commits being pushed. Remove it from history (rewrite the commit), not just the working tree."
+done
+
+if [[ -x "$top/.agents/gate" ]]; then
+  echo "agent-gate: running the repo's .agents/gate" >&2
+  (cd "$top" && ./.agents/gate) || fail "the repo's .agents/gate failed. Its output is above."
+fi
+
+echo "agent-gate: passed" >&2
