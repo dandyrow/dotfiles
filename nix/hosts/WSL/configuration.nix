@@ -70,10 +70,6 @@ in
   environment.systemPackages = with pkgs; [
     docker-sbx
     awscli2
-    # VS Code sandbox runtime deps, system scope so they resolve outside the user session PATH.
-    bubblewrap
-    socat
-    slirp4netns
   ];
 
   virtualisation.docker.enable = true;
