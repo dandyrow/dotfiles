@@ -7,7 +7,4 @@ export COPILOT_HOME="$HOME/.config/copilot"
 export COPILOT_SKILLS_DIRS="$HOME/.local/share/agents/skills"
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
 export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
-export PATH="/run/current-system/sw/bin:$XDG_STATE_HOME/nix/profile/bin:$HOME/.nix-profile/bin:$PATH"
-# The per-user profile is a symlink chain the sandbox cannot re-bind (bwrap mkdir parents failure); NixOS also injects it via the login PATH.
-PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -v '^/etc/profiles/per-user/' | paste -sd: -)
-export PATH
+export PATH="/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$XDG_STATE_HOME/nix/profile/bin:$HOME/.nix-profile/bin:$PATH"
