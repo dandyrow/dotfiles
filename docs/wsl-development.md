@@ -9,10 +9,6 @@ Nix restores everything on the Linux side. These are the manual steps it can't d
    expects it there. Set `dandyrow.wdxCheckout` in Home Manager to use another path.
 2. On Windows, install [VS Code](https://code.visualstudio.com/download) and the
    WSL extension (`ms-vscode-remote.remote-wsl`), then sign in to GitHub.
-3. In Windows VS Code, run **Preferences: Open User Settings (JSON)** and merge in
-   [`vscode/windows-settings.json`](../vscode/windows-settings.json). Replace
-   `__WSL_HOME__` with your WSL home, e.g. `/home/dandyrow`. It has to be the
-   Windows User settings; the agent sandbox ignores WSL Remote settings.
 4. Run **WSL: Connect to WSL using Distro** and pick NixOS.
 5. In a WSL terminal, run `copilot login` and `gh auth login`.
 6. Authorize Atlassian, Context7 and GitHub when Copilot CLI and VS Code prompt.
