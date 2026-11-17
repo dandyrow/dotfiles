@@ -11,12 +11,12 @@ Nix restores everything on the Linux side. These are the manual steps it can't d
    WSL extension (`ms-vscode-remote.remote-wsl`), then sign in to GitHub.
 3. In Windows VS Code, run **Preferences: Open User Settings (JSON)** and merge in
    [`vscode/windows-settings.json`](../vscode/windows-settings.json). Replace
-   `__WSL_HOME__` with your WSL home, e.g. `/home/dandyrow`. It has to be the
-   Windows User settings; the agent sandbox ignores WSL Remote settings.
-   A workspace `.vscode/settings.json` that sets
-   `chat.agent.sandbox.fileSystem.userConfiguredPaths` replaces the user
-   `readonlyPaths` array, so copy the `/nix/store`, `/etc/profiles`, and other
-   Nix entries into it. Without `/nix/store`, bwrap fails with
+   `__WSL_HOME__` with your WSL home, e.g. `/home/dandyrow`. Keep
+   `chat.agent.sandbox.fileSystem.userConfiguredPaths` in the Windows User
+   settings only. VS Code saves approved sandbox paths there, and a copy in the
+   WSL Remote (Machine) settings or a workspace `.vscode/settings.json`
+   replaces the User arrays instead of merging with them. If the agent host
+   loses `/nix/store`, bwrap fails with
    `Can't mkdir parents for /etc/profiles/per-user/<user>/bin`.
 4. Run **WSL: Connect to WSL using Distro** and pick NixOS.
 5. In a WSL terminal, run `copilot login` and `gh auth login`.

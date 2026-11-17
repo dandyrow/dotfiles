@@ -10,7 +10,8 @@
       "/etc/profiles",
       "/run/current-system",
       "/nix/var/nix/profiles",
-      "/nix/var/nix/daemon-socket"
+      "/nix/var/nix/daemon-socket",
+      "~/.config/copilot/hooks"
     ],
     "deniedPaths": []
   }
