@@ -1,8 +1,6 @@
 {
   "effortLevel": "high",
-  "enabledPlugins": {
-    "superpowers@superpowers-marketplace": true
-  },
+  "enabledPlugins": {},
   "experimental": true,
   "extraKnownMarketplaces": {
     "superpowers-marketplace": {
@@ -21,9 +19,29 @@
       }
     ]
   },
-  "model": "claude-sonnet-5",
+  "model": "claude-sonnet-5.5",
   "sandbox": {
-    "enabled": false
+    "enabled": false,
+    "sandboxMcpServers": true,
+    "sandboxLspServers": true,
+    "allowBypass": true,
+    "auth": {
+      "git": true,
+      "gh": true
+    },
+    "allowDevToolAccess": true,
+    "addCurrentWorkingDirectory": true,
+    "userPolicy": {
+      "filesystem": {
+        "readwritePaths": [],
+        "readonlyPaths": [],
+        "deniedPaths": []
+      },
+      "network": {
+        "allowOutbound": true,
+        "allowLocalNetwork": false
+      }
+    }
   },
   "skillDirectories": [
     "/home/dandyrow/Projects/work/EDM-AI/wd-product-ai/skills",
