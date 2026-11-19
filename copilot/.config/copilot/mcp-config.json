@@ -19,6 +19,13 @@
       "type": "stdio",
       "command": "wdx",
       "args": ["mcp"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "tools": [
+        "*"
+      ]
     }
   }
 }
