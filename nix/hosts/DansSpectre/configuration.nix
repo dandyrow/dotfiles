@@ -1,8 +1,12 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   users.users.${config.dandyrow.primaryUser}.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINsxeHA5DWcz/L4A1BpozhL/BTNepsGXfrINkfeZSmvJ dandyrow@WSL" # Work Nix WSL
   ];
+
+  virtualisation.podman.enable = true;
+
+  environment.systemPackages = [ pkgs.podman-compose ];
 
   gnome.enable = true;
 
