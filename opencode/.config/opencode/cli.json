@@ -19,5 +19,6 @@
   "cursor": {
     "style": "line",
     "blinking": true
-  }
+  },
+  "plugins": ["./herdr-opencode"]
 }
